@@ -25,14 +25,9 @@ RobotContainer::RobotContainer() {
 
 // All the button commands are set in this function
 void RobotContainer::ConfigureButtonBindings() {
-  //** For commented command file, look at:
-  //** ArmUp.cpp and
-  //** ArmUp.h
 
-  //Bind Limelight Pipeline 0 (Apriltags) and Pipeline 1 (Retroreflective) to ButtonA and ButtonB events respectively
-    // frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).WhileTrue(frc2::InstantCommand([this] { m_vision.SelectPipeline(0); }).ToPtr());
-  // frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).WhileTrue(frc2::InstantCommand([this] { m_vision.SelectPipeline(1); }).ToPtr());
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(IntakeToggle(&m_intake).ToPtr());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).OnTrue(ShooterToggle(&m_shooter).ToPtr());
   // Zeroing for swervedrive command
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kStart).OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
 

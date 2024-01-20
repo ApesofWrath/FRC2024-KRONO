@@ -22,8 +22,10 @@
 #include "commands/Drivetrain/Drive.h"
 #include "subsystems/drivetrain.h"
 #include "subsystems/intake.h"
+#include "subsystems/shooter.h"
 #include "MathFunctions.h"
 #include "commands/IntakeToggle.h"
+#include "commands/ShooterToggle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
@@ -47,6 +49,7 @@ class RobotContainer {
   // The robot's subsystems and commands are defined here...
   drivetrain m_drivetrain;
   intake m_intake;
+  shooter m_shooter;
   
   void ConfigureButtonBindings();
 
