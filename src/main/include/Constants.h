@@ -45,30 +45,6 @@ namespace shooterConstants {
     constexpr int kMotorShooterRight = 35;
 }
 
-// Motor IDs for robot arm
- namespace armConstants {
-    constexpr int kMotorArmAngleLeftID = 12;
-    constexpr int kMotorArmAngleRightID = 13;
-    constexpr int kMotorArmTelescopingID = 14;
-    constexpr int kMotorArmClampID = 15;
-    constexpr int kEncoderTelescopingID = 16;
-
-    constexpr double kRotationsToInchTelescoping = 3.4121929;
-    constexpr double kRotationsToRadianAngling = 40.743822;
-
-    namespace offsets {
-        constexpr double kTelescoping{-267.1};
-    }
-    namespace arm {
-        constexpr double kRobotArm[6]{kMotorArmAngleLeftID,
-                                        kMotorArmAngleRightID, 
-                                        kMotorArmTelescopingID,
-                                        kMotorArmClampID,
-                                        kEncoderTelescopingID,
-                                        offsets::kTelescoping};
-    }
-}
-
 // Motor IDs, Encoder IDs, and Offsets for swervedrive
 namespace drivetrainConstants {
     //CAN IDs
@@ -86,18 +62,6 @@ namespace drivetrainConstants {
     constexpr int kEncoderTurnRearRightID = 9;
     constexpr int kEncoderTurnFrontLeftID = 10;
     constexpr int kEncoderTurnRearLeftID = 11;
-
-    namespace offsets {
-        /* constexpr double kFrontRight{-38.057+180}; // tshirt shooter offsets
-        constexpr double kRearRight{61.787};
-        constexpr double kFrontLeft{38.057};
-        constexpr double kRearLeft{3.164}; */
-
-        constexpr double kFrontRight{50.713}; // curr robo offsets
-        constexpr double kRearRight{154.160};
-        constexpr double kFrontLeft{-6.416};
-        constexpr double kRearLeft{89.912};
-    }
 
     // Values for each swerve module object to use
     namespace swerveModules {
