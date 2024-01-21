@@ -42,7 +42,7 @@ class swerveModule {
   rev::SparkPIDController m_driveController = m_motorDrive.GetPIDController();
   rev::SparkPIDController m_turnController = m_motorTurn.GetPIDController();
 
-  const double m_encoderOffset;
+  // const double m_encoderOffset;
   double m_targetAngle;
 
   // hardwareSettings m_settings;

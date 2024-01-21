@@ -35,6 +35,16 @@ namespace controllerConstants {
     constexpr double kControllerCurve = 1.0;
 }
 
+namespace intakeConstants {
+    constexpr int kMotorRollerLeft = 20;
+    constexpr int kMotorRollerRight = 30;
+}
+
+namespace shooterConstants {
+    constexpr int kMotorShooterLeft = 25;
+    constexpr int kMotorShooterRight = 35;
+}
+
 // Motor IDs for robot arm
  namespace armConstants {
     constexpr int kMotorArmAngleLeftID = 12;
@@ -91,22 +101,18 @@ namespace drivetrainConstants {
 
     // Values for each swerve module object to use
     namespace swerveModules {
-        constexpr double kModuleFrontRight[4]{kMotorDriveFrontRightID,
+        constexpr double kModuleFrontRight[3]{kMotorDriveFrontRightID,
                                                    kMotorTurnFrontRightID,
-                                                   kEncoderTurnFrontRightID,
-                                                   offsets::kFrontRight};
-        constexpr double kModuleRearRight[4]{kMotorDriveRearRightID,
+                                                   kEncoderTurnFrontRightID};
+        constexpr double kModuleRearRight[3]{kMotorDriveRearRightID,
                                                   kMotorTurnRearRightID,
-                                                  kEncoderTurnRearRightID,
-                                                  offsets::kRearRight};
-        constexpr double kModuleFrontLeft[4]{kMotorDriveFrontLeftID,
+                                                  kEncoderTurnRearRightID};
+        constexpr double kModuleFrontLeft[3]{kMotorDriveFrontLeftID,
                                                   kMotorTurnFrontLeftID,
-                                                  kEncoderTurnFrontLeftID,
-                                                  offsets::kFrontLeft};
-        constexpr double kModuleRearLeft[4]{kMotorDriveRearLeftID,
+                                                  kEncoderTurnFrontLeftID};
+        constexpr double kModuleRearLeft[3]{kMotorDriveRearLeftID,
                                                  kMotorTurnRearLeftID,
-                                                 kEncoderTurnRearLeftID,
-                                                 offsets::kRearLeft};
+                                                 kEncoderTurnRearLeftID};
     }
 
     // Math constants and calculations to be used by swervedrive

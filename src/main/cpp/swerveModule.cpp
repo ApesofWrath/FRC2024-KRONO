@@ -9,8 +9,7 @@
 swerveModule::swerveModule(const double module[]) 
     : m_motorDrive(module[0], rev::CANSparkMax::MotorType::kBrushless),
     m_motorTurn(module[1], rev::CANSparkMax::MotorType::kBrushless),
-    m_encoderTurn(module[2]),
-    m_encoderOffset(module[3]) {
+    m_encoderTurn(module[2]) {
 
     // Resets the swerve module motors and encoders to factory settings
     m_motorDrive.RestoreFactoryDefaults();
