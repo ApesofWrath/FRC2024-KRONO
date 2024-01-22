@@ -19,7 +19,7 @@ m_shooterMotor2(shooterConstants::kMotorShooterRight, rev::CANSparkMax::MotorTyp
 
 void shooter::ShooterToggle(){
     if (shooterOn == true){
-        m_shooterMotor1.Set(0.75);
+        m_shooterMotor1.Set(1.0);
     }
     else if (shooterOn == false){
         m_shooterMotor1.Set(0.0);
