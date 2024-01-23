@@ -20,6 +20,12 @@ RobotContainer::RobotContainer() {
     [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetX()), controllerConstants::kControllerCurve)); },
     [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetY()), controllerConstants::kControllerCurve)); },
     [this] { return (-m_controllerMain.GetRawAxis(4)); }));
+
+    m_chooser.SetDefaultOption("DoNothing", "DoNothing");
+    m_chooser.AddOption("3Note", "3Note");
+    m_chooser.AddOption("4Note", "4Note");
+
+    frc::SmartDashboard::PutData(&m_chooser);
     
 }
 
@@ -40,7 +46,13 @@ void RobotContainer::ConfigureButtonBindings() {
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   using namespace pathplanner;
-  return PathPlannerAuto("Example Auto").ToPtr();
+  if (m_chooser.GetSelected() == "DoNothing") {
+    return frc2::WaitCommand(15_s).ToPtr();
+  }
+  else {
+    return PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
+  }
+  
 }
 
 
