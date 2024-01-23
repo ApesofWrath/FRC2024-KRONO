@@ -19,7 +19,7 @@ m_rollerMotor2(intakeConstants::kMotorRollerRight, rev::CANSparkMax::MotorType::
 
 void intake::IntakeToggle(){
     if (intakeOn == true){
-        m_rollerMotor1.Set(-0.2);
+        m_rollerMotor1.Set(0.2);
     }
     else if (intakeOn == false){
         m_rollerMotor1.Set(0.0);
