@@ -50,7 +50,8 @@ class RobotContainer {
   drivetrain m_drivetrain;
   intake m_intake;
   shooter m_shooter;
-  
+
+  frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();
 
   // Controller creation
