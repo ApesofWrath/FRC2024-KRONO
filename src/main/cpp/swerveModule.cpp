@@ -87,7 +87,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
         / drivetrainConstants::calculations::kWheelCircumference};
     
     m_driveController.SetReference(targetMotorSpeed.value(), rev::CANSparkMax::ControlType::kVelocity);
-    m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360.0);
+    m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
     frc::SmartDashboard::PutNumber("Target Wheel Speed", targetWheelSpeed.value());

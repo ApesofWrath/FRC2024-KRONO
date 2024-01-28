@@ -30,7 +30,8 @@
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
-
+#include <pathplanner/lib/auto/NamedCommands.h>
+#include <memory>
 
 
 /**

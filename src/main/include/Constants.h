@@ -85,8 +85,8 @@ namespace drivetrainConstants {
         constexpr auto kFinalTurnRatio{(14.0 / 50.0) * (10.0 / 60.0)};
         constexpr units::length::inch_t kWheelCircumference = {2 * std::numbers::pi * 3.8_in / 2};
 
-        constexpr auto kModuleMaxSpeed{14.5_fps};
-        constexpr auto kChassisMaxSpeed{14.5_fps};
+        constexpr auto kModuleMaxSpeed{12.5_fps};
+        constexpr auto kChassisMaxSpeed{12.5_fps};
 
         constexpr auto kModuleMaxAngularVelocity{std::numbers::pi * 2_rad_per_s};  // radians per second
         constexpr auto kModuleMaxAngularAcceleration{std::numbers::pi * 8_rad_per_s / 1_s};  // radians per second^2

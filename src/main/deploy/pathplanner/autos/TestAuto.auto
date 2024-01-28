@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
-      "y": 5.5
+      "x": 2,
+      "y": 6.0
     },
     "rotation": 0
   },
@@ -12,21 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "1NoteGroundPickupCenter"
+            "name": "test"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "1NoteGroundPickupDown"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "1NoteGroundPickupUp"
+            "pathName": "1MeterX"
           }
         }
       ]
