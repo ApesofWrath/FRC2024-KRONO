@@ -81,12 +81,12 @@ namespace drivetrainConstants {
 
     // Math constants and calculations to be used by swervedrive
     namespace calculations {
-        constexpr auto kFinalDriveRatio{6.75 * 360_deg};
+        constexpr auto kFinalDriveRatio{8.14 * 360_deg};
         constexpr auto kFinalTurnRatio{(14.0 / 50.0) * (10.0 / 60.0)};
-        constexpr units::length::inch_t kWheelCircumference = {2 * std::numbers::pi * 3.8_in / 2};
+        constexpr units::length::meter_t kWheelCircumference = {2 * std::numbers::pi * 0.0508_m};
 
-        constexpr auto kModuleMaxSpeed{12.5_fps};
-        constexpr auto kChassisMaxSpeed{12.5_fps};
+        constexpr auto kModuleMaxSpeed{3.81_mps};
+        constexpr auto kChassisMaxSpeed{3.81_mps};
 
         constexpr auto kModuleMaxAngularVelocity{std::numbers::pi * 2_rad_per_s};  // radians per second
         constexpr auto kModuleMaxAngularAcceleration{std::numbers::pi * 8_rad_per_s / 1_s};  // radians per second^2

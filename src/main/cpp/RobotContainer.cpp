@@ -3,9 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
-#include "commands/Drivetrain/ZeroGyro.h"
-#include "commands/Drivetrain/NormalSpeed.h"
-#include "commands/Drivetrain/SlowDown.h"
+
 
 RobotContainer::RobotContainer() {
 

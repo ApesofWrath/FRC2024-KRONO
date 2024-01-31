@@ -28,8 +28,8 @@ class drivetrain : public frc2::SubsystemBase {
   void AddDataFromVision();
   void resetGyro();
   frc::Pose2d GetOdometry();
+  void ResetOdometry180(frc::Pose2d initPose);
   void ResetOdometry(frc::Pose2d initPose);
-  void ResetOdometryNot180(frc::Pose2d initPose);
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
   /**
    * Will be called periodically whenever the CommandScheduler runs.

@@ -53,5 +53,5 @@ namespace units {
   UNIT_ADD(angular_velocity, native_units_per_decisecond, native_units_per_decisecond, nu_per_ds,
            compound_unit<native_units, inverse<deciseconds>>) // clicks per 100ms (standard FX output).
   //UNIT_ADD(angle, drive_gearing, drive_gearing, dratio, unit<std::ratio<27, 4>, units::degrees>)
-  UNIT_ADD(length, wheel_circumference, wheel_circumferences, wcrc, unit<std::ratio<1194, 100>, units::inches>) // 3.8in diameter.
+  UNIT_ADD(length, wheel_circumference, wheel_circumferences, wcrc, unit<std::ratio<32, 100>, units::meters>) // 3.8in diameter.
 }
