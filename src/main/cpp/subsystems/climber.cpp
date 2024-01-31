@@ -14,6 +14,13 @@ m_climberMotor2(2, rev::CANSparkMax::MotorType::kBrushless){
     m_climberMotor2.SetSmartCurrentLimit(40.0);
 
     m_climberMotor2.Follow(m_climberMotor1, true);
+
+    m_climberMotor1Controller.SetP(0);
+    m_climberMotor1Controller.SetI(0);
+    m_climberMotor1Controller.SetD(0);
+    m_climberMotor1Controller.SetFF(0);
+    m_climberMotor1Controller.SetOutputRange(-1.0F,1.0F);
+    
 }
 
 void climber::ClimberExtend() {

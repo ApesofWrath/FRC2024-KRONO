@@ -19,6 +19,10 @@ class intake : public frc2::SubsystemBase {
     rev::CANSparkMax m_rollerMotor1;
     rev::CANSparkMax m_rollerMotor2;
     //rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
+
+    rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
+    rev::SparkMaxPIDController m_rollerMotor2Controller = m_rollerMotor2.GetPIDController();
+
     bool intakeOn = true;
 };
 

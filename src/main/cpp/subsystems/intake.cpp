@@ -15,6 +15,12 @@ m_rollerMotor2(intakeConstants::kMotorRollerRight, rev::CANSparkMax::MotorType::
     m_rollerMotor2.SetSmartCurrentLimit(40.0);
 
     m_rollerMotor2.Follow(m_rollerMotor1, true);
+
+    m_rollerMotor1Controller.SetP(0);
+    m_rollerMotor1Controller.SetI(0);
+    m_rollerMotor1Controller.SetD(0);
+    m_rollerMotor1Controller.SetFF(0);
+    m_rollerMotor1Controller.SetOutputRange(-1.0F, 1.0F);
 }
 
 void intake::IntakeToggle(){

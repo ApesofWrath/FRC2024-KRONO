@@ -15,6 +15,12 @@ m_shooterMotor2(shooterConstants::kMotorShooterRight, rev::CANSparkMax::MotorTyp
     m_shooterMotor2.SetSmartCurrentLimit(40.0);
 
     m_shooterMotor2.Follow(m_shooterMotor1, true);
+
+    m_shooterMotor1Controller.SetP(0);
+    m_shooterMotor1Controller.SetI(0);
+    m_shooterMotor1Controller.SetD(0);
+    m_shooterMotor1Controller.SetFF(0);
+    m_shooterMotor1Controller.SetOutputRange(-1.0F, 1.0F);
 }
 
 void shooter::ShooterToggle(){

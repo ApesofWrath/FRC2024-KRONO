@@ -19,6 +19,9 @@ class shooter : public frc2::SubsystemBase {
     rev::CANSparkMax m_shooterMotor1;
     rev::CANSparkMax m_shooterMotor2;
     //rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
+
+    rev::SparkMaxPIDController m_shooterMotor1Controller = m_shooterMotor1.GetPIDController();
+    rev::SparkMaxPIDController m_shooterMotor2Controller = m_shooterMotor2.GetPIDController();
     bool shooterOn = true;
 };
 
