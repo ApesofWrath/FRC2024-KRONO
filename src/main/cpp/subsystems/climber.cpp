@@ -23,10 +23,16 @@ m_climberMotor2(2, rev::CANSparkMax::MotorType::kBrushless){
     
 }
 
-void climber::ClimberExtend() {
-    m_climberMotor1.Set(0.3);
-}
+// void climber::ClimberExtend() {
+//     m_climberMotor1.Set(0.3);
+// }
 
-void climber::ClimberRetract() {
-    m_climberMotor1.Set(-0.3);
+// void climber::ClimberRetract() {
+//     m_climberMotor1.Set(-0.3);
+// }
+
+
+// Set height of climber
+void climber::SetHeight(double height){
+	m_climberMotor1.Set(height);
 }
