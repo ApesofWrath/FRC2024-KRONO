@@ -46,7 +46,7 @@ class drivetrain : public frc2::SubsystemBase {
   void normalSpeed();
   void driveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
 
-  double kslowConst = -1.0;
+  double kslowConst = 1.0;
 
 private:
   

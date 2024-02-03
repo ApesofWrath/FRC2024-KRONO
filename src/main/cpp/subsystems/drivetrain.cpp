@@ -42,10 +42,16 @@ void drivetrain::resetGyro() {
 
 }
 
-// $ Slow constant value
+// Slow constant value
 void drivetrain::slowDown() {
-    kslowConst = -0.5;
+    kslowConst = 0.5;
     printf("Slow Func");
+}
+
+// Normal speed value (should always be 1.0)
+void drivetrain::normalSpeed() {
+    kslowConst = 1.0;
+    printf("Normal Func");
 }
 
 void drivetrain::driveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds) {
@@ -58,11 +64,6 @@ void drivetrain::driveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds
     m_frontLeft.SetDesiredState(frontLeft);
     m_rearLeft.SetDesiredState(rearLeft);
 
-}
-// Normal speed value (should always be 1.0)
-void drivetrain::normalSpeed() {
-    kslowConst = -1.0;
-    printf("Normal Func");
 }
 
 // Sets Desired States of the swerve modules for swervedrive
@@ -83,11 +84,11 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
     drivetrainConstants::calculations::kModuleMaxAngularVelocity
     );
 
-    frc::SmartDashboard::PutNumber("xSpeed", xSpeed.value());
+    //frc::SmartDashboard::PutNumber("xSpeed", xSpeed.value());
     // frc::SmartDashboard::PutNumber("ySpeed", ySpeed.value());
     // frc::SmartDashboard::PutNumber("zRotation", zRot.value());
-    frc::SmartDashboard::PutNumber("Robot Position", m_navX.GetRotation2d().Degrees().value());
-    frc::SmartDashboard::PutNumber("Robot Rotation", m_odometry.GetEstimatedPosition().Rotation().Degrees().value());
+    frc::SmartDashboard::PutNumber("Robot Rotation", m_navX.GetRotation2d().Degrees().value());
+    //frc::SmartDashboard::PutNumber("Robot Rotation", m_odometry.GetEstimatedPosition().Rotation().Degrees().value());
     
     auto [frontRight, rearRight, frontLeft, rearLeft] = moduleStates;
 
@@ -114,11 +115,10 @@ void drivetrain::ResetOdometry180(frc::Pose2d initPose) {
     m_odometry.ResetPosition(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
                       m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
                       m_rearLeft.GetPosition()}, initPose);
+    
 }
 
 void drivetrain::ResetOdometry(frc::Pose2d initPose) {
-    initPose.TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(0_deg)));
-    // frc::Pose2d newPose = frc::Pose2d(initPose.Translation(), new frc::Rotation2d(0,0));
     m_odometry.ResetPosition(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
                       m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
                       m_rearLeft.GetPosition()}, initPose);
@@ -146,7 +146,7 @@ void drivetrain::Periodic() {
     frc::SmartDashboard::PutNumber("Front Left TARGET", m_frontLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
     frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle)); */
     // frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
+    //frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
     //frc::SmartDashboard::PutNumber("Odometry Y", units::unit_cast<double>(m_odometry.GetPose().Translation().Y()));
     //frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetPose().Rotation().Degrees()));
 
