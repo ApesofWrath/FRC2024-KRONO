@@ -49,7 +49,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "PathPlanner Training Paths",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
