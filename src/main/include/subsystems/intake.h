@@ -14,14 +14,17 @@ class intake : public frc2::SubsystemBase {
     public:
     intake();
     void IntakeToggle();
+    void IntakeOn();
+    void IntakeStop();
+    void IntakeIdle();
 
     private:
-    rev::CANSparkMax m_rollerMotor1;
-    rev::CANSparkMax m_rollerMotor2;
+    rev::CANSparkMax m_intakeMotorLeft;
+    rev::CANSparkMax m_intakeMotorRight;
     //rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
 
-    rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
-    rev::SparkMaxPIDController m_rollerMotor2Controller = m_rollerMotor2.GetPIDController();
+    rev::SparkMaxPIDController m_intakeMotorLeftController = m_intakeMotorLeft.GetPIDController();
+    rev::SparkMaxPIDController m_intakeMotorRightController = m_intakeMotorRight.GetPIDController();
 
     bool intakeOn = true;
 };

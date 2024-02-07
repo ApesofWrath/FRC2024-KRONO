@@ -17,10 +17,10 @@ class climber : public frc2::SubsystemBase {
     void ClimberExtend();
 
     private:
-    rev::CANSparkMax m_climberMotor1;
-    rev::CANSparkMax m_climberMotor2;
+    rev::CANSparkMax m_climberMotorLeft;
+    rev::CANSparkMax m_climberMotorRight;
     //rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
-    rev:: SparkMaxPIDController m_climberMotor1Controller = m_climberMotor1.GetPIDController();
-    rev:: SparkMaxPIDController m_climberMotor2Controller = m_climberMotor2.GetPIDController();
+    rev:: SparkMaxPIDController m_climberMotorLeftController = m_climberMotorLeft.GetPIDController();
+    rev:: SparkMaxPIDController m_climberMotorRightController = m_climberMotorRight.GetPIDController();
 
 };

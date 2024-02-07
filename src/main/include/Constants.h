@@ -36,13 +36,19 @@ namespace controllerConstants {
 }
 
 namespace intakeConstants {
-    constexpr int kMotorRollerLeft = 20;
-    constexpr int kMotorRollerRight = 30;
+    constexpr int kIntakeMotorLeft = 0;
+    constexpr int kIntakeMotorRight = 0;
+    constexpr int kIntakeAnglingMotor = 0;
 }
 
 namespace shooterConstants {
-    constexpr int kMotorShooterLeft = 25;
-    constexpr int kMotorShooterRight = 35;
+    constexpr int kMotorShooterLeft = 0;
+    constexpr int kMotorShooterRight = 0;
+}
+
+namespace climberConstants {
+    constexpr int kMotorClimberLeft = 0;
+    constexpr int kMotorClimberRight = 0;
 }
 
 // Motor IDs, Encoder IDs, and Offsets for swervedrive

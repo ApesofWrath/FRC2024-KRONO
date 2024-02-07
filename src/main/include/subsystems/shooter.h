@@ -14,14 +14,17 @@ class shooter : public frc2::SubsystemBase {
     public:
     shooter();
     void ShooterToggle();
+    void ShooterOn();
+    void ShooterStop();
+    void ShooterIdle();
 
     private:
-    rev::CANSparkMax m_shooterMotor1;
-    rev::CANSparkMax m_shooterMotor2;
+    rev::CANSparkMax m_shooterMotorLeft;
+    rev::CANSparkMax m_shooterMotorRight;
     //rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
 
-    rev::SparkMaxPIDController m_shooterMotor1Controller = m_shooterMotor1.GetPIDController();
-    rev::SparkMaxPIDController m_shooterMotor2Controller = m_shooterMotor2.GetPIDController();
+    rev::SparkMaxPIDController m_shooterMotorLeftController = m_shooterMotorLeft.GetPIDController();
+    rev::SparkMaxPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();
     bool shooterOn = true;
 };
 
