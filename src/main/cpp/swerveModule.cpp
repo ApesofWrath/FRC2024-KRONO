@@ -56,8 +56,8 @@ swerveModule::swerveModule(const double module[])
     m_turnController.SetOutputRange(-1.0F, 1.0F);
 
     // Velocity values for the external turn encoder and the built in drive encoder
-    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * 3.141592653589 * ((14.0 / 50.0) * (10.0 / 60.0)));
-    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * 3.141592653589 * ((14.0 / 50.0) * (10.0 / 60.0))) / 60.0);
+    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * 3.141592653589 * (1/(250.0 / 7.0)));
+    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * 3.141592653589 * (1/(250.0 / 7.0))) / 60.0);
 
     m_encoderDrive.SetPositionConversionFactor(0.0508 * 2.0 * 3.141592653589 * ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0)));
     m_encoderDrive.SetVelocityConversionFactor(0.0508 * (2.0 * 3.141592653589 * ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0))) / 60.0);
@@ -85,9 +85,8 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     units::radians_per_second_t targetMotorSpeed{
         (targetWheelSpeed * units::radian_t(2*3.14159))
         / drivetrainConstants::calculations::kWheelCircumference};
-    
     m_driveController.SetReference(targetMotorSpeed.value(), rev::CANSparkMax::ControlType::kVelocity);
-    m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360.0);
+    m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
     frc::SmartDashboard::PutNumber("Target Wheel Speed", targetWheelSpeed.value());
@@ -122,7 +121,7 @@ frc::SwerveModuleState swerveModule::CustomOptimize(const frc::SwerveModuleState
 
     // frc::SmartDashboard::PutNumber("Desired Angle", optAngle.Degrees().value());
     // frc::SmartDashboard::PutNumber("Neo Encoder Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderTurnIntegrated.GetPosition());
-    // frc::SmartDashboard::PutNumber("Neo Encoder Vel " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetVelocity());
+    frc::SmartDashboard::PutNumber("Neo Encoder Vel " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetVelocity());
     // frc::SmartDashboard::PutNumber("Neo Encoder Drive Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetPosition());
     
     //frc::SmartDashboard::PutNumber("Motor " + std::to_string(m_motorTurn.GetDeviceID()) + " Desired Angle", m_motorTurn.GetClosedLoopTarget());

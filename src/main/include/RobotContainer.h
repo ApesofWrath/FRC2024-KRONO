@@ -20,6 +20,9 @@
 
 #include "Constants.h"
 #include "commands/Drivetrain/Drive.h"
+#include "commands/Drivetrain/ZeroGyro.h"
+#include "commands/Drivetrain/NormalSpeed.h"
+#include "commands/Drivetrain/SlowDown.h"
 #include "subsystems/drivetrain.h"
 #include "subsystems/intake.h"
 #include "subsystems/shooter.h"
@@ -31,7 +34,8 @@
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
-
+#include <pathplanner/lib/auto/NamedCommands.h>
+#include <memory>
 
 
 /**

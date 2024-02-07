@@ -3,14 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
-#include "commands/Drivetrain/ZeroGyro.h"
-#include "commands/Drivetrain/NormalSpeed.h"
-#include "commands/Drivetrain/SlowDown.h"
+
 
 RobotContainer::RobotContainer() {
 
   // Initialize all of your commands and subsystems here
-
+  pathplanner::NamedCommands::registerCommand("test", std::make_shared<frc2::PrintCommand>("This works :3"));
   // Configure the button bindings
   ConfigureButtonBindings();
 
@@ -24,6 +22,8 @@ RobotContainer::RobotContainer() {
     m_chooser.SetDefaultOption("DoNothing", "DoNothing");
     m_chooser.AddOption("3Note", "3Note");
     m_chooser.AddOption("4Note", "4Note");
+    m_chooser.AddOption("test", "test");
+    m_chooser.AddOption("path", "path");
 
     frc::SmartDashboard::PutData(&m_chooser);
     

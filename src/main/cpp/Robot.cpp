@@ -4,14 +4,7 @@
 
 #include "Robot.h"
 
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <frc2/command/CommandScheduler.h>
-#include "subsystems/drivetrain.h"
-#include <units/velocity.h>
-#include <units/angular_velocity.h>
-#include <frc/XboxController.h>
-#include <commands/Drivetrain/Drive.h>
-#include <frc/Joystick.h>
+
 
 
 void Robot::RobotInit() {
