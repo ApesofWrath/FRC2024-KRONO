@@ -13,8 +13,9 @@
 class climber : public frc2::SubsystemBase {
     public:
     climber();
-    void ClimberRetract();
-    void ClimberExtend();
+    // void ClimberRetract();
+    // void ClimberExtend();
+	void SetHeight(double height);
 
     private:
     rev::CANSparkMax m_climberMotorLeft;

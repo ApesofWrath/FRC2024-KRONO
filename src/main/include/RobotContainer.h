@@ -26,6 +26,7 @@
 #include "MathFunctions.h"
 #include "commands/IntakeToggle.h"
 #include "commands/ShooterToggle.h"
+#include "commands/SetClimber.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>

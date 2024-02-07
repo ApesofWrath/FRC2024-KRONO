@@ -22,10 +22,16 @@ m_climberMotorRight(climberConstants::kMotorClimberRight, rev::CANSparkMax::Moto
     m_climberMotorLeftController.SetOutputRange(-1.0F,1.0F);
 }
 
-void climber::ClimberExtend() {
-    m_climberMotorLeft.Set(0.3);
-}
+// void climber::ClimberExtend() {
+//     m_climberMotor1.Set(0.3);
+// }
 
-void climber::ClimberRetract() {
-    m_climberMotorLeft.Set(-0.3);
+// void climber::ClimberRetract() {
+//     m_climberMotor1.Set(-0.3);
+// }
+
+
+// Set height of climber
+void climber::SetHeight(double height){
+	m_climberMotorLeft.Set(height);
 }
