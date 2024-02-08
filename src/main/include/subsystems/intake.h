@@ -2,10 +2,13 @@
 
 #include <numbers>
 #include <units/length.h>
+#include <Constants.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <rev/CANSparkMax.h>
 #include <rev/SparkMaxPIDController.h>
-#include <Constants.h>
+#include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/controls/Follower.hpp>
+
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
@@ -19,12 +22,14 @@ class intake : public frc2::SubsystemBase {
     void IntakeIdle();
 
     private:
-    rev::CANSparkMax m_intakeMotorLeft;
-    rev::CANSparkMax m_intakeMotorRight;
+    //rev::CANSparkMax m_intakeMotorLeft;
+    //rev::CANSparkMax m_intakeMotorRight;
+    ctre::phoenix6::hardware::TalonFX m_intakeMotorLeft;
+    ctre::phoenix6::hardware::TalonFX m_intakeMotorRight;
     //rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
 
-    rev::SparkMaxPIDController m_intakeMotorLeftController = m_intakeMotorLeft.GetPIDController();
-    rev::SparkMaxPIDController m_intakeMotorRightController = m_intakeMotorRight.GetPIDController();
+    //rev::SparkMaxPIDController m_intakeMotorLeftController = m_intakeMotorLeft.GetPIDController();
+    //rev::SparkMaxPIDController m_intakeMotorRightController = m_intakeMotorRight.GetPIDController();
 
     bool intakeOn = true;
 };
