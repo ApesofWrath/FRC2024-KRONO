@@ -54,20 +54,20 @@ namespace climberConstants {
 // Motor IDs, Encoder IDs, and Offsets for swervedrive
 namespace drivetrainConstants {
     //CAN IDs
-    constexpr int kMotorDriveFrontRightID = 26;
-    constexpr int kMotorDriveRearRightID = 1;
-    constexpr int kMotorDriveFrontLeftID = 2;
-    constexpr int kMotorDriveRearLeftID = 3;
+    constexpr int kMotorDriveFrontRightID = 1;
+    constexpr int kMotorDriveRearRightID = 3;
+    constexpr int kMotorDriveFrontLeftID = 5;
+    constexpr int kMotorDriveRearLeftID = 7;
 
-    constexpr int kMotorTurnFrontRightID = 4;
-    constexpr int kMotorTurnRearRightID = 5;
+    constexpr int kMotorTurnFrontRightID = 2;
+    constexpr int kMotorTurnRearRightID = 4;
     constexpr int kMotorTurnFrontLeftID = 6;
-    constexpr int kMotorTurnRearLeftID = 7;
+    constexpr int kMotorTurnRearLeftID = 8;
 
-    constexpr int kEncoderTurnFrontRightID = 8;
-    constexpr int kEncoderTurnRearRightID = 9;
-    constexpr int kEncoderTurnFrontLeftID = 10;
-    constexpr int kEncoderTurnRearLeftID = 11;
+    constexpr int kEncoderTurnFrontRightID = 9;
+    constexpr int kEncoderTurnRearRightID = 10;
+    constexpr int kEncoderTurnFrontLeftID = 11;
+    constexpr int kEncoderTurnRearLeftID = 12;
 
     // Values for each swerve module object to use
     namespace swerveModules {
@@ -87,8 +87,8 @@ namespace drivetrainConstants {
 
     // Math constants and calculations to be used by swervedrive
     namespace calculations {
-        constexpr auto kFinalDriveRatio{8.14 * 360_deg};
-        constexpr auto kFinalTurnRatio{(14.0 / 50.0) * (10.0 / 60.0)};
+        constexpr auto kFinalDriveRatio{(14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0)};
+        constexpr auto kFinalTurnRatio{1 / (150 / 7)};
         constexpr units::length::meter_t kWheelCircumference = {2 * std::numbers::pi * 0.0508_m};
 
         constexpr auto kModuleMaxSpeed{3.81_mps};

@@ -56,11 +56,11 @@ swerveModule::swerveModule(const double module[])
     m_turnController.SetOutputRange(-1.0F, 1.0F);
 
     // Velocity values for the external turn encoder and the built in drive encoder
-    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * 3.141592653589 * (1/(250.0 / 7.0)));
-    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * 3.141592653589 * (1/(250.0 / 7.0))) / 60.0);
+    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * 3.141592653589 * (drivetrainConstants::calculations::kFinalTurnRatio));
+    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * 3.141592653589 * (drivetrainConstants::calculations::kFinalTurnRatio)) / 60.0);
 
-    m_encoderDrive.SetPositionConversionFactor(0.0508 * 2.0 * 3.141592653589 * ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0)));
-    m_encoderDrive.SetVelocityConversionFactor(0.0508 * (2.0 * 3.141592653589 * ((14.0 / 50.0) * (25.0 / 19.0) * (15.0 / 45.0))) / 60.0);
+    m_encoderDrive.SetPositionConversionFactor(0.0508 * 2.0 * 3.141592653589 * (drivetrainConstants::calculations::kFinalDriveRatio));
+    m_encoderDrive.SetVelocityConversionFactor(0.0508 * (2.0 * 3.141592653589 * (drivetrainConstants::calculations::kFinalDriveRatio)) / 60.0);
 }
 
 // Gets the position of the swerve module drive motor and turn motor

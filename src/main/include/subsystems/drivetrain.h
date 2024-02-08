@@ -54,10 +54,10 @@ private:
   AHRS m_navX{frc::SerialPort::kMXP};
   
   // Swervedrive dimensions
-  frc::Translation2d m_locationFrontRight{+14_in, -14_in};
-  frc::Translation2d m_locationRearRight{-14_in, -14_in};
-  frc::Translation2d m_locationFrontLeft{+14_in, +14_in};
-  frc::Translation2d m_locationRearLeft{-14_in, +14_in};
+  frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in};
+  frc::Translation2d m_locationRearRight{-9.875_in, -9.875_in};
+  frc::Translation2d m_locationFrontLeft{+9.875_in, +9.875_in};
+  frc::Translation2d m_locationRearLeft{-9.875_in, +9.875_in};
 
   // Creates new objects for each swerve module
   swerveModule m_frontRight{drivetrainConstants::swerveModules::kModuleFrontRight};

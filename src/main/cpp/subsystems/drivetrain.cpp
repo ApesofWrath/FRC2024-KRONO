@@ -54,18 +54,6 @@ void drivetrain::normalSpeed() {
     printf("Normal Func");
 }
 
-void drivetrain::driveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds) {
-    frc::ChassisSpeeds targetSpeeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 0.2_s);
-    auto targetStates = m_kinematics.ToSwerveModuleStates(targetSpeeds);
-
-    auto [frontRight, rearRight, frontLeft, rearLeft] = targetStates;
-    m_frontRight.SetDesiredState(frontRight);
-    m_rearRight.SetDesiredState(rearRight);
-    m_frontLeft.SetDesiredState(frontLeft);
-    m_rearLeft.SetDesiredState(rearLeft);
-
-}
-
 // Sets Desired States of the swerve modules for swervedrive
 void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
                              units::meters_per_second_t ySpeed,
