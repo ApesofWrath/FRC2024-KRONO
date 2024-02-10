@@ -6,9 +6,9 @@
   "autoFolders": [
     "Choreo Autos"
   ],
-  "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 3.0,
-  "defaultMaxAngVel": 540.0,
-  "defaultMaxAngAccel": 720.0,
+  "defaultMaxVel": 3.81,
+  "defaultMaxAccel": 3.81,
+  "defaultMaxAngVel": 360.0,
+  "defaultMaxAngAccel": 1440.0,
   "maxModuleSpeed": 4.5
 }

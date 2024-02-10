@@ -17,8 +17,8 @@ drivetrain::drivetrain() {
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
             PIDConstants(5.5, 0.0, 0.0), // Translation PID constants
             PIDConstants(3.5, 0.0, 0.0), // Rotation PID constants
-            3.81_mps, // Max module speed, in m/s
-            0.5_m, // Drive base radius in meters. Distance from robot center to furthest module.
+            units::meters_per_second_t(drivetrainConstants::calculations::kModuleMaxSpeed), // Max module speed, in m/s
+            units::meter_t(9.875_in), // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         []() {

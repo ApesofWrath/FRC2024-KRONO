@@ -18,6 +18,7 @@ RobotContainer::RobotContainer() {
     [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetX()), controllerConstants::kControllerCurve)); },
     [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetY()), controllerConstants::kControllerCurve)); },
     [this] { return (-m_controllerMain.GetRawAxis(4)); }));
+  
 
     m_chooser.SetDefaultOption("DoNothing", "DoNothing");
     m_chooser.AddOption("3Note", "3Note");

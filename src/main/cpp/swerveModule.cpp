@@ -56,11 +56,11 @@ swerveModule::swerveModule(const double module[])
     m_turnController.SetOutputRange(-1.0F, 1.0F);
 
     // Velocity values for the external turn encoder and the built in drive encoder
-    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * 3.141592653589 * (drivetrainConstants::calculations::kFinalTurnRatio));
-    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * 3.141592653589 * (drivetrainConstants::calculations::kFinalTurnRatio)) / 60.0);
+    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * std::numbers::pi * (drivetrainConstants::calculations::kFinalTurnRatio));
+    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * std::numbers::pi * (drivetrainConstants::calculations::kFinalTurnRatio)) / 60.0);
 
-    m_encoderDrive.SetPositionConversionFactor(0.0508 * 2.0 * 3.141592653589 * (drivetrainConstants::calculations::kFinalDriveRatio));
-    m_encoderDrive.SetVelocityConversionFactor(0.0508 * (2.0 * 3.141592653589 * (drivetrainConstants::calculations::kFinalDriveRatio)) / 60.0);
+    m_encoderDrive.SetPositionConversionFactor(drivetrainConstants::calculations::kWheelDiameter.value() * 2.0 * std::numbers::pi * (drivetrainConstants::calculations::kFinalDriveRatio));
+    m_encoderDrive.SetVelocityConversionFactor(drivetrainConstants::calculations::kWheelDiameter.value() * (2.0 * std::numbers::pi * (drivetrainConstants::calculations::kFinalDriveRatio)) / 60.0);
 }
 
 // Gets the position of the swerve module drive motor and turn motor
@@ -121,7 +121,7 @@ frc::SwerveModuleState swerveModule::CustomOptimize(const frc::SwerveModuleState
 
     // frc::SmartDashboard::PutNumber("Desired Angle", optAngle.Degrees().value());
     // frc::SmartDashboard::PutNumber("Neo Encoder Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderTurnIntegrated.GetPosition());
-    frc::SmartDashboard::PutNumber("Neo Encoder Vel " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetVelocity());
+    //frc::SmartDashboard::PutNumber("Neo Encoder Vel " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetVelocity());
     // frc::SmartDashboard::PutNumber("Neo Encoder Drive Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetPosition());
     
     //frc::SmartDashboard::PutNumber("Motor " + std::to_string(m_motorTurn.GetDeviceID()) + " Desired Angle", m_motorTurn.GetClosedLoopTarget());

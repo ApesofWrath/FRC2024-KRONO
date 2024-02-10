@@ -5,16 +5,10 @@ intake::intake()
 : m_intakeMotorLeft(intakeConstants::kIntakeMotorLeft),
 m_intakeMotorRight(intakeConstants::kIntakeMotorRight){
 
+    
     m_intakeMotorRight.SetControl(ctre::phoenix6::controls::Follower(intakeConstants::kIntakeMotorLeft, true));
 
-    ctre::phoenix6::configs::MotorOutputConfigs motorOutputConfigs{};
-    ctre::phoenix6::configs::CurrentLimitsConfigs currentLimitsConfigs{};
-    ctre::phoenix6::configs::Slot0Configs slotZeroConfigs{};
-
-
     motorOutputConfigs.WithNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Coast);
-    motorOutputConfigs.WithPeakForwardDutyCycle(1.0);
-    motorOutputConfigs.WithPeakReverseDutyCycle(-1.0);
     currentLimitsConfigs.WithStatorCurrentLimitEnable(true);
     currentLimitsConfigs.WithStatorCurrentLimit(40.0);
     slotZeroConfigs.WithKP(0.0);
@@ -27,26 +21,30 @@ m_intakeMotorRight(intakeConstants::kIntakeMotorRight){
     m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
     m_intakeMotorRight.GetConfigurator().Apply(slotZeroConfigs);
 
+    m_velocity.WithSlot(0);
+    m_velocity.WithEnableFOC(false);
+
 }
 
-void intake::IntakeToggle(){
-    if (intakeOn == true){
-        m_intakeMotorLeft.Set(0.2);
+void intake::IntakeToggle() {
+    if (currentIntakeSpeedState == IntakeSpeedStates::OFF){
+        currentIntakeSpeedState == IntakeSpeedStates::ON;
     }
-    else if (intakeOn == false){
-        m_intakeMotorLeft.Set(0.0);
+    else if (currentIntakeSpeedState == IntakeSpeedStates::ON){
+        currentIntakeSpeedState == IntakeSpeedStates::OFF;
     }
-    intakeOn = !intakeOn;
 }
 
-void intake::IntakeOn() {
-
-}
-
-void intake::IntakeStop() {
-
-}
-
-void intake::IntakeIdle() {
-    
+void intake::Periodic() {
+    switch (currentIntakeSpeedState) {
+        case IntakeSpeedStates::OFF:
+            m_intakeMotorLeft.SetControl(m_velocity.WithVelocity(0_tps));
+            break;
+        case IntakeSpeedStates::IDLE:
+            m_intakeMotorLeft.SetControl(m_velocity.WithVelocity(2.5_tps));
+            break;
+        case IntakeSpeedStates::ON:
+            m_intakeMotorLeft.SetControl(m_velocity.WithVelocity(10.0_tps));
+            break;
+    }
 }

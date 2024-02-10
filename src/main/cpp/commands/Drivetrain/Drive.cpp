@@ -20,9 +20,9 @@ void Drive::Initialize() { printf("Drive initialized.\n"); } // print debug mess
 
 void Drive::Execute() { // on command call (button press)
   m_drivetrain->SwerveDrive( // make m_drivetrain point to SwerveDrive function while passing the below values
-                            -m_ySpeedLimiter.Calculate(frc::ApplyDeadband((m_ySpeed() * m_drivetrain->kslowConst), 0.08))*drivetrainConstants::calculations::kChassisMaxSpeed, // ??
-                            -m_xSpeedLimiter.Calculate(frc::ApplyDeadband((m_xSpeed() * m_drivetrain->kslowConst), 0.08))*drivetrainConstants::calculations::kChassisMaxSpeed, // ??
-                            -m_zRotationLimiter.Calculate(frc::ApplyDeadband((m_zRotation() * m_drivetrain->kslowConst), 0.20))*drivetrainConstants::calculations::kModuleMaxAngularVelocity, true); // ??
+                            -m_ySpeedLimiter.Calculate(frc::ApplyDeadband((m_ySpeed() * m_drivetrain->kslowConst), 0.08)) * drivetrainConstants::calculations::kChassisMaxSpeed, // ??
+                            -m_xSpeedLimiter.Calculate(frc::ApplyDeadband((m_xSpeed() * m_drivetrain->kslowConst), 0.08)) * drivetrainConstants::calculations::kChassisMaxSpeed, // ??
+                            -m_zRotationLimiter.Calculate(frc::ApplyDeadband((m_zRotation() * m_drivetrain->kslowConst), 0.20)) * drivetrainConstants::calculations::kModuleMaxAngularVelocity, true); // ??
 }
 
 void Drive::End(bool interrupted) { printf("**Drive has been interrupted!**\n"); } // print debug message on end when it is inturrupted
