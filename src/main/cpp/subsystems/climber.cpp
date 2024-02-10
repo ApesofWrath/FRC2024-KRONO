@@ -13,8 +13,6 @@ m_climberMotorRight(kMotorClimberRight, rev::CANSparkMax::MotorType::kBrushless)
     m_climberMotorLeft.SetSmartCurrentLimit(40.0);
     m_climberMotorRight.SetSmartCurrentLimit(40.0);
 
-    m_climberMotorRight.Follow(m_climberMotorLeft, true);
-
     m_climberMotorLeftController.SetP(0);
     m_climberMotorLeftController.SetI(0);
     m_climberMotorLeftController.SetD(0);
@@ -23,6 +21,17 @@ m_climberMotorRight(kMotorClimberRight, rev::CANSparkMax::MotorType::kBrushless)
 
     m_climberMotorLeftEncoder.SetPositionConversionFactor((1 / kRotationsToInchTelescoping) * (kTelescopingRatio));
     m_climberMotorLeftEncoder.SetVelocityConversionFactor(((1 / kRotationsToInchTelescoping) * (kTelescopingRatio)) / 60);
+
+    m_climberMotorRightController.SetP(0);
+    m_climberMotorRightController.SetI(0);
+    m_climberMotorRightController.SetD(0);
+    m_climberMotorRightController.SetFF(0);
+    m_climberMotorRightController.SetOutputRange(-1.0F,1.0F);
+
+    m_climberMotorRightEncoder.SetPositionConversionFactor((1 / kRotationsToInchTelescoping) * (kTelescopingRatio));
+    m_climberMotorRightEncoder.SetVelocityConversionFactor(((1 / kRotationsToInchTelescoping) * (kTelescopingRatio)) / 60);
+
+    m_climberMotorRight.Follow(m_climberMotorLeft, true);
 }
 
 // Climber state machene (toggle and explicit set)

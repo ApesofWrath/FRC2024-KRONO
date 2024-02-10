@@ -61,6 +61,10 @@ m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless){
     m_rotationMotorController.SetD(0);
     m_rotationMotorController.SetFF(0);
     m_rotationMotorController.SetOutputRange(-1.0F, 1.0F);
+    m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
+
+    m_rotationEncoder.SetPositionConversionFactor(360);
+    m_rotationEncoder.SetVelocityConversionFactor(360 / 60);
 }
 
 void intakeshooter::intakeActivate() {
@@ -79,17 +83,28 @@ void intakeshooter::fireAMP() {
 }
 
 void intakeshooter::Periodic() {
-    // intakeshooter state machene
+    // intakeshooter state machine
     switch (currentIntakeshooterState) {
         case intakeshooterStates::IDLE:
+            m_intakeMotorLeft.SetControl(m_velocityIntake(2.5_tps)); // set the speed of the intake motor
+            m_shooterMotorLeft.SetReference(240, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
+            m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kPosition); // set the angle 
             break;
-        case intakeshooterStates::INTAKEING:
+        case intakeshooterStates::INTAKING:
+            m_intakeMotorLeft.SetControl(m_velocityIntake(7.5_tps)); // set the speed of the intake motor (TODO: tune speed)
+            m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
             break;
         case intakeshooterStates::HOLDING:
+            m_intakeMotorLeft.SetControl(m_velocityIntake(0_tps)); // set the speed of the intake motor
+            m_rotationMotorController.SetReference(15, rev::CANSparkMax::ControlType::kPosition); // set the angle
             break;
         case intakeshooterStates::SPINUP:
+            m_shooterMotorLeft.SetReference(1000, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (TODO: trial and error with rpm)
+            m_rotationMotorController.SetReference((currentShootTarget == shootTarget::AMP ? 30 : 40), rev::CANSparkMax::ControlType::kPosition); // set the angle depending on firing mode
             break;
         case intakeshooterStates::FIRE:
+            m_intakeMotorLeft.SetControl(m_velocityIntake(7.5_tps)); // set the speed of the intake motor (TODO: tune speed)
+            m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
             break;
     }
 }
