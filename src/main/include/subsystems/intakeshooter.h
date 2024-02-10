@@ -3,6 +3,7 @@
 #include <numbers>
 #include <string>
 #include <iostream>
+#include <vector>
 #include <units/length.h>
 #include <Constants.h>
 #include <rev/SparkRelativeEncoder.h>
@@ -49,9 +50,9 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::CANSparkMax m_shooterMotorRight;
     rev::CANSparkMax m_rotationMotor;
 
-    rev::CANPIDController m_shooterMotorLeftController = m_shooterMotorLeft.GetPIDController();
-    rev::CANPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();
-    rev::CANPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
+    rev::SparkPIDController m_shooterMotorLeftController = m_shooterMotorLeft.GetPIDController();
+    rev::SparkPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();
+    rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
     intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
     shootTarget currentShootTarget = shootTarget::AMP;
