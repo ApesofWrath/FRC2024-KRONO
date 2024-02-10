@@ -38,7 +38,11 @@ namespace controllerConstants {
 namespace intakeConstants {
     constexpr int kIntakeMotorLeft = 0;
     constexpr int kIntakeMotorRight = 0;
-    constexpr int kIntakeAnglingMotor = 0;
+    constexpr int kIntakeRotationMotor = 0;
+    constexpr auto kRotationGearRatio = 0;
+    const auto OFF_SPEED = 0.0_tps;
+    const auto IDLE_SPEED = 2.5_tps;
+    const auto ON_SPEED = 10.0_tps;
 }
 
 namespace shooterConstants {
@@ -49,6 +53,11 @@ namespace shooterConstants {
 namespace climberConstants {
     constexpr int kMotorClimberLeft = 0;
     constexpr int kMotorClimberRight = 0;
+    constexpr double kTelescopingRatio = 1 / 20;
+    constexpr double kRotationsToInchTelescoping = 0.75 * std::numbers::pi;
+    const double kClimberUnextendedHeight = 0.0;
+    const double kClimberExtendedHeight = 2.0;
+
 }
 
 // Motor IDs, Encoder IDs, and Offsets for swervedrive
