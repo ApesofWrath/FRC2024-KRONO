@@ -3,7 +3,6 @@
 #include <numbers>
 #include <string>
 #include <iostream>
-#include <vector>
 #include <units/length.h>
 #include <Constants.h>
 #include <rev/SparkRelativeEncoder.h>
