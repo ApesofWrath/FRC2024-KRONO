@@ -45,9 +45,33 @@ m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless){
     }
 }
 
-void intakeshooter::IntakeToggle() {
-    
+void intakeshooter::intakeActivate() {
+    currentIntakeshooterState = intakeshooterStates::IDLE;
+}
+void intakeshooter::spinup() {
+    currentIntakeshooterState = intakeshooterStates::SPINUP;
+}
+void intakeshooter::fireSPEAKER() {
+    currentShootTarget = shootTarget::SPEAKER;
+    currentIntakeshooterState = intakeshooterStates::FIRE;
+}
+void intakeshooter::fireAMP() {
+    currentShootTarget = shootTarget::AMP;
+    currentIntakeshooterState = intakeshooterStates::FIRE;
 }
 
 void intakeshooter::Periodic() {
+    // intakeshooter state machene
+    switch (currentIntakeshooterState) {
+        case intakeshooterStates::IDLE:
+            break;
+        case intakeshooterStates::INTAKEING:
+            break;
+        case intakeshooterStates::HOLDING:
+            break;
+        case intakeshooterStates::SPINUP:
+            break;
+        case intakeshooterStates::FIRE:
+            break;
+    }
 }

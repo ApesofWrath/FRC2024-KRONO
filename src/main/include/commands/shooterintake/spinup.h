@@ -5,9 +5,9 @@
 
 #include "subsystems/intakeshooter.h"
 
-class IntakeToggle : public frc2::CommandHelper<frc2::Command, IntakeToggle> {
+class spinup : public frc2::CommandHelper<frc2::Command, spinup> {
     public:
-    explicit IntakeToggle(intakeshooter* intake);
+    explicit spinup(intakeshooter* intake);
 
     void Initialize() override;
 

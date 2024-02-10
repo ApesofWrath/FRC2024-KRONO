@@ -17,14 +17,22 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     IDLE, // default state, wheels (except feeder) spinning slowly
     INTAKEING, // enter on intake button, intake angles down & spins wheels
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
-    SPINUP, // enter on fire button press, firing wheels go to max speed
-    FIRE // enter on firing wheels reaching max velocity, feed note to shooter wheels, go to idlewhen note gone
+    SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
+    FIRE // enter fire button, feed note to shooter wheels, go to idle when note gone
+};
+
+enum class shootTarget { // set this based off of which `fire` button is pressed
+    AMP, // angle the shooter to be able to go for the amp
+    SPEAKER // angle the shooter to be able to go for the shooter
 };
 
 class intakeshooter : public frc2::SubsystemBase {
     public:
     intakeshooter();
-    void IntakeToggle();
+    void intakeActivate();
+    void spinup();
+    void fireSPEAKER();
+    void fireAMP();
 
     void Periodic() override;
     private:
@@ -46,4 +54,5 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::CANPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
     intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
+    shootTarget currentShootTarget = shootTarget::AMP;
 };
