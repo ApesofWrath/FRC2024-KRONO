@@ -1,6 +1,6 @@
 #include "commands/IntakeToggle.h" // relevent header file
 
-IntakeToggle::IntakeToggle(intake* intake) : m_intake{intake} { // constructor for command class
+IntakeToggle::IntakeToggle(intakeshooter* intake) : m_intake{intake} { // constructor for command class
     SetName("IntakeToggle"); // set the ?? name
     AddRequirements({m_intake}); // require the m_drivetrain pointer
 }

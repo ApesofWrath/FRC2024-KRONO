@@ -24,11 +24,9 @@
 #include "commands/Drivetrain/NormalSpeed.h"
 #include "commands/Drivetrain/SlowDown.h"
 #include "subsystems/drivetrain.h"
-#include "subsystems/intake.h"
-#include "subsystems/shooter.h"
+#include "subsystems/intakeshooter.h"
 #include "MathFunctions.h"
 #include "commands/IntakeToggle.h"
-#include "commands/ShooterToggle.h"
 #include "commands/SetClimber.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
@@ -53,8 +51,7 @@ class RobotContainer {
  private:
   // The robot's subsystems and commands are defined here...
   drivetrain m_drivetrain;
-  intake m_intake;
-  shooter m_shooter;
+  intakeshooter m_intakeshooter;
 
   frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();

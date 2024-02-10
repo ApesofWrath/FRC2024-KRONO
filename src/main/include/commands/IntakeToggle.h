@@ -3,11 +3,11 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "subsystems/intake.h"
+#include "subsystems/intakeshooter.h"
 
 class IntakeToggle : public frc2::CommandHelper<frc2::Command, IntakeToggle> {
     public:
-    explicit IntakeToggle(intake* intake);
+    explicit IntakeToggle(intakeshooter* intake);
 
     void Initialize() override;
 
@@ -16,5 +16,5 @@ class IntakeToggle : public frc2::CommandHelper<frc2::Command, IntakeToggle> {
     bool IsFinished() override;
 
     private:
-    intake* m_intake;
+    intakeshooter* m_intake;
 };
