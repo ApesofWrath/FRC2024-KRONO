@@ -33,7 +33,6 @@ RobotContainer::RobotContainer() {
 // All the button commands are set in this function
 void RobotContainer::ConfigureButtonBindings() {
 
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(IntakeToggle(&m_intakeshooter).ToPtr());
   // Zeroing for swervedrive command
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kStart).OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
 

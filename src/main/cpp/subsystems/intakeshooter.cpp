@@ -2,6 +2,7 @@
 #include "subsystems/intakeshooter.h"
 using namespace shooterConstants;
 using namespace intakeConstants;
+using namespace generalConstants;
 
 intakeshooter::intakeshooter()
 : m_intakeMotorLeft(kIntakeMotorLeft),
@@ -63,8 +64,8 @@ m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless){
     m_rotationMotorController.SetOutputRange(-1.0F, 1.0F);
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
 
-    m_rotationEncoder.SetPositionConversionFactor(360);
-    m_rotationEncoder.SetVelocityConversionFactor(360 / 60);
+    m_rotationEncoder.SetPositionConversionFactor(rotationsToDegrees);
+    m_rotationEncoder.SetVelocityConversionFactor(rotationsToDegrees / 60);
 }
 
 void intakeshooter::intakeActivate() {

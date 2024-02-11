@@ -1,5 +1,4 @@
 #pragma once
-
 #include <units/angular_velocity.h>
 #include <units/length.h>
 #include <units/time.h>
@@ -12,6 +11,9 @@
  * Place constants into subsystem/command -specific NAMESPACES within this
  * header, which can then be included (where they are needed).
  */
+namespace generalConstants {
+    constexpr double rotationsToDegrees = 360.0;
+}
 namespace visionConstants {
     //How fast the robot attempts to correct its self
     constexpr double errorMultiplier = -0.025;

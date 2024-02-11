@@ -4,6 +4,8 @@
 #include <iostream>
 #include <numbers>
 #include <frc/geometry/Rotation2d.h>
+using namespace drivetrainConstants::calculations;
+using namespace generalConstants;
 
 // Constructor for creating and configuring the swerve module motors
 swerveModule::swerveModule(const double module[]) 
@@ -56,37 +58,37 @@ swerveModule::swerveModule(const double module[])
     m_turnController.SetOutputRange(-1.0F, 1.0F);
 
     // Velocity values for the external turn encoder and the built in drive encoder
-    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * std::numbers::pi * (drivetrainConstants::calculations::kFinalTurnRatio));
-    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * std::numbers::pi * (drivetrainConstants::calculations::kFinalTurnRatio)) / 60.0);
+    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * std::numbers::pi * (kFinalTurnRatio));
+    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * std::numbers::pi * (kFinalTurnRatio)) / 60.0);
 
-    m_encoderDrive.SetPositionConversionFactor(drivetrainConstants::calculations::kWheelDiameter.value() * 2.0 * std::numbers::pi * (drivetrainConstants::calculations::kFinalDriveRatio));
-    m_encoderDrive.SetVelocityConversionFactor(drivetrainConstants::calculations::kWheelDiameter.value() * (2.0 * std::numbers::pi * (drivetrainConstants::calculations::kFinalDriveRatio)) / 60.0);
+    m_encoderDrive.SetPositionConversionFactor(kWheelDiameter.value() * 2.0 * std::numbers::pi * (kFinalDriveRatio));
+    m_encoderDrive.SetVelocityConversionFactor(kWheelDiameter.value() * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
 }
 
 // Gets the position of the swerve module drive motor and turn motor
 frc::SwerveModulePosition swerveModule::GetPosition() {
-    return {units::meter_t{m_encoderDrive.GetPosition()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360.0}))};
+    return {units::meter_t{m_encoderDrive.GetPosition()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees}))};
 }
 
 frc::SwerveModuleState swerveModule::GetState() {
-    return {units::meters_per_second_t{m_encoderDrive.GetVelocity()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360.0}))};
+    return {units::meters_per_second_t{m_encoderDrive.GetVelocity()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees}))};
 }
 
 // Applies the wanted speed and direction to the turn and drive motors
 void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
     const auto state = CustomOptimize(
-        referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360.0));
+        referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees));
     //This returns the position in +-Cancoder units counting forever, as opposed to absolulte -180 to +180 deg.
 
     const auto targetWheelSpeed{state.speed};
     m_targetAngle = state.angle.Degrees().value();
-    const double turnOutput = m_targetAngle; // (4096.0/360.0)
+    const double turnOutput = m_targetAngle;
 
     units::radians_per_second_t targetMotorSpeed{
-        (targetWheelSpeed * units::radian_t(2*3.14159))
-        / drivetrainConstants::calculations::kWheelCircumference};
+        (targetWheelSpeed * units::radian_t(2 * std::numbers::pi))
+        / kWheelCircumference};
     m_driveController.SetReference(targetMotorSpeed.value(), rev::CANSparkMax::ControlType::kVelocity);
-    m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360);
+    m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
     frc::SmartDashboard::PutNumber("Target Wheel Speed", targetWheelSpeed.value());
@@ -134,7 +136,7 @@ frc::SwerveModuleState swerveModule::CustomOptimize(const frc::SwerveModuleState
 double swerveModule::DashboardInfo(const DataType& type) {
     switch(type) {
         case DataType::kCurrentAngle :
-            return {units::degree_t(frc::AngleModulus(units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * 360.0))).value()};
+            return {units::degree_t(frc::AngleModulus(units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees))).value()};
         case DataType::kTargetAngle :
             return {m_targetAngle};
         default :
