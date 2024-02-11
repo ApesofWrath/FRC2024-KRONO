@@ -68,7 +68,7 @@ m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless){
 }
 
 void intakeshooter::intakeActivate() {
-    currentIntakeshooterState = intakeshooterStates::IDLE;
+    currentIntakeshooterState = intakeshooterStates::INTAKING;
 }
 void intakeshooter::spinup() {
     currentIntakeshooterState = intakeshooterStates::SPINUP;
