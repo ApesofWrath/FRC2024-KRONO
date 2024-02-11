@@ -26,8 +26,8 @@ m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless){
     m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
     m_intakeMotorRight.GetConfigurator().Apply(slotZeroConfigs);
 
-    m_velocity.WithSlot(0);
-    m_velocity.WithEnableFOC(false);
+    m_velocityIntake.WithSlot(0);
+    m_velocityIntake.WithEnableFOC(false);
 
     //Neos
     m_shooterMotorLeft.RestoreFactoryDefaults();
