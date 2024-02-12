@@ -12,7 +12,7 @@
  * header, which can then be included (where they are needed).
  */
 namespace generalConstants {
-    constexpr double rotationsToDegrees = 360.0;
+    constexpr double kRotationsToDegrees = 360.0;
 }
 namespace visionConstants {
     //How fast the robot attempts to correct its self

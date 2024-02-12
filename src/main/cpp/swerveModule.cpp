@@ -67,17 +67,17 @@ swerveModule::swerveModule(const double module[])
 
 // Gets the position of the swerve module drive motor and turn motor
 frc::SwerveModulePosition swerveModule::GetPosition() {
-    return {units::meter_t{m_encoderDrive.GetPosition()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees}))};
+    return {units::meter_t{m_encoderDrive.GetPosition()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees}))};
 }
 
 frc::SwerveModuleState swerveModule::GetState() {
-    return {units::meters_per_second_t{m_encoderDrive.GetVelocity()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees}))};
+    return {units::meters_per_second_t{m_encoderDrive.GetVelocity()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees}))};
 }
 
 // Applies the wanted speed and direction to the turn and drive motors
 void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
     const auto state = CustomOptimize(
-        referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees));
+        referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees));
     //This returns the position in +-Cancoder units counting forever, as opposed to absolulte -180 to +180 deg.
 
     const auto targetWheelSpeed{state.speed};
@@ -88,7 +88,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
         (targetWheelSpeed * units::radian_t(2 * std::numbers::pi))
         / kWheelCircumference};
     m_driveController.SetReference(targetMotorSpeed.value(), rev::CANSparkMax::ControlType::kVelocity);
-    m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees);
+    m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
     frc::SmartDashboard::PutNumber("Target Wheel Speed", targetWheelSpeed.value());
@@ -136,7 +136,7 @@ frc::SwerveModuleState swerveModule::CustomOptimize(const frc::SwerveModuleState
 double swerveModule::DashboardInfo(const DataType& type) {
     switch(type) {
         case DataType::kCurrentAngle :
-            return {units::degree_t(frc::AngleModulus(units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * rotationsToDegrees))).value()};
+            return {units::degree_t(frc::AngleModulus(units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees))).value()};
         case DataType::kTargetAngle :
             return {m_targetAngle};
         default :
