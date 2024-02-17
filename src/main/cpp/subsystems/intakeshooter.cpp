@@ -92,12 +92,12 @@ void intakeshooter::Periodic() {
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(2.5_tps)); // set the speed of the intake motor
             m_shooterMotorLeftController.SetReference(0.25, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kPosition); // set the angle 
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding
             break;
         case intakeshooterStates::INTAKING:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(7.5_tps)); // set the speed of the intake motor (TODO: tune speed)
             m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::HOLDING : intakeshooterStates::INTAKING; // if the canifier's limit forward input is tripped, switch to holding
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::INTAKING; // if the canifier's limit forward input is tripped, switch to holding
             break;
         case intakeshooterStates::HOLDING:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0.0_tps)); // set the speed of the intake motor
@@ -110,7 +110,7 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::FIRE: //in the hole
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1.0_tps)); // set the speed of the intake motor (TODO: tune speed)
             m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::IDLE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to idle
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to idle
             break;
     }
 }
