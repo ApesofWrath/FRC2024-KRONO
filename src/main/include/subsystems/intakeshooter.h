@@ -10,6 +10,7 @@
 #include <rev/CANSparkMax.h>
 #include <rev/SparkMaxPIDController.h>
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix/CANifier.h>
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
@@ -46,10 +47,12 @@ class intakeshooter : public frc2::SubsystemBase {
 
     ctre::phoenix6::controls::VelocityDutyCycle m_velocityIntake{0_tps};
 
+    ctre::phoenix::CANifier m_BeambreakCanifier;
+
     rev::CANSparkMax m_shooterMotorLeft;
     rev::CANSparkMax m_shooterMotorRight;
     rev::CANSparkMax m_rotationMotor;
-    rev::SparkMaxAlternateEncoder m_rotationEncoder = m_rotationMotor.GetAlternateEncoder(rev::CANEncoder::AlternateEncoderType::kQuadrature, 8192);
+    rev::SparkMaxAlternateEncoder m_rotationEncoder = m_rotationMotor.GetAlternateEncoder(rev::SparkMaxAlternateEncoder::AlternateEncoderType::kQuadrature, 8192);
 
     rev::SparkPIDController m_shooterMotorLeftController = m_shooterMotorLeft.GetPIDController();
     rev::SparkPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();

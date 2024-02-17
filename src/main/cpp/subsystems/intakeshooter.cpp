@@ -9,7 +9,9 @@ intakeshooter::intakeshooter()
 m_intakeMotorRight(kIntakeMotorRight),
 m_shooterMotorLeft(kMotorShooterLeft, rev::CANSparkMax::MotorType::kBrushless),
 m_shooterMotorRight(kMotorShooterRight, rev::CANSparkMax::MotorType::kBrushless),
-m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless){
+m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless),
+m_BeambreakCanifierIntake(kBeambreakCanifier)
+{
 
     //Krakens
     m_intakeMotorRight.SetControl(ctre::phoenix6::controls::Follower(kIntakeMotorLeft, true));
@@ -64,8 +66,8 @@ m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless){
     m_rotationMotorController.SetOutputRange(-1.0F, 1.0F);
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
 
-    m_rotationEncoder.SetPositionConversionFactor(rotationsToDegrees);
-    m_rotationEncoder.SetVelocityConversionFactor(rotationsToDegrees / 60);
+    m_rotationEncoder.SetPositionConversionFactor(kRotationsToDegrees);
+    m_rotationEncoder.SetVelocityConversionFactor(kRotationsToDegrees / 60);
 }
 
 void intakeshooter::intakeActivate() {
@@ -87,25 +89,34 @@ void intakeshooter::Periodic() {
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
         case intakeshooterStates::IDLE:
-            m_intakeMotorLeft.SetControl(m_velocityIntake(2.5_tps)); // set the speed of the intake motor
-            m_shooterMotorLeft.SetReference(240, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(2.5_tps)); // set the speed of the intake motor
+            m_shooterMotorLeftController.SetReference(0.25, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kPosition); // set the angle 
+            if (m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF)) {
+                currentIntakeshooterState = intakeshooterStates::HOLDING;
+            }
             break;
         case intakeshooterStates::INTAKING:
-            m_intakeMotorLeft.SetControl(m_velocityIntake(7.5_tps)); // set the speed of the intake motor (TODO: tune speed)
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(7.5_tps)); // set the speed of the intake motor (TODO: tune speed)
             m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
+            if (m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF)) {
+                currentIntakeshooterState = intakeshooterStates::HOLDING;
+            }
             break;
         case intakeshooterStates::HOLDING:
-            m_intakeMotorLeft.SetControl(m_velocityIntake(0_tps)); // set the speed of the intake motor
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0.0_tps)); // set the speed of the intake motor
             m_rotationMotorController.SetReference(15, rev::CANSparkMax::ControlType::kPosition); // set the angle
             break;
         case intakeshooterStates::SPINUP:
-            m_shooterMotorLeft.SetReference(1000, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (TODO: trial and error with rpm)
+            m_shooterMotorLeftController.SetReference(1.0, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (TODO: trial and error with rpm)
             m_rotationMotorController.SetReference((currentShootTarget == shootTarget::AMP ? 30 : 40), rev::CANSparkMax::ControlType::kPosition); // set the angle depending on firing mode
             break;
-        case intakeshooterStates::FIRE:
-            m_intakeMotorLeft.SetControl(m_velocityIntake(7.5_tps)); // set the speed of the intake motor (TODO: tune speed)
+        case intakeshooterStates::FIRE: //in the hole
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1.0_tps)); // set the speed of the intake motor (TODO: tune speed)
             m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
+            if (m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR)) {
+                currentIntakeshooterState = intakeshooterStates::IDLE;
+            }
             break;
     }
 }

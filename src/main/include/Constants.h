@@ -38,23 +38,23 @@ namespace controllerConstants {
 }
 
 namespace intakeConstants {
-    constexpr int kIntakeMotorLeft = 0;
-    constexpr int kIntakeMotorRight = 0;
-    constexpr int kIntakeRotationMotor = 0;
-    constexpr auto kRotationGearRatio = 0;
+    constexpr int kIntakeMotorLeft = 13;
+    constexpr int kIntakeMotorRight = 14;
+    constexpr int kIntakeRotationMotor = 15;
     const auto OFF_SPEED = 0.0_tps;
     const auto IDLE_SPEED = 2.5_tps;
     const auto ON_SPEED = 10.0_tps;
+    constexpr int kBeambreakCanifier = 18;
 }
 
 namespace shooterConstants {
-    constexpr int kMotorShooterLeft = 0;
-    constexpr int kMotorShooterRight = 0;
+    constexpr int kMotorShooterLeft = 16;
+    constexpr int kMotorShooterRight = 17;
 }
 
 namespace climberConstants {
-    constexpr int kMotorClimberLeft = 0;
-    constexpr int kMotorClimberRight = 0;
+    constexpr int kMotorClimberLeft = 18;
+    constexpr int kMotorClimberRight = 19;
     constexpr double kTelescopingRatio = 1 / 20;
     constexpr double kRotationsToInchTelescoping = 0.75 * std::numbers::pi;
     const double kClimberUnextendedHeight = 0.0;
