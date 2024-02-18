@@ -14,12 +14,14 @@ m_BeambreakCanifier(kBeambreakCanifier)
 {
 
     //Krakens
-    m_intakeMotorRight.SetControl(ctre::phoenix6::controls::Follower(kIntakeMotorLeft, true));
+    m_intakeMotorRight.SetControl(ctre::phoenix6::controls::Follower(kIntakeMotorLeft, false));
 
     motorOutputConfigs.WithNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Coast);
     currentLimitsConfigs.WithStatorCurrentLimitEnable(true);
-    currentLimitsConfigs.WithStatorCurrentLimit(40.0);
-    slotZeroConfigs.WithKP(0.0);
+    currentLimitsConfigs.WithStatorCurrentLimit(25.0);
+
+    // Kraken PID Values
+    slotZeroConfigs.WithKP(1);
 
     m_intakeMotorLeft.GetConfigurator().Apply(motorOutputConfigs);
     m_intakeMotorLeft.GetConfigurator().Apply(currentLimitsConfigs);
@@ -42,12 +44,12 @@ m_BeambreakCanifier(kBeambreakCanifier)
     m_shooterMotorRight.SetSmartCurrentLimit(40.0);
     
     m_rotationMotor.RestoreFactoryDefaults();
-    m_rotationMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+    m_rotationMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_rotationMotor.SetSmartCurrentLimit(40.0);
 
     m_shooterMotorRight.Follow(m_shooterMotorLeft, true);
 
-    m_shooterMotorLeftController.SetP(0);
+    m_shooterMotorLeftController.SetP(0.1);
     m_shooterMotorLeftController.SetI(0);
     m_shooterMotorLeftController.SetD(0);
     m_shooterMotorLeftController.SetFF(0);
@@ -89,28 +91,45 @@ void intakeshooter::Periodic() {
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
         case intakeshooterStates::IDLE:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(2.5_tps)); // set the speed of the intake motor
-            m_shooterMotorLeftController.SetReference(0.25, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (worse api b/c REV is cringe)
+            // m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(2.5_tps)); // set the speed of the intake motor
+            // m_shooterMotorLeftController.SetReference(0.25, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kPosition); // set the angle 
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding
+
+            intakeState = "IDLE";
             break;
         case intakeshooterStates::INTAKING:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(7.5_tps)); // set the speed of the intake motor (TODO: tune speed)
+            // m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(7.5_tps)); // set the speed of the intake motor (TODO: tune speed)
+            m_intakeMotorLeft.Set(0.2);
             m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::HOLDING : intakeshooterStates::INTAKING; // if the canifier's limit forward input is tripped, switch to holding
+            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::INTAKING; // if the canifier's limit forward input is tripped, switch to holding
+
+            intakeState = "INTAKING";
             break;
         case intakeshooterStates::HOLDING:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0.0_tps)); // set the speed of the intake motor
+            // m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0.0_tps)); // set the speed of the intake motor
+            m_intakeMotorLeft.Set(0.0);
             m_rotationMotorController.SetReference(15, rev::CANSparkMax::ControlType::kPosition); // set the angle
+
+            intakeState = "HOLDING";
             break;
         case intakeshooterStates::SPINUP:
-            m_shooterMotorLeftController.SetReference(1.0, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (TODO: trial and error with rpm)
+            // m_shooterMotorLeftController.SetReference(1.0, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (TODO: trial and error with rpm)
+            m_shooterMotorLeft.Set(0.75);
             m_rotationMotorController.SetReference((currentShootTarget == shootTarget::AMP ? 30 : 40), rev::CANSparkMax::ControlType::kPosition); // set the angle depending on firing mode
+
+            intakeState = "SPINUP";
             break;
         case intakeshooterStates::FIRE: //in the hole
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1.0_tps)); // set the speed of the intake motor (TODO: tune speed)
+            //m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1.0_tps)); // set the speed of the intake motor (TODO: tune speed)
+            m_intakeMotorLeft.Set(0.4);
             m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::IDLE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to idle
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to idle
+
+            intakeState = "FIRE";
             break;
     }
+
+    frc::SmartDashboard::PutNumber("Intake Rot", m_rotationEncoder.GetPosition());
+    frc::SmartDashboard::PutString("Intake/Shooter State: ", intakeState);
 }

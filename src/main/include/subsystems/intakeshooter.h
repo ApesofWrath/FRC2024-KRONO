@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <units/length.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <Constants.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <rev/SparkAbsoluteEncoder.h>
@@ -60,4 +61,6 @@ class intakeshooter : public frc2::SubsystemBase {
 
     intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
     shootTarget currentShootTarget = shootTarget::AMP;
+
+    std::string intakeState = "";
 };
