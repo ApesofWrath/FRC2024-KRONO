@@ -1,45 +1,43 @@
 #include "subsystems/vision.h"
-//Class for Vision
-Vision::Vision()
-    : m_frontLimelightNT(nt::NetworkTableInstance::GetDefault().GetTable("frontlimelight")), m_backLimelightNT(nt::NetworkTableInstance::GetDefault().GetTable("limelight")) {}
+//Class for vision
+vision::vision() : m_frontLimelight(Limelight("frontLimelight")), m_backLimelight(Limelight("backLimelight")) {}
 
-void Vision::Periodic() {
+void vision::Periodic() {
 }
 
 
 //Get Robot's Pose
-std::vector<double> Vision::GetBotPose() {
-  double defaultbotpose[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-  return m_networkTable->GetNumberArray("botpose", std::span<double>(defaultbotpose, 6));
+std::vector<double> vision::GetBotPose() {
+  std::vector<double> front_limelight_reported_pose = m_frontLimelight.GetBotPose();
+  std::vector<double> back_limelight_reported_pose = m_frontLimelight.GetBotPose();
+  if (front_limelight_reported_pose == m_emptyVector){
+    return back_limelight_reported_pose;
+  } else {
+    return front_limelight_reported_pose;
+  }
+
 }
 
-frc::Pose2d Vision::ToPose2d() {
-  std::vector<double> defaultbotpose;
-  if (m_networkTable->GetNumber("tv", 0) != 1.0) {
-    return frc::Pose2d(0_m, 0_m, 0_deg);
-  }
 
-  if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
-      defaultbotpose = m_networkTable->GetNumberArray("botpose_wpiblue", std::span<const double>());
-  } 
-  else {
-      defaultbotpose = m_networkTable->GetNumberArray("botpose_wpired", std::span<const double>());
-  }
 
-  if (defaultbotpose.size() < 6) {
-      return frc::Pose2d(0_m, 0_m, 0_deg);
-  }
+std::vector<bool> vision::TargetFound() {
+  bool front_target_found = m_frontLimelight.TargetFound();
+  bool back_target_found = m_backLimelight.TargetFound();
   
-  return frc::Pose2d(frc::Translation2d(units::meter_t (defaultbotpose[0]), units::meter_t (defaultbotpose[1])), frc::Rotation2d(units::degree_t (defaultbotpose[5])));
+  std::vector<bool> result = {front_target_found, back_target_found};
+  return result;
 }
 
-bool Vision::TargetFound() {
-  return m_networkTable->GetNumber("tv", 0) == 1.0;
-}
-
-double Vision::GetLatency() {
-  double defaultbotpose[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-  std::vector<double> botpose = m_networkTable->GetNumberArray("botpose", std::span<double>(defaultbotpose, 7));
+std::vector<double> vision::GetLatency() {
+  double front_latency = m_frontLimelight.TargetFound();
+  double back_latency = m_backLimelight.TargetFound();
   
-  return botpose[6];
+  std::vector<double> result = {front_latency, back_latency};
+  return result; 
+}
+
+// Takes Robot position and Speaker position and returns the angle from the Robot to the Speaker in radians
+double vision::CalculateAngle(std::vector<double> RobotPosition, std::vector<double> AmpLocation){
+  double result = atan((AmpLocation[0]-RobotPosition[0])/(AmpLocation[1]-RobotPosition[1]));
+  return result;
 }

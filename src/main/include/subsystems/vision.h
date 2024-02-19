@@ -14,18 +14,23 @@
 #include "wpi/SpanExtras.h"
 #include <span>
 #include "limelight.h"
+#include "math.h"
 
-class Vision : public frc2::SubsystemBase {
+class vision : public frc2::SubsystemBase {
  public:
-  Vision();
+  vision();
 
 
   void Periodic() override;
-
+  std::vector<double> GetBotPose();
+  std::vector<bool> TargetFound();
+  std::vector<double> GetLatency();
+  double CalculateAngle(std::vector<double> RobotPosition, std::vector<double> AmpLocation);
 
  private:
-  std::shared_ptr<nt::NetworkTable> m_frontLimelightNT;
-  std::shared_ptr<nt::NetworkTable> m_backLimelightNT;
+  Limelight m_frontLimelight;
+  Limelight m_backLimelight;
+  std::vector<double> m_emptyVector;
 
 };
 #endif // VISION_H
