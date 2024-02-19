@@ -23,6 +23,7 @@
 #include "commands/Drivetrain/ZeroGyro.h"
 #include "commands/Drivetrain/NormalSpeed.h"
 #include "commands/Drivetrain/SlowDown.h"
+#include "commands/Drivetrain/Allign.h"
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
 #include "MathFunctions.h"
