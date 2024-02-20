@@ -5,35 +5,45 @@ vision::vision() : m_frontLimelight(Limelight("frontLimelight")), m_backLimeligh
 void vision::Periodic() {
 }
 
+Limelight* vision::GetCloserLimelight(){
+
+  // Get Distance from apriltag for Front Limelight
+  std::vector<double> front_apriltag_pose = m_frontLimelight.GetTargetPoseRobotSpace();
+  units::length::meter_t front_distance{sqrt(pow(front_apriltag_pose[0], 2)+pow(front_apriltag_pose[0], 2)+pow(front_apriltag_pose[0], 1))};
+
+
+  // Get Distance from apriltag for Back Limelight
+  std::vector<double> back_apriltag_pose = m_backLimelight.GetTargetPoseRobotSpace();
+  units::length::meter_t back_distance{sqrt(pow(back_apriltag_pose[0], 2)+pow(back_apriltag_pose[0], 2)+pow(back_apriltag_pose[0], 1))};
+
+  // Return pointer to the closer Limelight
+  Limelight* selectedLimelight = nullptr;
+  if(front_distance > back_distance){
+      selectedLimelight = &m_backLimelight;
+  } else{
+      selectedLimelight = &m_frontLimelight;
+  }
+  return selectedLimelight;
+  
+
+}
 
 //Get Robot's Pose
 std::vector<double> vision::GetBotPose() {
-  std::vector<double> front_limelight_reported_pose = m_frontLimelight.GetBotPose();
-  std::vector<double> back_limelight_reported_pose = m_frontLimelight.GetBotPose();
-  if (front_limelight_reported_pose == m_emptyVector){
-    return back_limelight_reported_pose;
-  } else {
-    return front_limelight_reported_pose;
-  }
-
+  std::vector<double> pose = GetCloserLimelight()->GetBotPose();
+  return pose;
 }
 
 
 
-std::vector<bool> vision::TargetFound() {
-  bool front_target_found = m_frontLimelight.TargetFound();
-  bool back_target_found = m_backLimelight.TargetFound();
-  
-  std::vector<bool> result = {front_target_found, back_target_found};
-  return result;
+bool vision::TargetFound() {
+  bool target_found = GetCloserLimelight()->TargetFound();
+  return target_found;
 }
 
-std::vector<double> vision::GetLatency() {
-  double front_latency = m_frontLimelight.TargetFound();
-  double back_latency = m_backLimelight.TargetFound();
-  
-  std::vector<double> result = {front_latency, back_latency};
-  return result; 
+double vision::GetLatency() {
+  double latency = GetCloserLimelight()->TargetFound();
+  return latency; 
 }
 
 // Takes Robot position and Speaker position and returns the angle from the Robot to the Speaker in radians

@@ -20,11 +20,11 @@ class vision : public frc2::SubsystemBase {
  public:
   vision();
 
-
+  Limelight* GetCloserLimelight();
   void Periodic() override;
   std::vector<double> GetBotPose();
-  std::vector<bool> TargetFound();
-  std::vector<double> GetLatency();
+  bool TargetFound();
+  double GetLatency();
   double CalculateAngle(std::vector<double> RobotPosition, std::vector<double> AmpLocation);
 
  private:
