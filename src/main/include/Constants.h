@@ -4,6 +4,7 @@
 #include <units/time.h>
 #include <units/velocity.h>
 #include <numbers>
+#include <vector>
 
 /**
  * This header contains hold robot-wide numerical or boolean constants ONLY.
@@ -18,8 +19,11 @@ namespace visionConstants {
     namespace fieldConstants{
         const std::vector<double> kRedSpeakerLocation{0.0, 0.0}; // Placeholder, to be changed
         const std::vector<double> kBlueSpeakerLocation{0.0, 0.0}; // Placeholder, to be changed
-
+        const double kP= 0.0; // Placeholder, to be changed
+        const double kI = 0.0; // Placeholder, to be changed
+        const double kD = 0.0; // Placeholder, to be changed
     }
+    
     //How fast the robot attempts to correct its self
     constexpr double errorMultiplier = -0.025;
     //The minumum error for the robot to move

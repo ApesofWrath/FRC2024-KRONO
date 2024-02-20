@@ -20,4 +20,5 @@ class Allign : public frc2::CommandHelper<frc2::Command, Allign> {
     private:
     drivetrain* m_drivetrain;
     vision* m_vision;
+    std::vector<double> speaker_position;
 };
