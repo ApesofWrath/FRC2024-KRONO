@@ -1,4 +1,4 @@
-#include "subsystems/Limelight.h"
+#include "Limelight.h"
 //Class for Limelight
 Limelight::Limelight(std::string name)
     : m_networkTable(nt::NetworkTableInstance::GetDefault().GetTable(name)){}
