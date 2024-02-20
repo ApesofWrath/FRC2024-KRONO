@@ -19,14 +19,22 @@
 enum class intakeshooterStates { // proceed cyclically down list, each comment describes state & conditions for entering
     IDLE, // default state, wheels (except feeder) spinning slowly
     INTAKING, // enter on intake button, intake angles down & spins wheels
+    BACKOFF,
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
-    FIRE // enter fire button, feed note to shooter wheels, go to idle when note gone
+    FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
+    POSTFIRE
 };
 
 enum class shootTarget { // set this based off of which `fire` button is pressed
     AMP, // angle the shooter to be able to go for the amp
     SPEAKER // angle the shooter to be able to go for the shooter
+};
+
+enum class testStates {
+    down,
+    up,
+    idle
 };
 
 class intakeshooter : public frc2::SubsystemBase {
@@ -55,12 +63,20 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::CANSparkMax m_rotationMotor;
     rev::SparkMaxAlternateEncoder m_rotationEncoder = m_rotationMotor.GetAlternateEncoder(rev::SparkMaxAlternateEncoder::AlternateEncoderType::kQuadrature, 8192);
 
+    rev::SparkMaxRelativeEncoder m_shooterLeftEncoder = m_shooterMotorLeft.GetEncoder(rev::SparkMaxRelativeEncoder::EncoderType::kHallSensor, 42);
+    rev::SparkMaxRelativeEncoder m_shooterRightEncoder = m_shooterMotorRight.GetEncoder(rev::SparkMaxRelativeEncoder::EncoderType::kHallSensor, 42);
+
+
     rev::SparkPIDController m_shooterMotorLeftController = m_shooterMotorLeft.GetPIDController();
     rev::SparkPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();
     rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
     intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
     shootTarget currentShootTarget = shootTarget::AMP;
+    testStates currentTestState = testStates::idle;
 
     std::string intakeState = "";
+    std::string rotState = "";
+
+    int backoffCount = 0;
 };

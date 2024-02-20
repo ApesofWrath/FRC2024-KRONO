@@ -44,6 +44,8 @@ void RobotContainer::ConfigureButtonBindings() {
 
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(intakeActivate(&m_intakeshooter).ToPtr());
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter).ToPtr());
+
+  
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kX).OnTrue(fireAMP(&m_intakeshooter).ToPtr());
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kY).OnTrue(fireSPEAKER(&m_intakeshooter).ToPtr());
 }

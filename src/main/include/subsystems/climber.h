@@ -33,5 +33,8 @@ class climber : public frc2::SubsystemBase {
     rev::SparkMaxRelativeEncoder m_climberMotorLeftEncoder = m_climberMotorLeft.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kHallSensor, 42);
     rev::SparkMaxRelativeEncoder m_climberMotorRightEncoder = m_climberMotorRight.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kHallSensor, 42);
 
+    rev::CANSparkMax m_climberSolenoidLeft;
+    rev::CANSparkMax m_climberSolenoidRight;
+
     telescopeStates currentTelescopeState = telescopeStates::UNEXTENDED;
 }; 

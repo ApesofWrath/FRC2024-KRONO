@@ -57,9 +57,10 @@ namespace climberConstants {
     constexpr int kMotorClimberRight = 19;
     constexpr double kTelescopingRatio = 1 / 20;
     constexpr double kRotationsToInchTelescoping = 0.75 * std::numbers::pi;
-    const double kClimberUnextendedHeight = 0.0;
-    const double kClimberExtendedHeight = 2.0;
-
+    constexpr double kClimberUnextendedHeight = 0.0;
+    constexpr double kClimberExtendedHeight = 2.0;
+    constexpr int kSolenoidClimberLeft = 20;
+    constexpr int kSolenoidClimberRight = 21;
 }
 
 // Motor IDs, Encoder IDs, and Offsets for swervedrive
