@@ -7,6 +7,7 @@
 #include <subsystems/vision.h>
 #include <subsystems/drivetrain.h>
 
+
 class Allign : public frc2::CommandHelper<frc2::Command, Allign> {
     public:
     explicit Allign(drivetrain* m_drivetrain, vision* m_vision);
@@ -21,4 +22,6 @@ class Allign : public frc2::CommandHelper<frc2::Command, Allign> {
     drivetrain* m_drivetrain;
     vision* m_vision;
     std::vector<double> speaker_position;
+    frc::PIDController m_PIDController{visionConstants::kP, visionConstants::kI, visionConstants::kD};
+    
 };
