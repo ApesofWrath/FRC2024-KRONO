@@ -27,13 +27,8 @@ void Allign::Execute() {
 
     // Calculate desired angle 
     double desired_angle = m_vision->CalculateAngle(robot_position, speaker_position); // Note: CHECK WHAT UNITS LIMELIGHT USES FOR ANGLE
-    frc::units::degree_t desired_angle = frc::units::degree_t(angleInDegrees);
-
-
-    m_PIDController.Calculate(robot_z_rotation, desired_angle);
+    units::angular_velocity::radians_per_second_t desired_speed{m_PIDController.Calculate(robot_z_rotation, desired_angle)};
     m_drivetrain->SwerveDrive(0_mps, 0_mps, units::angular_velocity::radians_per_second_t(desired_angle), true);
-    
-
 }
 
 bool Allign::IsFinished() { return true; } // return when ??

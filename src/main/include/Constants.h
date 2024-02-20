@@ -16,12 +16,12 @@ namespace generalConstants {
     constexpr double kRotationsToDegrees = 360.0;
 }
 namespace visionConstants {
+    const double kP= 0.0; // Placeholder, to be changed
+    const double kI = 0.0; // Placeholder, to be changed
+    const double kD = 0.0; // Placeholder, to be changed
     namespace fieldConstants{
         const std::vector<double> kRedSpeakerLocation{0.0, 0.0}; // Placeholder, to be changed
         const std::vector<double> kBlueSpeakerLocation{0.0, 0.0}; // Placeholder, to be changed
-        const double kP= 0.0; // Placeholder, to be changed
-        const double kI = 0.0; // Placeholder, to be changed
-        const double kD = 0.0; // Placeholder, to be changed
     }
     
     //How fast the robot attempts to correct its self
