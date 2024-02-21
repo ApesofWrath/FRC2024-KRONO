@@ -137,7 +137,11 @@ void intakeshooter::Periodic() {
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(7_tps));
             m_rotationMotorController.SetReference(118, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut);
-            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::BACKOFF : intakeshooterStates::INTAKING; // if the canifier's limit forward input is tripped, switch to holding
+
+            m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
+            m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
+
+            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::BACKOFF : intakeshooterStates::INTAKING; // if the canifier's limit forward input is tripped, switch to backoff
 
             intakeState = "INTAKING";
             break;
@@ -145,10 +149,12 @@ void intakeshooter::Periodic() {
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-1_tps));
             backoffCount++;
 
-            if (backoffCount>8) {
+            if (backoffCount > 8) { // after 8 counts, switch to holding (wait a little to back off note before firing)
                 currentIntakeshooterState = intakeshooterStates::HOLDING;
-                backoffCount=0;
+                backoffCount = 0;
             }
+
+            intakeState = "BACKOFF";
             break;
         case intakeshooterStates::HOLDING:
             gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
@@ -175,13 +181,14 @@ void intakeshooter::Periodic() {
             //m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1.0_tps)); // set the speed of the intake motor (TODO: tune speed)
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps));
             // m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
-            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to idle
+            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
 
             intakeState = "FIRE";
             break;
         case::intakeshooterStates::POSTFIRE:
             currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::POSTFIRE;
-        
+
+            intakeState = "POSTFIRE";
             break;
         case::intakeshooterStates::NOTHING:
 
