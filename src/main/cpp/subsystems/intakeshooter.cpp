@@ -167,7 +167,7 @@ void intakeshooter::Periodic() {
             m_shooterMotorLeftController.SetReference(5000, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(-5400, rev::CANSparkMax::ControlType::kVelocity);
             
-            m_rotationMotorController.SetReference(90, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker
+            m_rotationMotorController.SetReference(99, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday)
 
             intakeState = "SPINUP";
             break;
@@ -182,6 +182,9 @@ void intakeshooter::Periodic() {
         case::intakeshooterStates::POSTFIRE:
             currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::POSTFIRE;
         
+            break;
+        case::intakeshooterStates::NOTHING:
+
             break;
     }
 

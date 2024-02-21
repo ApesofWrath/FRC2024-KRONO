@@ -5,9 +5,9 @@
 
 #include "subsystems/climber.h"
 
-class SetClimber : public frc2::CommandHelper<frc2::Command, SetClimber> {
+class RetractClimber : public frc2::CommandHelper<frc2::Command, RetractClimber> {
     public:
-    explicit SetClimber(climber* climber, double height);
+    explicit RetractClimber(climber* climber);
 
     void Initialize() override;
 
@@ -17,5 +17,4 @@ class SetClimber : public frc2::CommandHelper<frc2::Command, SetClimber> {
 
     private:
     climber* m_climber;
-	double m_height;
 };

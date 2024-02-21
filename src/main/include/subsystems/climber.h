@@ -9,19 +9,49 @@
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
 using namespace climberConstants;
 
-enum class telescopeStates {
+/* enum class telescopeStates {
     EXTENDED,
     UNEXTENDED
+}; */
+
+enum class zeroingStates {
+    INIT,
+    NOTZEROED,
+    ZEROED,
+    MANUALZERO,
+    IDLE
 };
+
+enum class extendingStates {
+    INIT,
+    EXTEND,
+    WAITING,
+    CLOSESOLENOIDS
+};
+
+/* enum class retractingStates {
+    INIT,
+    RETRACT,
+    WAITING,
+    CLOSESOLENOIDS
+}; */
 
 class climber : public frc2::SubsystemBase {
     public:
     climber();
-	void SetHeight(double height);
+	/* void SetHeight(double height);
     void TelescopeToggle();
-    void TelescopeToggle(telescopeStates state);
+    void TelescopeToggle(telescopeStates state); */
+
+    void climberExtend();
+    void climberRetract();
+    void disengageSolenoids();
+    void zeroClimber();
+    void motorRetract();
     void Periodic();
 
     private:
@@ -36,5 +66,10 @@ class climber : public frc2::SubsystemBase {
     rev::CANSparkMax m_climberSolenoidLeft;
     rev::CANSparkMax m_climberSolenoidRight;
 
-    telescopeStates currentTelescopeState = telescopeStates::UNEXTENDED;
+    // telescopeStates currentTelescopeState = telescopeStates::UNEXTENDED;
+    zeroingStates currentZeroState = zeroingStates::IDLE; //INIT
+    extendingStates currentExtendState = extendingStates::INIT;
+    // retractingStates curentRetractState = retractingStates::INIT;
+
+    std::string zeroState = "";
 }; 
