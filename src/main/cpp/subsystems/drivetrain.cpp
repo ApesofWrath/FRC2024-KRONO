@@ -5,7 +5,7 @@
 #include <iostream>
 
 // Constructor, zeros the gyro for swervedrive
-drivetrain::drivetrain() {
+drivetrain::drivetrain(vision* vision) : m_vision{vision} {
     m_navX.ZeroYaw();
     printf("Drive Constructor");
     using namespace pathplanner;
@@ -117,6 +117,11 @@ frc::ChassisSpeeds drivetrain::GetRobotRelativeSpeeds(){
     return frc::ChassisSpeeds::FromFieldRelativeSpeeds(speeds.vx, speeds.vy, speeds.omega, m_navX.GetRotation2d());
 }
 
+void drivetrain::AddDataFromVision(){
+     m_odometry.AddVisionMeasurement(m_vision->ToPose2d(), frc::Timer::GetFPGATimestamp() - units::second_t(m_vision->GetLatency() / 1000.0), {1.0, 1.0, 1.0}); 
+}
+    
+
 void drivetrain::Periodic() {
     UpdateOdometry();
     // if (m_vision.TargetFound())
@@ -140,5 +145,4 @@ void drivetrain::Periodic() {
 
     
 }
-
 void drivetrain::SimulationPeriodic() {}

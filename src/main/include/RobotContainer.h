@@ -28,6 +28,7 @@
 #include "subsystems/intakeshooter.h"
 #include "MathFunctions.h"
 #include "commands/SetClimber.h"
+#include "subsystems/vision.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
@@ -52,6 +53,7 @@ class RobotContainer {
   // The robot's subsystems and commands are defined here...
   drivetrain m_drivetrain;
   intakeshooter m_intakeshooter;
+  vision m_vision;
 
   frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();

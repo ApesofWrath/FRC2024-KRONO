@@ -10,6 +10,7 @@
 #include <units/length.h>
 #include "swerveModule.h"
 #include "Constants.h"
+#include "vision.h"
 
 #include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
@@ -17,7 +18,7 @@
 
 class drivetrain : public frc2::SubsystemBase {
  public:
-  drivetrain();
+  drivetrain(vision* vision);
 
   void SwerveDrive(units::meters_per_second_t xSpeed,
                    units::meters_per_second_t ySpeed,
@@ -49,7 +50,9 @@ class drivetrain : public frc2::SubsystemBase {
   double kslowConst = 1.0;
 
 private:
+  vision* m_vision;
   
+
   // navX
   AHRS m_navX{frc::SerialPort::kMXP};
   

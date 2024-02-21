@@ -2,6 +2,9 @@
 
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
+#include <frc/Joystick.h>
+#include <frc/filter/SlewRateLimiter.h>
+#include <frc/MathUtil.h>
 #include <Constants.h>
 
 #include <subsystems/vision.h>
@@ -21,7 +24,9 @@ class Allign : public frc2::CommandHelper<frc2::Command, Allign> {
 
     private:
     drivetrain* m_drivetrain;
+
     vision* m_vision;
+
     std::vector<double> speaker_position;
     frc::PIDController m_PIDController{visionConstants::kP, visionConstants::kI, visionConstants::kD};
     

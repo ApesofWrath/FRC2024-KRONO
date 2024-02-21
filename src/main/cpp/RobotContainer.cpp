@@ -5,7 +5,8 @@
 #include "RobotContainer.h"
 
 
-RobotContainer::RobotContainer() {
+RobotContainer::RobotContainer() : m_drivetrain(&m_vision) {
+  
 
   // Initialize all of your commands and subsystems here
   pathplanner::NamedCommands::registerCommand("test", std::make_shared<frc2::PrintCommand>("This works :3"));

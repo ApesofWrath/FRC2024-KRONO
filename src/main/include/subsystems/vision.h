@@ -7,6 +7,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DriverStation.h>
 #include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Rotation2d.h>
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTableEntry.h"
@@ -26,6 +27,8 @@ class vision : public frc2::SubsystemBase {
   bool TargetFound();
   double GetLatency();
   double CalculateAngle(std::vector<double> RobotPosition, std::vector<double> AmpLocation);
+  frc::Pose2d ToPose2d();
+
 
  private:
   Limelight m_frontLimelight;
