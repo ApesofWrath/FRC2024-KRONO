@@ -27,19 +27,12 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     ZEROING // after we fire, go back to neutral and then resume idle
 };
 
-enum class testStates {
-    down,
-    up,
-    idle
-};
-
 class intakeshooter : public frc2::SubsystemBase {
     public:
     intakeshooter();
     void intakeActivate();
     void spinup();
-    void spinupNear();
-    void spinupFar();
+    void spinup(float angle);
     void fire();
 
     void Periodic() override;
@@ -67,12 +60,11 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::SparkPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();
     rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
-    intakeshooterStates currentIntakeshooterState = intakeshooterStates::ZEROING; // IDLE
-    testStates currentTestState = testStates::idle;
+    intakeshooterStates currentIntakeshooterState = intakeshooterStates::ZEROING;
 
     std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 
     int backoffCount = 0; // keep track of the number execution cycles we have backed up for (waiting) 
-    double shootAngle = 0; // set the angle at which we are shooting based off of the limelight
+    double shootAngle; // set the angle at which we are shooting based off of the limelight
     double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
 };

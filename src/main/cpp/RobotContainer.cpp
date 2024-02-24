@@ -44,7 +44,8 @@ void RobotContainer::ConfigureButtonBindings() {
 
   // ShooterIntake buttons
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(intakeActivate(&m_intakeshooter).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter, 93.0).ToPtr()); // manually angle to far (use non-manual once vision is done)
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kY).OnTrue(spinup(&m_intakeshooter, 110.0).ToPtr()); // manually angle to near (use non-manual once vision is done)
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kX).OnTrue(fire(&m_intakeshooter).ToPtr());
 
   // Climber Buttons

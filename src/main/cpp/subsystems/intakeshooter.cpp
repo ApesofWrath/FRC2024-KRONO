@@ -46,8 +46,6 @@ m_BeambreakCanifier(kBeambreakCanifier)
     m_shooterMotorRight.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
     m_shooterMotorRight.SetSmartCurrentLimit(40.0);
     
-    // m_rotationMotor.RestoreFactoryDefaults();
-
     // rotation motor
     m_rotationMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_rotationMotor.SetSmartCurrentLimit(80.0);
@@ -91,25 +89,14 @@ m_BeambreakCanifier(kBeambreakCanifier)
 
 void intakeshooter::intakeActivate() {
     currentIntakeshooterState = intakeshooterStates::INTAKING;
-
-    // currentTestState = testStates::down;
 }
 
-void intakeshooter::spinup() {
-    currentIntakeshooterState = intakeshooterStates::SPINUP;
-
-    // currentTestState = testStates::up;
-}
-
-void intakeshooter::spinupNear() { // for right up against the speaker
-    shootAngle = 110.0;
-
-    currentIntakeshooterState = intakeshooterStates::SPINUP;
-}
-
-void intakeshooter::spinupFar() {
-    shootAngle = 93.0;
-
+void intakeshooter::spinup(float angle) { // provide manual angle control before vision is finished
+    if (std::isnan(angle)) {
+        printf("The code will now fail in a very obvious way by using NaN for the angle.\nReplace this with the code to set angle using vision when it's done.");
+    } else {
+        shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
+    }
     currentIntakeshooterState = intakeshooterStates::SPINUP;
 }
 
@@ -123,14 +110,12 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::IDLE:
             gravityFF = 0.0;
 
-            // m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(2.5_tps)); // set the speed of the intake motor
-            // m_shooterMotorLeftController.SetReference(0.25, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // set the angle 
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
-            m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
-            m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
-            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding
+            m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
+            m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set speeds seperatly for spin while shooting
+            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding (for preloads)
 
             intakeState = "IDLE";
             break;
