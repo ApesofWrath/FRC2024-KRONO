@@ -21,10 +21,10 @@ RobotContainer::RobotContainer() {
   
 
     m_chooser.SetDefaultOption("DoNothing", "DoNothing");
-    m_chooser.AddOption("3Note", "3Note");
-    m_chooser.AddOption("4Note", "4Note");
-    m_chooser.AddOption("test", "test");
-    m_chooser.AddOption("path", "path");
+    m_chooser.AddOption("Everything Test", "EverythingTest");
+    m_chooser.AddOption("RotationTest", "RotationTest");
+    m_chooser.AddOption("StraightLineX", "StraightLineX");
+    m_chooser.AddOption("StraightLineY", "StraightLineY");
 
     frc::SmartDashboard::PutData(&m_chooser);
     
