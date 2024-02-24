@@ -19,17 +19,12 @@
 enum class intakeshooterStates { // proceed cyclically down list, each comment describes state & conditions for entering
     IDLE, // default state, wheels (except feeder) spinning slowly
     INTAKING, // enter on intake button, intake angles down & spins wheels
-    BACKOFF,
+    BACKOFF, // feed note backwards out of mechanism to prevent excess grinding & early shots
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
     FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
-    POSTFIRE,
-    NOTHING
-};
-
-enum class shootTarget { // set this based off of which `fire` button is pressed
-    AMP, // angle the shooter to be able to go for the amp
-    SPEAKER // angle the shooter to be able to go for the shooter
+    POSTFIRE, // after the note is fired, check if the note is gone before resuming idle
+    ZEROING // after we fire, go back to neutral and then resume idle
 };
 
 enum class testStates {
@@ -43,8 +38,9 @@ class intakeshooter : public frc2::SubsystemBase {
     intakeshooter();
     void intakeActivate();
     void spinup();
-    void fireSPEAKER();
-    void fireAMP();
+    void spinupNear();
+    void spinupFar();
+    void fire();
 
     void Periodic() override;
     private:
@@ -67,17 +63,16 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::SparkMaxRelativeEncoder m_shooterLeftEncoder = m_shooterMotorLeft.GetEncoder(rev::SparkMaxRelativeEncoder::EncoderType::kHallSensor, 42);
     rev::SparkMaxRelativeEncoder m_shooterRightEncoder = m_shooterMotorRight.GetEncoder(rev::SparkMaxRelativeEncoder::EncoderType::kHallSensor, 42);
 
-
     rev::SparkPIDController m_shooterMotorLeftController = m_shooterMotorLeft.GetPIDController();
     rev::SparkPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();
     rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
-    intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE; // IDLE
-    shootTarget currentShootTarget = shootTarget::AMP;
+    intakeshooterStates currentIntakeshooterState = intakeshooterStates::ZEROING; // IDLE
     testStates currentTestState = testStates::idle;
 
-    std::string intakeState = "";
-    std::string rotState = "";
+    std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 
-    int backoffCount = 0;
+    int backoffCount = 0; // keep track of the number execution cycles we have backed up for (waiting) 
+    double shootAngle = 0; // set the angle at which we are shooting based off of the limelight
+    double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
 };

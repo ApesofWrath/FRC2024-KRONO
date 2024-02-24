@@ -45,8 +45,7 @@ void RobotContainer::ConfigureButtonBindings() {
   // ShooterIntake buttons
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(intakeActivate(&m_intakeshooter).ToPtr());
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kX).OnTrue(fireAMP(&m_intakeshooter).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kY).OnTrue(fireSPEAKER(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kX).OnTrue(fire(&m_intakeshooter).ToPtr());
 
   // Climber Buttons
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightBumper).OnTrue(ExtendClimber(&m_climber).ToPtr());

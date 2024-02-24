@@ -5,9 +5,9 @@
 
 #include "subsystems/intakeshooter.h"
 
-class fireSPEAKER : public frc2::CommandHelper<frc2::Command, fireSPEAKER> {
+class fire : public frc2::CommandHelper<frc2::Command, fire> {
     public:
-    explicit fireSPEAKER(intakeshooter* intake);
+    explicit fire(intakeshooter* intake);
 
     void Initialize() override;
 

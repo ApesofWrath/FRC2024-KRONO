@@ -94,28 +94,30 @@ void intakeshooter::intakeActivate() {
 
     // currentTestState = testStates::down;
 }
+
 void intakeshooter::spinup() {
     currentIntakeshooterState = intakeshooterStates::SPINUP;
 
     // currentTestState = testStates::up;
 }
-void intakeshooter::fireSPEAKER() {
-    currentShootTarget = shootTarget::SPEAKER;
-    currentIntakeshooterState = intakeshooterStates::FIRE;
 
-    //currentTestState = testStates::down;
+void intakeshooter::spinupNear() { // for right up against the speaker
+    shootAngle = 110.0;
+
+    currentIntakeshooterState = intakeshooterStates::SPINUP;
 }
-void intakeshooter::fireAMP() {
-    currentShootTarget = shootTarget::AMP;
-    currentIntakeshooterState = intakeshooterStates::FIRE;
 
-    //currentTestState = testStates::up;
+void intakeshooter::spinupFar() {
+    shootAngle = 93.0;
+
+    currentIntakeshooterState = intakeshooterStates::SPINUP;
+}
+
+void intakeshooter::fire() {
+    currentIntakeshooterState = intakeshooterStates::FIRE;
 }
 
 void intakeshooter::Periodic() {
-
-    double gravityFF = 0.0;
-
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
         case intakeshooterStates::IDLE:
@@ -159,8 +161,7 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::HOLDING:
             gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
-            // m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0.0_tps)); // set the speed of the intake motor
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
             
             m_rotationMotorController.SetReference(118, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut);
 
@@ -168,12 +169,11 @@ void intakeshooter::Periodic() {
             break;
         case intakeshooterStates::SPINUP:
             gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
-            // m_shooterMotorLeftController.SetReference(1.0, rev::CANSparkMax::ControlType::kDutyCycle); // set the speed of the shooter motor (TODO: trial and error with rpm)
 
-            m_shooterMotorLeftController.SetReference(5000, rev::CANSparkMax::ControlType::kVelocity);
+            m_shooterMotorLeftController.SetReference(5000, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motors diferently so we have spin
             m_shooterMotorRightController.SetReference(-5400, rev::CANSparkMax::ControlType::kVelocity);
             
-            m_rotationMotorController.SetReference(99, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday)
+            m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
 
             intakeState = "SPINUP";
             break;
@@ -186,44 +186,29 @@ void intakeshooter::Periodic() {
             intakeState = "FIRE";
             break;
         case::intakeshooterStates::POSTFIRE:
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::POSTFIRE;
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::ZEROING : intakeshooterStates::POSTFIRE;
 
             intakeState = "POSTFIRE";
             break;
-        case::intakeshooterStates::NOTHING:
+        case::intakeshooterStates::ZEROING:
+            gravityFF = 0.0;
 
-            break;
-    }
-
-    switch(currentTestState) {
-        case testStates::up:
-            // gravityFF = 3 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
-            gravityFF = 0;
-            //m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF);
-            // m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
-
+            m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // set the angle 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
-            rotState = "off";
-            break;
-        
-        case testStates::down:
-            gravityFF = 0.07 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
-            //m_rotationMotorController.SetReference(118, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut);
-            /* m_shooterMotorLeftController.SetReference(2500, rev::CANSparkMax::ControlType::kVelocity);
-            m_shooterMotorRightController.SetReference(-2500, rev::CANSparkMax::ControlType::kVelocity); */
 
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(250_tps));
-            rotState = "on";
-            break;
+            m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
+            m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
 
-        case testStates::idle:
+            if (m_rotationEncoder.GetPosition() < 1.0) {
+                currentIntakeshooterState = intakeshooterStates::IDLE;
+            }
 
+            intakeState = "ZEROING";
             break;
     }
 
     frc::SmartDashboard::PutNumber("Intake Rot", m_rotationEncoder.GetPosition());
     frc::SmartDashboard::PutString("Intake/Shooter State: ", intakeState);
-    frc::SmartDashboard::PutString("Rot State", rotState);
 
     frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
