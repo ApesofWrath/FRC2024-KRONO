@@ -74,9 +74,9 @@ m_BeambreakCanifier(kBeambreakCanifier)
     m_rotationEncoder.SetVelocityConversionFactor(kRotationsToDegrees / 60.0);
 
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
-    m_rotationMotorController.SetP(0.00004);
+    m_rotationMotorController.SetP(0.00002); // 0.00004
     m_rotationMotorController.SetI(0);
-    m_rotationMotorController.SetD(0);
+    m_rotationMotorController.SetD(0.15); // 0.0
     m_rotationMotorController.SetFF(1.0 / 275.0);
     m_rotationMotorController.SetOutputRange(-1.0F, 1.0F);
     m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(2.0);
@@ -171,7 +171,7 @@ void intakeshooter::Periodic() {
             intakeState = "FIRE";
             break;
         case::intakeshooterStates::POSTFIRE:
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::ZEROING : intakeshooterStates::POSTFIRE;
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::POSTFIRE;
 
             intakeState = "POSTFIRE";
             break;
@@ -185,6 +185,7 @@ void intakeshooter::Periodic() {
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
 
             if (m_rotationEncoder.GetPosition() < 1.0) {
+                m_rotationEncoder.SetPosition(0.0);
                 currentIntakeshooterState = intakeshooterStates::IDLE;
             }
 
