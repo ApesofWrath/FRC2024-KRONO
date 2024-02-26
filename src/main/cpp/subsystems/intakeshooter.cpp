@@ -163,9 +163,7 @@ void intakeshooter::Periodic() {
             intakeState = "SPINUP";
             break;
         case intakeshooterStates::FIRE: //in the hole
-            //m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1.0_tps)); // set the speed of the intake motor (TODO: tune speed)
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps));
-            // m_rotationMotorController.SetReference(30, rev::CANSparkMax::ControlType::kPosition); // set the angle (TODO: tune angle)
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
 
             intakeState = "FIRE";
