@@ -13,7 +13,7 @@ drivetrain::drivetrain() {
         [this](){ return GetOdometry(); }, // Robot pose supplier
         [this](frc::Pose2d pose){ ResetOdometry(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
         [this](){ return GetRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        [this](frc::ChassisSpeeds speeds){ SwerveDrive(speeds.vx, speeds.vy, -speeds.omega, false); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        [this](frc::ChassisSpeeds speeds){ SwerveDrive(speeds.vx, speeds.vy, speeds.omega, false); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
             PIDConstants(5.5, 0.0, 0.0), // Translation PID constants
             PIDConstants(3.5, 0.0, 0.0), // Rotation PID constants
@@ -39,7 +39,6 @@ drivetrain::drivetrain() {
 // Resets the gyro when function run
 void drivetrain::resetGyro() {
     m_navX.ZeroYaw();
-
 }
 
 // Slow constant value
@@ -76,7 +75,8 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
     // frc::SmartDashboard::PutNumber("ySpeed", ySpeed.value());
     // frc::SmartDashboard::PutNumber("zRotation", zRot.value());
     frc::SmartDashboard::PutNumber("Robot Rotation", m_navX.GetRotation2d().Degrees().value());
-    //frc::SmartDashboard::PutNumber("Robot Rotation", m_odometry.GetEstimatedPosition().Rotation().Degrees().value());
+    frc::SmartDashboard::PutNumber("navX Yaw", m_navX.GetYaw());
+    frc::SmartDashboard::PutNumber("Od Rob Rot", m_odometry.GetEstimatedPosition().Rotation().Degrees().value());
     
     auto [frontRight, rearRight, frontLeft, rearLeft] = moduleStates;
 

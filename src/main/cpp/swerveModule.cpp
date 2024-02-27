@@ -61,8 +61,8 @@ swerveModule::swerveModule(const double module[])
     m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * std::numbers::pi * (kFinalTurnRatio));
     m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * std::numbers::pi * (kFinalTurnRatio)) / 60.0);
 
-    m_encoderDrive.SetPositionConversionFactor(kWheelDiameter.value() * 2.0 * std::numbers::pi * (kFinalDriveRatio));
-    m_encoderDrive.SetVelocityConversionFactor(kWheelDiameter.value() * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
+    m_encoderDrive.SetPositionConversionFactor((kWheelDiameter.value() / 2.0) * 2.0 * std::numbers::pi * (kFinalDriveRatio));
+    m_encoderDrive.SetVelocityConversionFactor((kWheelDiameter.value() / 2.0) * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
 }
 
 // Gets the position of the swerve module drive motor and turn motor
