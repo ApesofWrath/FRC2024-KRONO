@@ -1,8 +1,5 @@
 #include "subsystems/vision.h"
-#include "limelight.h"
-#include <frc/geometry/Pose2d.h>
-#include <frc/geometry/Rotation2d.h>
-#include <units/length.h>
+
 
 using namespace visionConstants::fieldConstants;
 
@@ -27,7 +24,6 @@ Limelight* vision::GetCloserLimelight(){
   // Get Distance from apriltag for Front Limelight
   std::vector<double> front_apriltag_pose = m_frontLimelight.GetTargetPoseRobotSpace();
   units::length::meter_t front_distance{sqrt(pow(front_apriltag_pose[0], 2)+pow(front_apriltag_pose[0], 2)+pow(front_apriltag_pose[0], 1))};
-
 
   // Get Distance from apriltag for Back Limelight
   std::vector<double> back_apriltag_pose = m_backLimelight.GetTargetPoseRobotSpace();

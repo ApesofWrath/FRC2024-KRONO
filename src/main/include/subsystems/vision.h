@@ -18,6 +18,9 @@
 #include "math.h"
 #include "units/angle.h"
 #include "Constants.h"
+#include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Rotation2d.h>
+#include <units/length.h>
 
 class vision : public frc2::SubsystemBase {
  public:
