@@ -72,13 +72,15 @@ double vision::GetLatency() {
 }
 
 // Takes Robot position and Speaker position and returns the angle from the Robot to the Speaker in radians
-double vision::CalculateAngle(std::vector<double> RobotPosition, std::vector<double> AmpLocation){
-  double result = atan((AmpLocation[0]-RobotPosition[0])/(AmpLocation[1]-RobotPosition[1]));
+double vision::CalculateAngle(std::vector<double> RobotPosition, std::vector<double> SpeakerLocation){
+  double result = atan((SpeakerLocation[0]-RobotPosition[0])/(SpeakerLocation[1]-RobotPosition[1]));
   return result;
   
 }
 
-units::angle::degree vision::CalulateShooterAngle(){
-  std::vector<double> bot_pose = GetBotPose();
+// units::angle::degree vision::CalulateShooterAngle(){
+//   std::vector<double> speaker_position = 
+//   std::vector<double> bot_pose = GetBotPose();
+//   distance_from_speaker = sqrt(pow())
 
-}
+// }
