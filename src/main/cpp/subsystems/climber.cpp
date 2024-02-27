@@ -14,11 +14,13 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     m_climberMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_climberMotorRight.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
-    m_climberMotorLeft.SetSmartCurrentLimit(40.0);
-    m_climberMotorRight.SetSmartCurrentLimit(40.0);
+    m_climberMotorLeft.SetSmartCurrentLimit(80.0);
+    m_climberMotorRight.SetSmartCurrentLimit(80.0);
 
-    // PID for Climber Motor Left
-    m_climberMotorLeftController.SetP(0.0001);
+    m_climberMotorLeft.SetInverted(true);
+
+    // PID for Climber Motor Left and Right
+    m_climberMotorLeftController.SetP(0.005);
     m_climberMotorLeftController.SetI(0);
     m_climberMotorLeftController.SetD(0);
     m_climberMotorLeftController.SetFF(0);
@@ -27,14 +29,14 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     m_climberMotorLeftEncoder.SetPositionConversionFactor((1.0 / kRotationsToInchTelescoping) * (kTelescopingRatio));
     m_climberMotorLeftEncoder.SetVelocityConversionFactor(((1.0 / kRotationsToInchTelescoping) * (kTelescopingRatio)) / 60.0);
 
-    /* m_climberMotorRightController.SetP(0);
+    m_climberMotorRightController.SetP(0.005);
     m_climberMotorRightController.SetI(0);
     m_climberMotorRightController.SetD(0);
     m_climberMotorRightController.SetFF(0);
     m_climberMotorRightController.SetOutputRange(-1.0F,1.0F);
 
-    m_climberMotorRightEncoder.SetPositionConversionFactor((1 / kRotationsToInchTelescoping) * (kTelescopingRatio));
-    m_climberMotorRightEncoder.SetVelocityConversionFactor(((1 / kRotationsToInchTelescoping) * (kTelescopingRatio)) / 60); */
+    m_climberMotorRightEncoder.SetPositionConversionFactor((1.0 / kRotationsToInchTelescoping) * (kTelescopingRatio));
+    m_climberMotorRightEncoder.SetVelocityConversionFactor(((1.0 / kRotationsToInchTelescoping) * (kTelescopingRatio)) / 60.0);
 
     //Left and Right Climber Solenoids
     m_climberSolenoidLeft.RestoreFactoryDefaults();
@@ -47,7 +49,7 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     m_climberSolenoidRight.SetSmartCurrentLimit(40.0);
 
     // Set Left Motors and Solenoids to follow Right
-    m_climberMotorRight.Follow(m_climberMotorLeft, true);
+    // m_climberMotorRight.Follow(m_climberMotorLeft, true);
     m_climberSolenoidRight.Follow(m_climberSolenoidLeft, false);
 }
 
@@ -75,22 +77,27 @@ void climber::zeroClimber() {
 }
 
 void climber::climberRetract() {
-    // m_climberMotorLeftController.SetReference(0.0, rev::CANSparkMax::ControlType::kSmartMotion);
+    /* m_climberMotorLeft.Set(0.0);
+    m_climberMotorRight.Set(0.0); */
 
-    m_climberMotorLeft.Set(0.0);
-    //m_climberMotorRight.Set(0.0);
+    //m_climberMotorRightEncoder.SetPosition(0.0);
+    m_climberMotorLeftEncoder.SetPosition(0.0);
 }
 
 void climber::climberExtend() {
-    // currentExtendState = extendingStates::EXTEND;
+    /* m_climberMotorLeft.Set(-0.2);
+    m_climberMotorRight.Set(0.2); */
 
-    m_climberMotorLeft.Set(-0.2);
-    //m_climberMotorRight.Set(0.4);
+    //m_climberMotorRightController.SetReference(10.0, rev::CANSparkMax::ControlType::kPosition);
+    m_climberMotorLeftController.SetReference(10.0, rev::CANSparkMax::ControlType::kPosition);
 }
 
 void climber::motorRetract() {
-    m_climberMotorLeft.Set(0.2);
-    //m_climberMotorRight.Set(-0.4);
+    /* m_climberMotorLeft.Set(0.2);
+    m_climberMotorRight.Set(-0.2); */
+
+    //m_climberMotorRightController.SetReference(0.0, rev::CANSparkMax::ControlType::kPosition);
+    m_climberMotorLeftController.SetReference(0.0, rev::CANSparkMax::ControlType::kPosition);
 }
 
 void climber::Periodic(){

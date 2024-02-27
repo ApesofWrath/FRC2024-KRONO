@@ -55,7 +55,7 @@ namespace shooterConstants {
 namespace climberConstants {
     constexpr int kMotorClimberLeft = 18;
     constexpr int kMotorClimberRight = 19;
-    constexpr double kTelescopingRatio = 1 / 20;
+    constexpr double kTelescopingRatio = 1.0 / 16.0;
     constexpr double kRotationsToInchTelescoping = 0.75 * std::numbers::pi;
     constexpr double kClimberUnextendedHeight = 0.0;
     constexpr double kClimberExtendedHeight = 2.0;
