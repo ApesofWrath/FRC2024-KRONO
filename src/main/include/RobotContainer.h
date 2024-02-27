@@ -34,6 +34,8 @@
 #include "commands/ZeroClimber.h"
 #include "commands/DisengageSolenoids.h"
 #include "commands/MotorRetract.h"
+#include "commands/shooterintake/intakeRetract.h"
+#include "commands/shooterintake/scoreAmp.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>

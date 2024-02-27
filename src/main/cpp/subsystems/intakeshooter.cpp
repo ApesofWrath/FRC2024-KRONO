@@ -91,6 +91,10 @@ void intakeshooter::intakeActivate() {
     currentIntakeshooterState = intakeshooterStates::INTAKING;
 }
 
+void intakeshooter::intakeRetract() {
+    currentIntakeshooterState = intakeshooterStates::IDLE;
+}
+
 void intakeshooter::spinup(float angle) { // provide manual angle control before vision is finished
     if (std::isnan(angle)) {
         printf("The code will now fail in a very obvious way by using NaN for the angle.\nReplace this with the code to set angle using vision when it's done.");
@@ -98,6 +102,10 @@ void intakeshooter::spinup(float angle) { // provide manual angle control before
         shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
     }
     currentIntakeshooterState = intakeshooterStates::SPINUP;
+}
+
+void intakeshooter::scoreAmp() {
+    currentIntakeshooterState = intakeshooterStates::SCOREAMP;
 }
 
 void intakeshooter::fire() {
@@ -162,6 +170,11 @@ void intakeshooter::Periodic() {
 
             intakeState = "SPINUP";
             break;
+        case intakeshooterStates::SCOREAMP:
+            m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // set the angle
+
+            intakeState = "SCOREAMP";
+            break;
         case intakeshooterStates::FIRE: //in the hole
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
@@ -169,7 +182,7 @@ void intakeshooter::Periodic() {
             intakeState = "FIRE";
             break;
         case::intakeshooterStates::POSTFIRE:
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::POSTFIRE;
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::ZEROING : intakeshooterStates::POSTFIRE;
 
             intakeState = "POSTFIRE";
             break;

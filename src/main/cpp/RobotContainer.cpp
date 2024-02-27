@@ -43,10 +43,12 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
 
   // ShooterIntake buttons
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(intakeActivate(&m_intakeshooter).ToPtr());
+/*   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(intakeActivate(&m_intakeshooter).ToPtr());
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter, 93.0).ToPtr()); // manually angle to far (use non-manual once vision is done)
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kY).OnTrue(spinup(&m_intakeshooter, 110.0).ToPtr()); // manually angle to near (use non-manual once vision is done)
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kX).OnTrue(fire(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnTrue(intakeRetract(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kRightBumper).OnTrue(scoreAmp(&m_intakeshooter).ToPtr()); */
 
   // Climber Buttons
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightBumper).OnTrue(ExtendClimber(&m_climber).ToPtr());

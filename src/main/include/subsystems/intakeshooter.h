@@ -22,6 +22,7 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     BACKOFF, // feed note backwards out of mechanism to prevent excess grinding & early shots
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
+    SCOREAMP,
     FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
     POSTFIRE, // after the note is fired, check if the note is gone before resuming idle
     ZEROING // after we fire, go back to neutral and then resume idle
@@ -31,7 +32,9 @@ class intakeshooter : public frc2::SubsystemBase {
     public:
     intakeshooter();
     void intakeActivate();
+    void intakeRetract();
     void spinup();
+    void scoreAmp();
     void spinup(float angle);
     void fire();
 
