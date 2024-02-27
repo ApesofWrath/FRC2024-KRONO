@@ -4,15 +4,6 @@ using namespace visionConstants::fieldConstants;
 Allign::Allign(drivetrain* drivetrain, vision* vision) : m_drivetrain{drivetrain}, m_vision{vision} {
     SetName("Allign"); // set the ?? name
     AddRequirements({m_drivetrain}); // require the m_drivetrain pointer
-    
-    // Set speaker_position based on the alliance
-    auto alliance = frc::DriverStation::GetAlliance();
-    std::vector<double> speaker_position;
-    if (alliance == frc::DriverStation::Alliance::kRed){
-        speaker_position = kRedSpeakerLocation;
-    } else {
-        speaker_position = kBlueSpeakerLocation;
-    }
 }
 
 
@@ -26,7 +17,7 @@ void Allign::Execute() {
 
 
     // Calculate desired angle 
-    double desired_angle = m_vision->CalculateAngle(robot_position, speaker_position); // Note: CHECK WHAT UNITS LIMELIGHT USES FOR ANGLE
+    double desired_angle = m_vision->CalculateAngle(robot_position, m_vision->speaker_position); // Note: CHECK WHAT UNITS LIMELIGHT USES FOR ANGLE
     units::angular_velocity::radians_per_second_t desired_speed{m_PIDController.Calculate(robot_z_rotation, desired_angle)};
 
     // Get the controller inputs

@@ -4,8 +4,18 @@
 #include <frc/geometry/Rotation2d.h>
 #include <units/length.h>
 
+using namespace visionConstants::fieldConstants;
+
 //Class for vision
-vision::vision() : m_frontLimelight(Limelight("frontLimelight")), m_backLimelight(Limelight("backLimelight")) {}
+vision::vision() : m_frontLimelight(Limelight("frontLimelight")), m_backLimelight(Limelight("backLimelight")) {
+    auto alliance = frc::DriverStation::GetAlliance();
+    std::vector<double> speaker_position;
+    if (alliance == frc::DriverStation::Alliance::kRed){
+        speaker_position = kRedSpeakerLocation;
+    } else {
+        speaker_position = kBlueSpeakerLocation;
+    }
+}
 
 void vision::Periodic() {
 }
@@ -65,4 +75,10 @@ double vision::GetLatency() {
 double vision::CalculateAngle(std::vector<double> RobotPosition, std::vector<double> AmpLocation){
   double result = atan((AmpLocation[0]-RobotPosition[0])/(AmpLocation[1]-RobotPosition[1]));
   return result;
+  
+}
+
+units::angle::degree vision::CalulateShooterAngle(){
+  std::vector<double> bot_pose = GetBotPose();
+
 }

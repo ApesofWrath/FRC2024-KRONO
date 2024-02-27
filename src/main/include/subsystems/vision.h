@@ -16,6 +16,8 @@
 #include <span>
 #include "limelight.h"
 #include "math.h"
+#include "units/angle.h"
+#include "Constants.h"
 
 class vision : public frc2::SubsystemBase {
  public:
@@ -28,7 +30,8 @@ class vision : public frc2::SubsystemBase {
   double GetLatency();
   double CalculateAngle(std::vector<double> RobotPosition, std::vector<double> AmpLocation);
   frc::Pose2d ToPose2d();
-
+  units::angle::degree CalulateShooterAngle();
+  std::vector<double> speaker_position;
 
  private:
   Limelight m_frontLimelight;
