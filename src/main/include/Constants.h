@@ -20,8 +20,9 @@ namespace visionConstants {
     const double kI = 0.0; // Placeholder, to be changed
     const double kD = 0.0; // Placeholder, to be changed
     namespace fieldConstants{
-        const std::vector<double> kRedSpeakerLocation{0.0, 0.0}; // Placeholder, to be changed
-        const std::vector<double> kBlueSpeakerLocation{0.0, 0.0}; // Placeholder, to be changed
+        const std::vector<double> kRedSpeakerLocation{8.309, 1.443}; // Placeholder, to be changed
+        const std::vector<double> kBlueSpeakerLocation{-8.309, 1.443}; // Placeholder, to be changed
+        const std::vector<double> kDefaultSpeakerLocation = kBlueSpeakerLocation; // Default location if not alliance is set
     }
     
     //How fast the robot attempts to correct its self
