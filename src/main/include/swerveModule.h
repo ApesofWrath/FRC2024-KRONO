@@ -6,7 +6,6 @@
 #include <units/time.h>
 #include <units/velocity.h>
 #include <numbers>
-#include <rev/SparkRelativeEncoder.h>
 #include <rev/CANSparkMax.h>
 #include <ctre/phoenix6/CANcoder.hpp>
 #include "Constants.h"
