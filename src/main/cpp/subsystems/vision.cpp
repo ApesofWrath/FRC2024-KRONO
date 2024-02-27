@@ -78,9 +78,11 @@ double vision::CalculateAngle(std::vector<double> RobotPosition, std::vector<dou
   
 }
 
-// units::angle::degree vision::CalulateShooterAngle(){
-//   std::vector<double> speaker_position = 
-//   std::vector<double> bot_pose = GetBotPose();
-//   distance_from_speaker = sqrt(pow())
+units::angle::degree_t vision::CalulateShooterAngle(){
+  std::vector<double> speaker_position = speaker_position;
+  std::vector<double> bot_pose = GetBotPose();
+  double distance_from_speaker = sqrt(pow(speaker_position[0]-bot_pose[0], 2)+pow(speaker_position[0]-bot_pose[0], 2));
+  units::angle::degree_t angle = 0.0_deg; // PUT INTERPOLATION HERE!!!!!!!!
+  return angle;
 
-// }
+}

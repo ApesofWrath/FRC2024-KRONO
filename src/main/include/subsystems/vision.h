@@ -30,7 +30,7 @@ class vision : public frc2::SubsystemBase {
   double GetLatency();
   double CalculateAngle(std::vector<double> RobotPosition, std::vector<double> SpeakerLocation);
   frc::Pose2d ToPose2d();
-  units::angle::degree CalulateShooterAngle();
+  units::angle::degree_t CalulateShooterAngle();
   std::vector<double> speaker_position;
 
  private:
