@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
+        "x": 1.0,
         "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 6.0
+        "x": 1.9999999999999991,
+        "y": 7.0
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 6.0
+        "x": 2.5,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 2.0,
+        "x": 1.5,
         "y": 7.0
       },
       "nextControl": null,
@@ -43,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "PathPlanner Paths",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 0.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

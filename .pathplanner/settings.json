@@ -1,10 +1,13 @@
 {
-  "robotWidth": 0.725,
-  "robotLength": 0.72,
+  "robotWidth": 0.76,
+  "robotLength": 0.76,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "PathPlanner Paths"
+  ],
   "autoFolders": [
-    "Choreo Autos"
+    "Choreo Autos",
+    "PathPlanner Autos"
   ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 3.5,

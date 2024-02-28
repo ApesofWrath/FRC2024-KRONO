@@ -8,7 +8,11 @@
 RobotContainer::RobotContainer() {
 
   // Initialize all of your commands and subsystems here
-  pathplanner::NamedCommands::registerCommand("test", std::make_shared<frc2::PrintCommand>("This works :3"));
+  pathplanner::NamedCommands::registerCommand("spinup", std::move(spinup(&m_intakeshooter).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("fire", std::move(fire(&m_intakeshooter).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(intakeActivate(&m_intakeshooter).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(intakeRetract(&m_intakeshooter).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("rapidFire", std::move(rapidFire(&m_intakeshooter).ToPtr()));
   // Configure the button bindings
   ConfigureButtonBindings();
 
@@ -21,10 +25,13 @@ RobotContainer::RobotContainer() {
   
 
     m_chooser.SetDefaultOption("DoNothing", "DoNothing");
-    m_chooser.AddOption("Everything Test", "EverythingTest");
-    m_chooser.AddOption("RotationTest", "RotationTest");
-    m_chooser.AddOption("StraightLineX", "StraightLineX");
-    m_chooser.AddOption("StraightLineY", "StraightLineY");
+    m_chooser.AddOption("2Note", "2Note");
+    m_chooser.AddOption("3NoteAmpSide", "3NoteAmpSide");
+    m_chooser.AddOption("3NoteCenter", "3NoteCenter");
+    m_chooser.AddOption("4Note", "4Note");
+    m_chooser.AddOption("Backup", "Backup");
+    m_chooser.AddOption("Preload", "Preload");
+    m_chooser.AddOption("PreloadBackup", "PreloadBackup");
 
     frc::SmartDashboard::PutData(&m_chooser);
     

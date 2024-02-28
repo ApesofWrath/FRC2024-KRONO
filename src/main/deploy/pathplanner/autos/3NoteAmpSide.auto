@@ -1,0 +1,106 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6616607308387756,
+      "y": 6.721363067626953
+    },
+    "rotation": 59.98868115019719
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3NoteAmpSide.1"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3NoteAmpSide.2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "fire"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Choreo Autos",
+  "choreoAuto": true
+}
