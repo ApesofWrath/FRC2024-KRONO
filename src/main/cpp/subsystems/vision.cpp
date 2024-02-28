@@ -1,7 +1,7 @@
 #include "subsystems/vision.h"
 
-
 using namespace visionConstants::fieldConstants;
+using namespace visionConstants::shootAngleInterpolation;
 
 //Class for vision
 vision::vision() : m_frontLimelight(Limelight("frontLimelight")), m_backLimelight(Limelight("backLimelight")) {
@@ -20,7 +20,6 @@ void vision::Periodic() {
 
 
 Limelight* vision::GetCloserLimelight(){
-
   // Get Distance from apriltag for Front Limelight
   std::vector<double> front_apriltag_pose = m_frontLimelight.GetTargetPoseRobotSpace();
   units::length::meter_t front_distance{sqrt(pow(front_apriltag_pose[0], 2)+pow(front_apriltag_pose[0], 2)+pow(front_apriltag_pose[0], 1))};
@@ -74,11 +73,10 @@ double vision::CalculateAngle(std::vector<double> RobotPosition, std::vector<dou
   
 }
 
-units::angle::degree_t vision::CalulateShooterAngle(){
+double vision::CalulateShooterAngle(){
   std::vector<double> speaker_position = speaker_position;
   std::vector<double> bot_pose = GetBotPose();
   double distance_from_speaker = sqrt(pow(speaker_position[0]-bot_pose[0], 2)+pow(speaker_position[0]-bot_pose[0], 2));
-  units::angle::degree_t angle = 0.0_deg; // PUT INTERPOLATION HERE!!!!!!!!
+  double angle = MathFunctions::lerpPoints(distances, angles, distance_from_speaker);
   return angle;
-
 }
