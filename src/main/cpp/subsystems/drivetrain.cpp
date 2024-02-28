@@ -124,10 +124,10 @@ void drivetrain::AddDataFromVision(){
 
 void drivetrain::Periodic() {
     UpdateOdometry();
-    // if (m_vision.TargetFound())
-    // {
-    //     AddDataFromVision();
-    // }
+    if (m_vision->TargetFound())
+    {
+        AddDataFromVision();
+    }
     // Test posting angle to Dashboard.
     /*frc::SmartDashboard::PutNumber("Front Right Angle", m_frontRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));
     frc::SmartDashboard::PutNumber("Rear Right Angle", m_rearRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));

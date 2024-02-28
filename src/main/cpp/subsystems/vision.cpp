@@ -7,7 +7,7 @@
 using namespace visionConstants::fieldConstants;
 
 //Class for vision
-vision::vision() : m_frontLimelight(Limelight("frontLimelight")), m_backLimelight(Limelight("backLimelight")) {
+vision::vision() : m_frontLimelight(Limelight("limelight-front")), m_backLimelight(Limelight("limelight-back")) {
     auto alliance = frc::DriverStation::GetAlliance();
     std::vector<double> speaker_position;
     if (alliance == frc::DriverStation::Alliance::kRed){
