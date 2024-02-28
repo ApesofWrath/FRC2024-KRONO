@@ -118,5 +118,8 @@ void intakeshooter::Periodic() {
                 currentIntakeshooterState = intakeshooterStates::IDLE;
             }
             break;
+        case intakeshooterStates::NOTHING:
+
+            break;
     }
 }

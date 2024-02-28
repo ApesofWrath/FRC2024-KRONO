@@ -20,7 +20,8 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     INTAKING, // enter on intake button, intake angles down & spins wheels
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
-    FIRE // enter fire button, feed note to shooter wheels, go to idle when note gone
+    FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
+    NOTHING
 };
 
 enum class shootTarget { // set this based off of which `fire` button is pressed
@@ -58,6 +59,6 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::SparkPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();
     rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
-    intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
+    intakeshooterStates currentIntakeshooterState = intakeshooterStates::NOTHING;
     shootTarget currentShootTarget = shootTarget::AMP;
 };
