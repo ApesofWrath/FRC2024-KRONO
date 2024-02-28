@@ -6,10 +6,7 @@
 #include <units/length.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <Constants.h>
-#include <rev/SparkRelativeEncoder.h>
-#include <rev/SparkAbsoluteEncoder.h>
 #include <rev/CANSparkMax.h>
-#include <rev/SparkMaxPIDController.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix/CANifier.h>
 
@@ -23,8 +20,10 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
     SCOREAMP,
+    RAPIDFIRE, // do not bind to a button - for auto use only(goes to rapidpostfire state)
     FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
     POSTFIRE, // after the note is fired, check if the note is gone before resuming idle
+    RAPIDPOSTFIRE, // returns to intaking position instead of idle for quicker shots and less intake movement
     ZEROING // after we fire, go back to neutral and then resume idle
 };
 
@@ -37,6 +36,7 @@ class intakeshooter : public frc2::SubsystemBase {
     void scoreAmp();
     void spinup(float angle);
     void fire();
+    void rapidFire();
 
     void Periodic() override;
     private:
@@ -54,10 +54,10 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::CANSparkMax m_shooterMotorLeft;
     rev::CANSparkMax m_shooterMotorRight;
     rev::CANSparkMax m_rotationMotor;
-    rev::SparkMaxAlternateEncoder m_rotationEncoder = m_rotationMotor.GetAlternateEncoder(rev::SparkMaxAlternateEncoder::AlternateEncoderType::kQuadrature, 8192);
+    rev::SparkMaxAlternateEncoder m_rotationEncoder = m_rotationMotor.GetAlternateEncoder(rev::SparkMaxAlternateEncoder::Type::kQuadrature, 8192);
 
-    rev::SparkMaxRelativeEncoder m_shooterLeftEncoder = m_shooterMotorLeft.GetEncoder(rev::SparkMaxRelativeEncoder::EncoderType::kHallSensor, 42);
-    rev::SparkMaxRelativeEncoder m_shooterRightEncoder = m_shooterMotorRight.GetEncoder(rev::SparkMaxRelativeEncoder::EncoderType::kHallSensor, 42);
+    rev::SparkRelativeEncoder m_shooterLeftEncoder = m_shooterMotorLeft.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
+    rev::SparkRelativeEncoder m_shooterRightEncoder = m_shooterMotorRight.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
 
     rev::SparkPIDController m_shooterMotorLeftController = m_shooterMotorLeft.GetPIDController();
     rev::SparkPIDController m_shooterMotorRightController = m_shooterMotorRight.GetPIDController();
