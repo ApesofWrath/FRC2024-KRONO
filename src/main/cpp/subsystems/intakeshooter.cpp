@@ -179,7 +179,7 @@ void intakeshooter::Periodic() {
             intakeState = "SCOREAMP";
             break;
         case intakeshooterStates::FIRE: //in the hole
-            if (m_rotationEncoder.GetPosition() > shootAngle - 2 && m_rotationEncoder.GetPosition() < shootAngle + 2){
+            if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
                  m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
             }
             shooterClearCount++;
@@ -188,7 +188,7 @@ void intakeshooter::Periodic() {
             intakeState = "FIRE";
             break;
         case intakeshooterStates::RAPIDFIRE:
-            if (m_rotationEncoder.GetPosition() > shootAngle - 2 && m_rotationEncoder.GetPosition() < shootAngle + 2){
+            if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
                  m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
             }
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::RAPIDPOSTFIRE : intakeshooterStates::RAPIDFIRE;
