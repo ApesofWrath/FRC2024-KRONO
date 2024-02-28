@@ -77,27 +77,24 @@ void climber::zeroClimber() {
 }
 
 void climber::climberRetract() {
-    /* m_climberMotorLeft.Set(0.0);
-    m_climberMotorRight.Set(0.0); */
+    m_climberMotorLeft.Set(0.0);
+    m_climberMotorRight.Set(0.0);
 
-    //m_climberMotorRightEncoder.SetPosition(0.0);
-    m_climberMotorLeftEncoder.SetPosition(0.0);
+    //m_climberMotorLeftEncoder.SetPosition(0.0);
 }
 
 void climber::climberExtend() {
-    /* m_climberMotorLeft.Set(-0.2);
-    m_climberMotorRight.Set(0.2); */
+    m_climberMotorLeft.Set(0.2);
+    m_climberMotorRight.Set(0.2);
 
-    //m_climberMotorRightController.SetReference(10.0, rev::CANSparkMax::ControlType::kPosition);
-    m_climberMotorLeftController.SetReference(10.0, rev::CANSparkMax::ControlType::kPosition);
+    //m_climberMotorLeftController.SetReference(10.0, rev::CANSparkMax::ControlType::kPosition);
 }
 
 void climber::motorRetract() {
-    /* m_climberMotorLeft.Set(0.2);
-    m_climberMotorRight.Set(-0.2); */
+    m_climberMotorLeft.Set(-0.2);
+    m_climberMotorRight.Set(-0.2);
 
-    //m_climberMotorRightController.SetReference(0.0, rev::CANSparkMax::ControlType::kPosition);
-    m_climberMotorLeftController.SetReference(0.0, rev::CANSparkMax::ControlType::kPosition);
+    //m_climberMotorLeftController.SetReference(0.0, rev::CANSparkMax::ControlType::kPosition);
 }
 
 void climber::Periodic(){
