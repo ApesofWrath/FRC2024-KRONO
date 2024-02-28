@@ -37,6 +37,7 @@ class intakeshooter : public frc2::SubsystemBase {
     void spinup(float angle);
     void fire();
     void rapidFire();
+    intakeshooterStates getState();
 
     void Periodic() override;
     private:
@@ -68,6 +69,7 @@ class intakeshooter : public frc2::SubsystemBase {
     std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 
     int backoffCount = 0; // keep track of the number execution cycles we have backed up for (waiting) 
+    int shooterClearCount = 0;
     double shootAngle; // set the angle at which we are shooting based off of the limelight
     double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
 };

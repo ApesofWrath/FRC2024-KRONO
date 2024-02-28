@@ -5,10 +5,13 @@ fire::fire(intakeshooter* intake) : m_intake{intake} { // constructor for comman
     AddRequirements({m_intake}); // require the m_drivetrain pointer
 }
 
-void fire::Initialize() { printf("fire Initialized \n"); } // print debug message on initialization
+void fire::Initialize() { 
+    printf("fire Initialized \n"); 
+    m_intake->fire();
+} // print debug message on initialization
 
 void fire::Execute() { // on command call (button press)
-    m_intake->fire();
+    
 }
 
-bool fire::IsFinished() { return true; } // return when ??
+bool fire::IsFinished() { return m_intake->getState() == intakeshooterStates::POSTFIRE; } // return when ??
