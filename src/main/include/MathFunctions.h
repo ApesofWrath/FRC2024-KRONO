@@ -9,7 +9,7 @@ public:
     static double negativeSqrt(double x);
     static std::vector<double> getPointed(std::vector<std::vector<double>> );
     static double getAngle(std::vector<double> origin, std::vector<double> angle, std::vector<double> target);
-    static double lerpPoints( std::vector<double> &xData, std::vector<double> &yData, double x );
+    static double lerpPoints( const std::vector<double> &xData, const std::vector<double> &yData, double x );
 };
 
 #endif // MATH_FUNCTIONS_H

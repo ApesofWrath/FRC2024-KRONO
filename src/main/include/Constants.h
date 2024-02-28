@@ -24,6 +24,10 @@ namespace visionConstants {
         const std::vector<double> kBlueSpeakerLocation{-8.309, 1.443}; // Placeholder, to be changed
         const std::vector<double> kDefaultSpeakerLocation = kBlueSpeakerLocation; // Default location if not alliance is set
     }
+    namespace shootAngleInterpolation { // TODO: figure this out asap
+        const std::vector<double> distances { 0.0 }; // x value
+        const std::vector<double> angles    { 0.0 }; // y value
+    }
     
     //How fast the robot attempts to correct its self
     constexpr double errorMultiplier = -0.025;

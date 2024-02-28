@@ -18,6 +18,10 @@
 #include "math.h"
 #include "units/angle.h"
 #include "Constants.h"
+#include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Rotation2d.h>
+#include <units/length.h>
+#include "MathFunctions.h"
 
 class vision : public frc2::SubsystemBase {
  public:
@@ -30,7 +34,7 @@ class vision : public frc2::SubsystemBase {
   double GetLatency();
   double CalculateAngle(std::vector<double> RobotPosition, std::vector<double> SpeakerLocation);
   frc::Pose2d ToPose2d();
-  units::angle::degree_t CalulateShooterAngle();
+  double CalulateShooterAngle();
   std::vector<double> speaker_position;
 
  private:

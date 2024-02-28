@@ -29,6 +29,7 @@
 #include "MathFunctions.h"
 #include "commands/SetClimber.h"
 #include "subsystems/vision.h"
+#include "commands/Drivetrain/Allign.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
