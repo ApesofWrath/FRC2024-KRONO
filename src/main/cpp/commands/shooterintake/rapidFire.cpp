@@ -5,10 +5,12 @@ rapidFire::rapidFire(intakeshooter* intake) : m_intake{intake} { // constructor 
     AddRequirements({m_intake}); // require the m_drivetrain pointer
 }
 
-void rapidFire::Initialize() { printf("rapidFire Initialized \n"); } // print debug message on initialization
+void rapidFire::Initialize() {
+    printf("rapidFire Initialized \n");  
+    m_intake->rapidFire();
+} // print debug message on initialization
 
 void rapidFire::Execute() { // on command call (button press)
-    m_intake->rapidFire();
 }
 
-bool rapidFire::IsFinished() { return true; } // return when ??
+bool rapidFire::IsFinished() { return m_intake->getState() == intakeshooterStates::RAPIDPOSTFIRE; } // return when ??

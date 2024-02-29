@@ -166,8 +166,8 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::SPINUP:
             gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
-            m_shooterMotorLeftController.SetReference(5000, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motors diferently so we have spin
-            m_shooterMotorRightController.SetReference(-5400, rev::CANSparkMax::ControlType::kVelocity);
+            m_shooterMotorLeftController.SetReference(3500, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motors diferently so we have spin
+            m_shooterMotorRightController.SetReference(-3000, rev::CANSparkMax::ControlType::kVelocity);
             
             m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
 
@@ -180,23 +180,29 @@ void intakeshooter::Periodic() {
             intakeState = "SCOREAMP";
             break;
         case intakeshooterStates::FIRE: //in the hole
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
+            if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
+                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
+            }
+            shooterClearCount++;
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
-
+            //currentIntakeshooterState = shooterClearCount > 4 ? intakeshooterStates::POSTFIRE : currentIntakeshooterState;
             intakeState = "FIRE";
             break;
         case intakeshooterStates::RAPIDFIRE:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps));
-            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::RAPIDPOSTFIRE : intakeshooterStates::FIRE;
+            if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
+                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
+            }
+            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::RAPIDPOSTFIRE : intakeshooterStates::RAPIDFIRE;
             intakeState = "RAPIDFIRE";
             break;
         case::intakeshooterStates::POSTFIRE:
+            shooterClearCount = 0;
             currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::POSTFIRE;
 
             intakeState = "POSTFIRE";
             break;
         case::intakeshooterStates::RAPIDPOSTFIRE:
-            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::INTAKING : intakeshooterStates::POSTFIRE;
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::INTAKING : intakeshooterStates::RAPIDPOSTFIRE;
 
             intakeState = "RAPIDPOSTFIRE";
             break;
@@ -225,4 +231,8 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
     // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
+}
+
+intakeshooterStates intakeshooter::getState(){
+    return currentIntakeshooterState;
 }

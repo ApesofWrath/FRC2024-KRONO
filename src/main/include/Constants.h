@@ -45,6 +45,7 @@ namespace intakeConstants {
     const auto IDLE_SPEED = 2.5_tps;
     const auto ON_SPEED = 10.0_tps;
     constexpr int kBeambreakCanifier = 18;
+    constexpr int kIntakeAngleTolerance = 2;
 }
 
 namespace shooterConstants {
