@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0,
-      "y": 7.0
+      "x": 1.2542914308886268,
+      "y": 6.892517043179449
     },
-    "rotation": 0.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2NoteAmpSide.1"
+          }
+        },
         {
           "type": "sequential",
           "data": {
@@ -19,12 +25,6 @@
                 "type": "named",
                 "data": {
                   "name": "spinup"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
                 }
               },
               {
@@ -37,29 +37,9 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Backup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Return"
-                }
-              }
-            ]
+            "pathName": "2NoteAmpSide.2"
           }
         },
         {
@@ -70,12 +50,6 @@
                 "type": "named",
                 "data": {
                   "name": "spinup"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
                 }
               },
               {

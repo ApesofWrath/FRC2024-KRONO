@@ -25,13 +25,14 @@ RobotContainer::RobotContainer() {
   
 
     m_chooser.SetDefaultOption("DoNothing", "DoNothing");
-    m_chooser.AddOption("2Note", "2Note");
+    m_chooser.AddOption("2NoteCenter", "2NoteCenter");
+    m_chooser.AddOption("2NoteAmpSide", "2NoteAmpSide");
     m_chooser.AddOption("3NoteAmpSide", "3NoteAmpSide");
     m_chooser.AddOption("3NoteCenter", "3NoteCenter");
     m_chooser.AddOption("4Note", "4Note");
     m_chooser.AddOption("Backup", "Backup");
     m_chooser.AddOption("Preload", "Preload");
-    m_chooser.AddOption("PreloadBackup", "PreloadBackup");
+    m_chooser.AddOption("PreloadBackupCenter", "PreloadBackupCenter");
 
     frc::SmartDashboard::PutData(&m_chooser);
     

@@ -38,6 +38,7 @@ class intakeshooter : public frc2::SubsystemBase {
     void fire();
     void rapidFire();
     intakeshooterStates getState();
+    bool shooterAtSpeed();
 
     void Periodic() override;
     private:

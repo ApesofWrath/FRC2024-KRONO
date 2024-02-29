@@ -116,6 +116,13 @@ void intakeshooter::fire() {
     currentIntakeshooterState = intakeshooterStates::FIRE;
 }
 
+intakeshooterStates intakeshooter::getState() {
+    return currentIntakeshooterState;
+}
+
+bool intakeshooter::shooterAtSpeed() {
+    return m_shooterLeftEncoder.GetVelocity() > 3500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 3500.0 + kShooterRPMTolerance;
+}
 
 void intakeshooter::Periodic() {
     // intakeshooter state machine
@@ -232,6 +239,3 @@ void intakeshooter::Periodic() {
     // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
 }
 
-intakeshooterStates intakeshooter::getState(){
-    return currentIntakeshooterState;
-}

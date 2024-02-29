@@ -51,6 +51,7 @@ namespace intakeConstants {
 namespace shooterConstants {
     constexpr int kMotorShooterLeft = 16;
     constexpr int kMotorShooterRight = 17;
+    constexpr double kShooterRPMTolerance = 100;
 }
 
 namespace climberConstants {

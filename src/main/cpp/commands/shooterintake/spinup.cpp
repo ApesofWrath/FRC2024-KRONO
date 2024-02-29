@@ -11,10 +11,12 @@ spinup::spinup(intakeshooter* intake, double angle) : m_intake{intake} { // cons
     shootAngle = angle;
 }
 
-void spinup::Initialize() { printf("spinup Initialized \n"); } // print debug message on initialization
+void spinup::Initialize() { 
+    printf("spinup Initialized \n");
+    m_intake->spinup(shootAngle);
+} // print debug message on initialization
 
 void spinup::Execute() { // on command call (button press)
-    m_intake->spinup(shootAngle);
 }
 
-bool spinup::IsFinished() { return true; } // return when ??
+bool spinup::IsFinished() { return m_intake->shooterAtSpeed();} // return when ??
