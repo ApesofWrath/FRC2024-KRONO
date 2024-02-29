@@ -50,19 +50,19 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
 
   // ShooterIntake buttons
-/*   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(intakeActivate(&m_intakeshooter).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter, 93.0).ToPtr()); // manually angle to far (use non-manual once vision is done)
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kY).OnTrue(spinup(&m_intakeshooter, 110.0).ToPtr()); // manually angle to near (use non-manual once vision is done)
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kX).OnTrue(fire(&m_intakeshooter).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnTrue(intakeRetract(&m_intakeshooter).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kRightBumper).OnTrue(scoreAmp(&m_intakeshooter).ToPtr()); */
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kA).OnTrue(intakeActivate(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter, 94.0).ToPtr()); // spinup for far speaker shot (7 feet from speaker)
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kY).OnTrue(spinup(&m_intakeshooter, 110.0).ToPtr()); // spinup for near speaker shot (right at speaker)
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kX).OnTrue(fire(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftBumper).OnTrue(intakeRetract(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightBumper).OnTrue(scoreAmp(&m_intakeshooter).ToPtr());
 
   // Climber Buttons
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightBumper).OnTrue(ExtendClimber(&m_climber).ToPtr());
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftBumper).OnTrue(RetractClimber(&m_climber).ToPtr());
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kA).OnTrue(ZeroClimber(&m_climber).ToPtr());
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kX).OnTrue(DisengageSolenoids(&m_climber).ToPtr());
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kY).OnTrue(MotorRetract(&m_climber).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftStick).OnTrue(ExtendClimber(&m_climber).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightStick).OnTrue(RetractClimber(&m_climber).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kA).OnTrue(ZeroClimber(&m_climber).ToPtr()); //remove later
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kX).OnTrue(DisengageSolenoids(&m_climber).ToPtr()); //remove later
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kY).OnTrue(MotorRetract(&m_climber).ToPtr()); //remove later
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
