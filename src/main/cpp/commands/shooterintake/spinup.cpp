@@ -19,4 +19,4 @@ void spinup::Initialize() {
 void spinup::Execute() { // on command call (button press)
 }
 
-bool spinup::IsFinished() { return m_intake->shooterAtSpeed();} // return when ??
+bool spinup::IsFinished() { return m_intake->shooterAtSpeed() || !m_intake->allowSpinup;} // return when ??

@@ -101,11 +101,14 @@ void intakeshooter::spinup(float angle) { // provide manual angle control before
     } else {
         shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
     }
-    currentIntakeshooterState = intakeshooterStates::SPINUP;
+
+    if (allowSpinup) {
+        currentIntakeshooterState = intakeshooterStates::SPINUP;
+    }
 }
 
 void intakeshooter::scoreAmp() {
-    currentIntakeshooterState = intakeshooterStates::SCOREAMP;
+    currentIntakeshooterState = intakeshooterStates::AIMAMP;
 }
 
 void intakeshooter::rapidFire() {
@@ -113,7 +116,9 @@ void intakeshooter::rapidFire() {
 }
 
 void intakeshooter::fire() {
-    currentIntakeshooterState = intakeshooterStates::FIRE;
+    if (m_rotationEncoder.GetPosition() >= 60) {
+        currentIntakeshooterState = intakeshooterStates::FIRE;
+    }
 }
 
 intakeshooterStates intakeshooter::getState() {
@@ -141,7 +146,7 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::INTAKING:
             gravityFF = 0.03 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(7_tps));
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(30_tps));
             m_rotationMotorController.SetReference(118.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut);
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
@@ -151,27 +156,35 @@ void intakeshooter::Periodic() {
             intakeState = "INTAKING";
             break;
         case::intakeshooterStates::BACKOFF:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-1_tps));
-            backoffCount++;
+            allowSpinup = false;
 
-            if (backoffCount > 8) { // after 8 counts, switch to holding (wait a little to back off note before firing)
-                currentIntakeshooterState = intakeshooterStates::HOLDING;
-                backoffCount = 0;
-            }
+            gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+
+            m_rotationMotorController.SetReference(0.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); //retract intake when holding note
+
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-1_tps));
+
+            currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::NOTEFORWARD : intakeshooterStates::BACKOFF;
 
             intakeState = "BACKOFF";
             break;
+        case intakeshooterStates::NOTEFORWARD:
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0.2_tps));
+
+            currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::NOTEFORWARD;
+
+            break;
         case intakeshooterStates::HOLDING:
-            gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+            allowSpinup = true;
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
             
-            m_rotationMotorController.SetReference(0.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); //retract intake when holding note
-
             intakeState = "HOLDING";
             break;
         case intakeshooterStates::SPINUP:
             gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
             m_shooterMotorLeftController.SetReference(4500, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motors diferently so we have spin monkey
             m_shooterMotorRightController.SetReference(-4000, rev::CANSparkMax::ControlType::kVelocity);
@@ -180,8 +193,17 @@ void intakeshooter::Periodic() {
 
             intakeState = "SPINUP";
             break;
+        case intakeshooterStates::AIMAMP:
+            gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+
+            m_rotationMotorController.SetReference(23, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
+
+            if (m_rotationEncoder.GetPosition() > 22.8) {
+                currentIntakeshooterState = intakeshooterStates::SCOREAMP;
+            }
+            break;
         case intakeshooterStates::SCOREAMP:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-50_tps));
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-65_tps));
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::SCOREAMP; // if the canifier's limit backward input is tripped, switch to postfire
 
             intakeState = "SCOREAMP";
