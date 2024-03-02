@@ -84,6 +84,8 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_targetAngle = state.angle.Degrees().value();
     const double turnOutput = m_targetAngle;
 
+    //frc::SmartDashboard::PutNumber("TarWheelSpeed", targetWheelSpeed);
+
     units::radians_per_second_t targetMotorSpeed{
         (targetWheelSpeed * units::radian_t(2 * std::numbers::pi))
         / kWheelCircumference};
