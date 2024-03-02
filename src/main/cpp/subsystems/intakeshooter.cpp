@@ -173,8 +173,8 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::SPINUP:
             gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
-            m_shooterMotorLeftController.SetReference(3500, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motors diferently so we have spin
-            m_shooterMotorRightController.SetReference(-3000, rev::CANSparkMax::ControlType::kVelocity);
+            m_shooterMotorLeftController.SetReference(4500, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motors diferently so we have spin monkey
+            m_shooterMotorRightController.SetReference(-4000, rev::CANSparkMax::ControlType::kVelocity);
             
             m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
 

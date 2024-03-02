@@ -5,9 +5,9 @@
 
 #include "subsystems/climber.h"
 
-class MotorRetract : public frc2::CommandHelper<frc2::Command, MotorRetract> {
+class LeftClimbToggle : public frc2::CommandHelper<frc2::Command, LeftClimbToggle> {
     public:
-    explicit MotorRetract(climber* climber);
+    explicit LeftClimbToggle(climber* climber);
 
     void Initialize() override;
 

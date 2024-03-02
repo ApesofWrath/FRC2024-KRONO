@@ -8,35 +8,19 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <RobotContainer.h>
 
 using namespace climberConstants;
 
-/* enum class telescopeStates {
-    EXTENDED,
-    UNEXTENDED
-}; */
-
-enum class zeroingStates {
-    INIT,
-    NOTZEROED,
-    ZEROED,
-    MANUALZERO,
-    IDLE
-};
-
 enum class extendingStates {
     INIT,
+    SOLEXTEND,
     EXTEND,
     WAITING,
-    CLOSESOLENOIDS
-};
-
-/* enum class retractingStates {
-    INIT,
+    CLOSESOLENOIDS,
     RETRACT,
-    WAITING,
-    CLOSESOLENOIDS
-}; */
+    POSTRETRACT
+};
 
 class climber : public frc2::SubsystemBase {
     public:
@@ -47,15 +31,14 @@ class climber : public frc2::SubsystemBase {
 
     void climberExtend();
     void climberRetract();
-    void disengageSolenoids();
-    void zeroClimber();
-    void motorRetract();
+
+    void leftClimbToggle();
+    void rightClimbToggle();
     void Periodic();
 
     private:
     rev::CANSparkMax m_climberMotorLeft;
     rev::CANSparkMax m_climberMotorRight;
-    //rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
     rev::SparkPIDController m_climberMotorLeftController = m_climberMotorLeft.GetPIDController();
     rev::SparkPIDController m_climberMotorRightController = m_climberMotorRight.GetPIDController();
     rev::SparkRelativeEncoder m_climberMotorLeftEncoder = m_climberMotorLeft.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
@@ -64,10 +47,11 @@ class climber : public frc2::SubsystemBase {
     rev::CANSparkMax m_climberSolenoidLeft;
     rev::CANSparkMax m_climberSolenoidRight;
 
-    // telescopeStates currentTelescopeState = telescopeStates::UNEXTENDED;
-    zeroingStates currentZeroState = zeroingStates::IDLE; //INIT
     extendingStates currentExtendState = extendingStates::INIT;
-    // retractingStates curentRetractState = retractingStates::INIT;
 
-    std::string zeroState = "";
+    int solCount = 0;
+    std::string climbState = "";
+
+    bool lToggle = false;
+    bool rToggle = false;
 }; 

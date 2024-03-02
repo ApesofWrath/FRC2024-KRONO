@@ -5,9 +5,9 @@
 
 #include "subsystems/climber.h"
 
-class ZeroClimber : public frc2::CommandHelper<frc2::Command, ZeroClimber> {
+class RightClimbToggle : public frc2::CommandHelper<frc2::Command, RightClimbToggle> {
     public:
-    explicit ZeroClimber(climber* climber);
+    explicit RightClimbToggle(climber* climber);
 
     void Initialize() override;
 
