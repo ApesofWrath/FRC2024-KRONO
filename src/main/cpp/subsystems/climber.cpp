@@ -1,4 +1,3 @@
-#pragma once
 #include "subsystems/climber.h"
 
 climber::climber()
