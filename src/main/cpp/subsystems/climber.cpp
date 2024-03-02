@@ -19,7 +19,7 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     m_climberMotorLeft.SetInverted(true);
 
     // PID for Climber Motor Left and Right
-    m_climberMotorLeftController.SetP(0.15);
+    m_climberMotorLeftController.SetP(0.65); //0.15
     m_climberMotorLeftController.SetI(0.0004);
     m_climberMotorLeftController.SetD(0);
     m_climberMotorLeftController.SetFF(0);
@@ -29,7 +29,7 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     m_climberMotorLeftEncoder.SetPositionConversionFactor((kRotationsToInchTelescoping) * (kTelescopingRatio));
     m_climberMotorLeftEncoder.SetVelocityConversionFactor(((kRotationsToInchTelescoping) * (kTelescopingRatio)) / 60.0);
 
-    m_climberMotorRightController.SetP(0.55);
+    m_climberMotorRightController.SetP(1.05); //0.55
     m_climberMotorRightController.SetI(0.0004);
     m_climberMotorRightController.SetD(0);
     m_climberMotorRightController.SetFF(0);
@@ -130,7 +130,7 @@ void climber::Periodic(){
             currentExtendState = extendingStates::INIT;
             break;
         case extendingStates::WAITING:
-            if (m_climberMotorLeftEncoder.GetPosition() > 18.9) {
+            if (m_climberMotorLeftEncoder.GetPosition() > 18.9 && m_climberMotorRightEncoder.GetPosition() > 19.9) {
                 currentExtendState = extendingStates::CLOSESOLENOIDS;
             }
 
@@ -147,7 +147,7 @@ void climber::Periodic(){
             m_climberMotorLeftController.SetReference(0.2, rev::CANSparkMax::ControlType::kPosition);
             m_climberMotorRightController.SetReference(0.2, rev::CANSparkMax::ControlType::kPosition);
 
-            if (m_climberMotorLeftEncoder.GetPosition() < 0.5) {
+            if (m_climberMotorLeftEncoder.GetPosition() < 0.5 && m_climberMotorRightEncoder.GetPosition() < 0.5) {
                 currentExtendState = extendingStates::POSTRETRACT;
             }
             
