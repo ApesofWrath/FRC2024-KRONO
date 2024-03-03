@@ -21,6 +21,7 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     NOTEFORWARD,
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
+    AMPBACK,
     AIMAMP,
     SCOREAMP,
     RAPIDFIRE, // do not bind to a button - for auto use only(goes to rapidpostfire state)
@@ -77,4 +78,5 @@ class intakeshooter : public frc2::SubsystemBase {
     int shooterClearCount = 0;
     double shootAngle; // set the angle at which we are shooting based off of the limelight
     double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
+    int ampBackCount = 0;
 };
