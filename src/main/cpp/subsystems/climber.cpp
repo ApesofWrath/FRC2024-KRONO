@@ -144,10 +144,10 @@ void climber::Periodic(){
         case extendingStates::RETRACT:
             m_climberSolenoidLeft.SetVoltage(units::voltage::volt_t(0));
 
-            m_climberMotorLeftController.SetReference(0.2, rev::CANSparkMax::ControlType::kPosition);
-            m_climberMotorRightController.SetReference(0.2, rev::CANSparkMax::ControlType::kPosition);
+            m_climberMotorLeftController.SetReference(0.5, rev::CANSparkMax::ControlType::kPosition);
+            m_climberMotorRightController.SetReference(0.5, rev::CANSparkMax::ControlType::kPosition);
 
-            if (m_climberMotorLeftEncoder.GetPosition() < 0.5 && m_climberMotorRightEncoder.GetPosition() < 0.5) {
+            if (m_climberMotorLeftEncoder.GetPosition() < 0.8 && m_climberMotorRightEncoder.GetPosition() < 0.8) {
                 currentExtendState = extendingStates::POSTRETRACT;
             }
             

@@ -146,7 +146,7 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::INTAKING:
             gravityFF = 0.03 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(30_tps));
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(15_tps)); //!!!!!!30
             m_rotationMotorController.SetReference(118.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut);
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
