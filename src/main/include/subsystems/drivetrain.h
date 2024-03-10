@@ -7,6 +7,8 @@
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/DriverStation.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/WaitUntilCommand.h>
+#include <frc/filter/SlewRateLimiter.h>
 #include <units/length.h>
 #include "swerveModule.h"
 #include "Constants.h"
@@ -24,9 +26,19 @@ class drivetrain : public frc2::SubsystemBase {
                    units::radians_per_second_t zRot,
                    bool fieldRelative);
 
+  std::function<double()> m_xSpeed{0};
+  std::function<double()> m_ySpeed{0};
+  std::function<double()> m_zRotation{0};
+  frc::SlewRateLimiter<units::scalar> m_xSpeedLimiter{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_ySpeedLimiter{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_zRotationLimiter{3 / 1_s};
+  frc2::CommandPtr SwerveDriveCommand(std::function<double()> xSpeed, std::function<double()> ySpeed, std::function<double()> zRotation);
+
   void UpdateOdometry();
   void AddDataFromVision();
   void resetGyro();
+  frc2::CommandPtr resetGyroCommand();
+
   frc::Pose2d GetOdometry();
   void ResetOdometry180(frc::Pose2d initPose);
   void ResetOdometry(frc::Pose2d initPose);
@@ -43,7 +55,9 @@ class drivetrain : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
   void slowDown();
+  frc2::CommandPtr slowDownCommand();
   void normalSpeed();
+  frc2::CommandPtr normalSpeedCommand();
   void driveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
 
   double kslowConst = 1.0;
