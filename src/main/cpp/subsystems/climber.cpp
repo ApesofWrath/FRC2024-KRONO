@@ -66,25 +66,15 @@ void climber::climberExtend() {
 }
 
 void climber::leftClimbToggle() {
-    if(!lToggle) {
-        m_climberMotorLeft.Set(-0.2);
-        lToggle = true;
-    } else {
-        m_climberMotorLeft.Set(0.0);
-        m_climberMotorLeftEncoder.SetPosition(0);
-        lToggle = false;
-    }
+    m_climberMotorLeft.Set(lToggle ? 0.0 : -0.2);
+    if (lToggle) { m_climberMotorLeftEncoder.SetPosition(0); } // TODO: what's the point of setting the encoder here?
+    lToggle = !lToggle;
 }
 
 void climber::rightClimbToggle() {
-    if(!rToggle) {
-        m_climberMotorRight.Set(-0.2);
-        rToggle = true;
-    } else {
-        m_climberMotorRight.Set(0.0);
-        m_climberMotorRightEncoder.SetPosition(0);
-        rToggle = false;
-    }
+    m_climberMotorLeft.Set(rToggle ? 0.0 : -0.2);
+    if (rToggle) { m_climberMotorRightEncoder.SetPosition(0); }
+    rToggle = !rToggle;
 }
 
 void climber::Periodic(){
@@ -123,8 +113,7 @@ void climber::Periodic(){
 
             climbState = "WAITING";
             break;
-        case extendingStates::CLOSESOLENOIDS:
-
+        case extendingStates::CLOSESOLENOIDS: // TODO: remove empty states
             climbState = "CLOSESOLENOIDS";
             currentExtendState = extendingStates::INIT;
             break;
@@ -147,7 +136,6 @@ void climber::Periodic(){
             climbState = "POSTRETRACT";
             currentExtendState = extendingStates::INIT;
             break;
-        default:
         case extendingStates::INIT:
 
             climbState = "INIT";

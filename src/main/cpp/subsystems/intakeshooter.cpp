@@ -101,9 +101,7 @@ void intakeshooter::spinup(float angle) { // provide manual angle control before
         shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
     }
 
-    if (allowSpinup) {
-        currentIntakeshooterState = intakeshooterStates::SPINUP;
-    }
+    currentIntakeshooterState = allowSpinup ? intakeshooterStates::SPINUP : currentIntakeshooterState;
 }
 
 void intakeshooter::scoreAmp() {
@@ -115,9 +113,7 @@ void intakeshooter::rapidFire() {
 }
 
 void intakeshooter::fire() {
-    if (m_rotationEncoder.GetPosition() >= 60) {
-        currentIntakeshooterState = intakeshooterStates::FIRE;
-    }
+    currentIntakeshooterState = m_rotationEncoder.GetPosition() >= 60 ? intakeshooterStates::FIRE : currentIntakeshooterState;
 }
 
 intakeshooterStates intakeshooter::getState() {
@@ -213,9 +209,7 @@ void intakeshooter::Periodic() {
 
             m_rotationMotorController.SetReference(23, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
 
-            if (m_rotationEncoder.GetPosition() > 22.8) {
-                currentIntakeshooterState = intakeshooterStates::SCOREAMP;
-            }
+            currentIntakeshooterState = m_rotationEncoder.GetPosition() ? intakeshooterStates::SCOREAMP : currentIntakeshooterState;
 
             intakeState = "AIMAMP";
             break;
@@ -261,7 +255,7 @@ void intakeshooter::Periodic() {
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
 
-            if (m_rotationEncoder.GetPosition() < 1.0) {
+            if (m_rotationEncoder.GetPosition() < 1.0) { // TODO: do we need this if?
                 m_rotationEncoder.SetPosition(0.0);
                 currentIntakeshooterState = intakeshooterStates::IDLE;
             }

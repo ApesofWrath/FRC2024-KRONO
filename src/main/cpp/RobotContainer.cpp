@@ -4,7 +4,6 @@
 
 #include "RobotContainer.h"
 
-
 RobotContainer::RobotContainer() {
 
   // Initialize all of your commands and subsystems here
@@ -69,13 +68,7 @@ void RobotContainer::ConfigureButtonBindings() {
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   using namespace pathplanner;
-  if (m_chooser.GetSelected() == "DoNothing") {
-    return frc2::WaitCommand(15_s).ToPtr();
-  }
-  else {
-    return PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
-  }
-  
+  return m_chooser.GetSelected() == "DoNothing" ? frc2::WaitCommand(15_s).ToPtr() : PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
 }
 
 
