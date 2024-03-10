@@ -51,7 +51,7 @@ class drivetrain : public frc2::SubsystemBase {
 private:
   
   // navX
-  AHRS m_navX{frc::SerialPort::kMXP};
+  AHRS m_navX{frc::SPI::kMXP};
   
   // Swervedrive dimensions
   frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in};

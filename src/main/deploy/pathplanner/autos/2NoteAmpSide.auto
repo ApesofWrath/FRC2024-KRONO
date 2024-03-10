@@ -2,74 +2,68 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6758966445922852,
-      "y": 6.742509841918945
+      "x": 1.2542914308886268,
+      "y": 6.892517043179449
     },
-    "rotation": 59.58761069360562
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "2NoteAmpSide.1"
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "3Note.1"
+                  "name": "spinup"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake"
+                  "name": "rapidFire"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "2NoteAmpSide.2"
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "3Note.2"
+                  "name": "spinup"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake"
+                  "name": "fire"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
           }
         }
       ]
     }
   },
-  "folder": "Choreo Autos",
-  "choreoAuto": true
+  "folder": "PathPlanner Autos",
+  "choreoAuto": false
 }

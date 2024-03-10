@@ -1,0 +1,94 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3411831855773926,
+      "y": 5.573251724243164
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3NoteCenter.1"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3NoteCenter.2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "fire"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Choreo Autos",
+  "choreoAuto": true
+}
