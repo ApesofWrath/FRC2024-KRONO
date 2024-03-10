@@ -108,14 +108,10 @@ void climber::Periodic(){
             break;
         case extendingStates::WAITING:
             if (m_climberMotorLeftEncoder.GetPosition() > 18.9 && m_climberMotorRightEncoder.GetPosition() > 19.9) {
-                currentExtendState = extendingStates::CLOSESOLENOIDS;
+                currentExtendState = extendingStates::INIT;
             }
 
             climbState = "WAITING";
-            break;
-        case extendingStates::CLOSESOLENOIDS: // TODO: remove empty states
-            climbState = "CLOSESOLENOIDS";
-            currentExtendState = extendingStates::INIT;
             break;
         case extendingStates::RETRACT:
             m_climberSolenoidLeft.SetVoltage(units::voltage::volt_t(0));

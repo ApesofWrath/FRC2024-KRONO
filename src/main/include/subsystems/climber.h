@@ -16,7 +16,6 @@ enum class extendingStates {
     SOLEXTEND,
     EXTEND,
     WAITING,
-    CLOSESOLENOIDS,
     RETRACT,
     POSTRETRACT
 };
