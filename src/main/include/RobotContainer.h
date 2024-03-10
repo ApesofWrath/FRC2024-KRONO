@@ -24,24 +24,22 @@
 #include "commands/Drivetrain/NormalSpeed.h"
 #include "commands/Drivetrain/SlowDown.h"
 
-#include "commands/shooterintake/fire.h"
-#include "commands/shooterintake/intakeActivate.h"
-#include "commands/shooterintake/intakeRetract.h"
-#include "commands/shooterintake/rapidFire.h"
-#include "commands/shooterintake/scoreAmp.h"
-#include "commands/shooterintake/spinup.h"
+#include "commands/ShooterIntake/fire.h"
+#include "commands/ShooterIntake/intakeActivate.h"
+#include "commands/ShooterIntake/intakeRetract.h"
+#include "commands/ShooterIntake/rapidFire.h"
+#include "commands/ShooterIntake/scoreAmp.h"
+#include "commands/ShooterIntake/spinup.h"
 
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
 
 #include "MathFunctions.h"
 
-#include "commands/ExtendClimber.h"
-#include "commands/RetractClimber.h"
-#include "commands/shooterintake/intakeRetract.h"
-#include "commands/shooterintake/scoreAmp.h"
-#include "commands/LeftClimbToggle.h"
-#include "commands/RightClimbToggle.h"
+#include "commands/Climber/ExtendClimber.h"
+#include "commands/Climber/RetractClimber.h"
+#include "commands/Climber/LeftClimbToggle.h"
+#include "commands/Climber/RightClimbToggle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>

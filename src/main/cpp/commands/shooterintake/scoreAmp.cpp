@@ -1,4 +1,4 @@
-#include "commands/shooterintake/scoreAmp.h" // relevent header file
+#include "commands/ShooterIntake/scoreAmp.h" // relevent header file
 
 scoreAmp::scoreAmp(intakeshooter* intake) : m_intake{intake} { // constructor for command class
     SetName("scoreAmp"); // set the ?? name

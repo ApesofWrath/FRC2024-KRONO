@@ -27,10 +27,7 @@ drivetrain::drivetrain() {
             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
             auto alliance = frc::DriverStation::GetAlliance();
-            if (alliance) {
-                return alliance.value() == frc::DriverStation::Alliance::kRed;
-            }
-            return false;
+            return alliance.value() == frc::DriverStation::Alliance::kRed;
         },
         this // Reference to this subsystem to set requirements
     );

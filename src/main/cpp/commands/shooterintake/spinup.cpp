@@ -1,4 +1,4 @@
-#include "commands/shooterintake/spinup.h" // relevent header file
+#include "commands/ShooterIntake/spinup.h" // relevent header file
 
 spinup::spinup(intakeshooter* intake) : m_intake{intake} { // constructor for command class using vision angle
     SetName("spinup"); // set the ?? name

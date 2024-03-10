@@ -66,25 +66,15 @@ void climber::climberExtend() {
 }
 
 void climber::leftClimbToggle() {
-    if(!lToggle) {
-        m_climberMotorLeft.Set(-0.2);
-        lToggle = true;
-    } else {
-        m_climberMotorLeft.Set(0.0);
-        m_climberMotorLeftEncoder.SetPosition(0);
-        lToggle = false;
-    }
+    m_climberMotorLeft.Set(lToggle ? 0.0 : -0.2);
+    if (lToggle) { m_climberMotorLeftEncoder.SetPosition(0); } // TODO: what's the point of setting the encoder here?
+    lToggle = !lToggle;
 }
 
 void climber::rightClimbToggle() {
-    if(!rToggle) {
-        m_climberMotorRight.Set(-0.2);
-        rToggle = true;
-    } else {
-        m_climberMotorRight.Set(0.0);
-        m_climberMotorRightEncoder.SetPosition(0);
-        rToggle = false;
-    }
+    m_climberMotorLeft.Set(rToggle ? 0.0 : -0.2);
+    if (rToggle) { m_climberMotorRightEncoder.SetPosition(0); }
+    rToggle = !rToggle;
 }
 
 void climber::Periodic(){
@@ -118,15 +108,10 @@ void climber::Periodic(){
             break;
         case extendingStates::WAITING:
             if (m_climberMotorLeftEncoder.GetPosition() > 18.9 && m_climberMotorRightEncoder.GetPosition() > 19.9) {
-                currentExtendState = extendingStates::CLOSESOLENOIDS;
+                currentExtendState = extendingStates::INIT;
             }
 
             climbState = "WAITING";
-            break;
-        case extendingStates::CLOSESOLENOIDS:
-
-            climbState = "CLOSESOLENOIDS";
-            currentExtendState = extendingStates::INIT;
             break;
         case extendingStates::RETRACT:
             m_climberSolenoidLeft.SetVoltage(units::voltage::volt_t(0));
@@ -147,7 +132,6 @@ void climber::Periodic(){
             climbState = "POSTRETRACT";
             currentExtendState = extendingStates::INIT;
             break;
-        default:
         case extendingStates::INIT:
 
             climbState = "INIT";

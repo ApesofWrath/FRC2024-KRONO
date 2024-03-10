@@ -1,4 +1,4 @@
-#include "commands/shooterintake/intakeRetract.h" // relevent header file
+#include "commands/ShooterIntake/intakeRetract.h" // relevent header file
 
 intakeRetract::intakeRetract(intakeshooter* intake) : m_intake{intake} { // constructor for command class
     SetName("intakeRetract"); // set the ?? name

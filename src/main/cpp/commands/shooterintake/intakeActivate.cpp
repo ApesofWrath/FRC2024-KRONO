@@ -1,4 +1,4 @@
-#include "commands/shooterintake/intakeActivate.h" // relevent header file
+#include "commands/ShooterIntake/intakeActivate.h" // relevent header file
 
 intakeActivate::intakeActivate(intakeshooter* intake) : m_intake{intake} { // constructor for command class
     SetName("intakeActivate"); // set the ?? name
