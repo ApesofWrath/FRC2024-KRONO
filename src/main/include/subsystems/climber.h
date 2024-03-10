@@ -7,6 +7,7 @@
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/WaitUntilCommand.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace climberConstants;
@@ -26,9 +27,13 @@ class climber : public frc2::SubsystemBase {
 
     void climberExtend();
     void climberRetract();
-
     void leftClimbToggle();
     void rightClimbToggle();
+    frc2::CommandPtr climberExtendCommand();
+    frc2::CommandPtr climberRetractCommand();
+    frc2::CommandPtr leftClimbToggleCommand();
+    frc2::CommandPtr rightClimbToggleCommand();
+
     void Periodic();
 
     private:

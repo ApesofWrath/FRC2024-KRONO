@@ -61,8 +61,16 @@ void climber::climberRetract() {
     currentExtendState = extendingStates::RETRACT;
 }
 
+frc2::CommandPtr climber::climberRetractCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->climberRetract();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
+}
+
 void climber::climberExtend() {
     currentExtendState = extendingStates::SOLEXTEND;
+}
+
+frc2::CommandPtr climber::climberExtendCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->climberExtend();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
 }
 
 void climber::leftClimbToggle() {
@@ -71,10 +79,18 @@ void climber::leftClimbToggle() {
     lToggle = !lToggle;
 }
 
+frc2::CommandPtr climber::leftClimbToggleCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->leftClimbToggle();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
+}
+
 void climber::rightClimbToggle() {
     m_climberMotorLeft.Set(rToggle ? 0.0 : -0.2);
     if (rToggle) { m_climberMotorRightEncoder.SetPosition(0); }
     rToggle = !rToggle;
+}
+
+frc2::CommandPtr climber::rightClimbToggleCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->rightClimbToggle();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
 }
 
 void climber::Periodic(){

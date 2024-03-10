@@ -26,13 +26,9 @@
 
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
+#include "subsystems/climber.h"
 
 #include "MathFunctions.h"
-
-#include "commands/Climber/ExtendClimber.h"
-#include "commands/Climber/RetractClimber.h"
-#include "commands/Climber/LeftClimbToggle.h"
-#include "commands/Climber/RightClimbToggle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
