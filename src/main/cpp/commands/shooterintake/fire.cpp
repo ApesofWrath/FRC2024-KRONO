@@ -1,4 +1,4 @@
-#include "commands/shooterintake/fire.h" // relevent header file
+#include "commands/ShooterIntake/fire.h" // relevent header file
 
 fire::fire(intakeshooter* intake) : m_intake{intake} { // constructor for command class
     SetName("fire"); // set the ?? name
