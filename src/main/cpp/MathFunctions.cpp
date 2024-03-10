@@ -13,11 +13,3 @@ double MathFunctions::negativeSqrt(double x) {
     double abs_x = std::abs(x);
     return (sqrt(abs_x))*sign;
 }
-
-// double MathFunctions::getPointed(std::vector<std::vector<double>>){
-//     minVal = 
-// }
-
-// double MathFunctions::POVDistance(std::vector<double> origin, std::vector<double> angle, std::vector<double> target){
-//     centered = 
-// }

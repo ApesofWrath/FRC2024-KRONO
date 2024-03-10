@@ -57,19 +57,6 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     m_climberMotorRightEncoder.SetPosition(0.2);
 }
 
-/* // Climber state machene (toggle and explicit set)
-void climber::TelescopeToggle () { // Note that turnery would need to be expanded with addition of any additional states (get S to do it)
-    currentTelescopeState = (currentTelescopeState == telescopeStates::UNEXTENDED) ? telescopeStates::EXTENDED : telescopeStates::UNEXTENDED;
-}
-void climber::TelescopeToggle (telescopeStates state) {
-    currentTelescopeState = state;
-}
-
-// Set height of climber
-void climber::SetHeight(double height){
-	m_climberMotorLeftController.SetReference(height, rev::CANSparkMax::ControlType::kPosition);
-} */
-
 void climber::climberRetract() {
     currentExtendState = extendingStates::RETRACT;
 }

@@ -12,7 +12,6 @@ m_shooterMotorRight(kMotorShooterRight, rev::CANSparkMax::MotorType::kBrushless)
 m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless),
 m_BeambreakCanifier(kBeambreakCanifier)
 {
-
     //Kraken Settings
     m_intakeMotorRight.SetControl(ctre::phoenix6::controls::Follower(kIntakeMotorLeft, false));
     motorOutputConfigs.WithNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Coast);
@@ -141,7 +140,6 @@ void intakeshooter::Periodic() {
 
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set speeds seperatly for spin while shooting
-            // currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding (for preloads)
 
             intakeState = "IDLE";
             break;
@@ -225,7 +223,6 @@ void intakeshooter::Periodic() {
             currentLimitsConfigs.WithStatorCurrentLimit(80.0);
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-65_tps));
-            //currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::IDLE : intakeshooterStates::SCOREAMP; // if the canifier's limit backward input is tripped, switch to postfire
 
             intakeState = "SCOREAMP";
             break;
@@ -235,7 +232,6 @@ void intakeshooter::Periodic() {
             }
             shooterClearCount++;
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
-            //currentIntakeshooterState = shooterClearCount > 4 ? intakeshooterStates::POSTFIRE : currentIntakeshooterState;
             intakeState = "FIRE";
             break;
         case intakeshooterStates::RAPIDFIRE:
@@ -280,6 +276,5 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
-    // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
 }
 
