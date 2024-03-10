@@ -128,6 +128,10 @@ bool intakeshooter::shooterAtSpeed() {
     return m_shooterLeftEncoder.GetVelocity() > 3500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 5500.0 + kShooterRPMTolerance;
 }
 
+frc2::CommandPtr intakeshooter::getFireCommand() {
+    return frc2::Subsystem::RunOnce([this]() {this->fire();}).AndThen(frc2::WaitUntilCommand([this]() {return currentIntakeshooterState == intakeshooterStates::POSTFIRE;}).ToPtr());
+}
+
 void intakeshooter::Periodic() {
     // intakeshooter state machine
     switch (currentIntakeshooterState) {

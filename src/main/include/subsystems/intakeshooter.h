@@ -13,6 +13,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/WaitUntilCommand.h>
 #include <frc/XboxController.h>
 
 enum class intakeshooterStates { // proceed cyclically down list, each comment describes state & conditions for entering
@@ -44,6 +45,7 @@ class intakeshooter : public frc2::SubsystemBase {
     void rapidFire();
     intakeshooterStates getState();
     bool shooterAtSpeed();
+    frc2::CommandPtr getFireCommand();
 
     bool allowSpinup = true;
 
