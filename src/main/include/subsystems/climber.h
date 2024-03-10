@@ -23,9 +23,6 @@ enum class extendingStates {
 class climber : public frc2::SubsystemBase {
     public:
     climber();
-	/* void SetHeight(double height);
-    void TelescopeToggle();
-    void TelescopeToggle(telescopeStates state); */
 
     void climberExtend();
     void climberRetract();
