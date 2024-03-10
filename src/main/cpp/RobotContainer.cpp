@@ -7,11 +7,11 @@
 RobotContainer::RobotContainer() {
 
   // Initialize all of your commands and subsystems here
-  pathplanner::NamedCommands::registerCommand("spinup", std::move(spinup(&m_intakeshooter, 110.0).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.getFireCommand()));
-  pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(intakeActivate(&m_intakeshooter).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(intakeRetract(&m_intakeshooter).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("rapidFire", std::move(rapidFire(&m_intakeshooter).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.spinupCommand(110.0)));
+  pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.fireCommand()));
+  pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.intakeActivateCommand()));
+  pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.intakeRetractCommand()));
+  pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.rapidFireCommand()));
   // Configure the button bindings
   ConfigureButtonBindings();
 
@@ -50,12 +50,12 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
   
   // ShooterIntake buttons
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftBumper).OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter, 111.5).ToPtr()); // spinup for far speaker shot (7 feet from speaker) !!!!96.6
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kX).OnTrue(spinup(&m_intakeshooter, 110.0).ToPtr()); // spinup for near speaker shot (right at speaker) Y
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightBumper).OnTrue(m_intakeshooter.getFireCommand()); // TODO: make every other command like this
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kA).OnTrue(intakeRetract(&m_intakeshooter).ToPtr()); // leftbumper
-  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kY).OnTrue(scoreAmp(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftBumper).OnTrue(m_intakeshooter.intakeActivateCommand());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kB).OnTrue(m_intakeshooter.spinupCommand(111.5)); // spinup for far speaker shot (7 feet from speaker)
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kX).OnTrue(m_intakeshooter.spinupCommand(110.0)); // spinup for near speaker shot (right at speaker)
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightBumper).OnTrue(m_intakeshooter.fireCommand());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kA).OnTrue(m_intakeshooter.intakeRetractCommand());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kY).OnTrue(m_intakeshooter.scoreAmpCommand());
   
   // Climber Buttons
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftStick).OnTrue(ExtendClimber(&m_climber).ToPtr());

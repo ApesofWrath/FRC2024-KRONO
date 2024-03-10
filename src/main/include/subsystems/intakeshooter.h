@@ -38,14 +38,18 @@ class intakeshooter : public frc2::SubsystemBase {
     intakeshooter();
     void intakeActivate();
     void intakeRetract();
-    void spinup();
-    void scoreAmp();
     void spinup(float angle);
+    void scoreAmp();
     void fire();
     void rapidFire();
     intakeshooterStates getState();
     bool shooterAtSpeed();
-    frc2::CommandPtr getFireCommand();
+    frc2::CommandPtr intakeActivateCommand();
+    frc2::CommandPtr intakeRetractCommand();
+    frc2::CommandPtr spinupCommand(float angle);
+    frc2::CommandPtr scoreAmpCommand();
+    frc2::CommandPtr fireCommand();
+    frc2::CommandPtr rapidFireCommand();
 
     bool allowSpinup = true;
 

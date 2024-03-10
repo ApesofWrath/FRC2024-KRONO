@@ -90,8 +90,16 @@ void intakeshooter::intakeActivate() {
     currentIntakeshooterState = intakeshooterStates::INTAKING;
 }
 
+frc2::CommandPtr intakeshooter::intakeActivateCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->intakeActivate();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
+}
+
 void intakeshooter::intakeRetract() {
     currentIntakeshooterState = intakeshooterStates::IDLE;
+}
+
+frc2::CommandPtr intakeshooter::intakeRetractCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->intakeRetract();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
 }
 
 void intakeshooter::spinup(float angle) { // provide manual angle control before vision is finished
@@ -104,16 +112,32 @@ void intakeshooter::spinup(float angle) { // provide manual angle control before
     currentIntakeshooterState = allowSpinup ? intakeshooterStates::SPINUP : currentIntakeshooterState;
 }
 
+frc2::CommandPtr intakeshooter::spinupCommand(float angle) { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this, angle]() {this->spinup(angle);}).AndThen(frc2::WaitUntilCommand([this]() {return shooterAtSpeed() || !allowSpinup;}).ToPtr());
+}
+
 void intakeshooter::scoreAmp() {
     currentIntakeshooterState = intakeshooterStates::SCOREAMP;
 }
 
+frc2::CommandPtr intakeshooter::scoreAmpCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->scoreAmp();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
+}
+
 void intakeshooter::rapidFire() {
-    currentIntakeshooterState = intakeshooterStates::RAPIDFIRE;
+    currentIntakeshooterState = intakeshooterStates::RAPIDPOSTFIRE;
+}
+
+frc2::CommandPtr intakeshooter::rapidFireCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->rapidFire();}).AndThen(frc2::WaitUntilCommand([this]() {return currentIntakeshooterState == intakeshooterStates::POSTFIRE;}).ToPtr());
 }
 
 void intakeshooter::fire() {
     currentIntakeshooterState = m_rotationEncoder.GetPosition() >= 60 ? intakeshooterStates::FIRE : currentIntakeshooterState;
+}
+
+frc2::CommandPtr intakeshooter::fireCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
+    return frc2::Subsystem::RunOnce([this]() {this->fire();}).AndThen(frc2::WaitUntilCommand([this]() {return currentIntakeshooterState == intakeshooterStates::POSTFIRE;}).ToPtr());
 }
 
 intakeshooterStates intakeshooter::getState() {
@@ -122,10 +146,6 @@ intakeshooterStates intakeshooter::getState() {
 
 bool intakeshooter::shooterAtSpeed() {
     return m_shooterLeftEncoder.GetVelocity() > 3500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 5500.0 + kShooterRPMTolerance;
-}
-
-frc2::CommandPtr intakeshooter::getFireCommand() {
-    return frc2::Subsystem::RunOnce([this]() {this->fire();}).AndThen(frc2::WaitUntilCommand([this]() {return currentIntakeshooterState == intakeshooterStates::POSTFIRE;}).ToPtr());
 }
 
 void intakeshooter::Periodic() {

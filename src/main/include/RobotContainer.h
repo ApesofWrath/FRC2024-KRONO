@@ -24,13 +24,6 @@
 #include "commands/Drivetrain/NormalSpeed.h"
 #include "commands/Drivetrain/SlowDown.h"
 
-#include "commands/ShooterIntake/fire.h"
-#include "commands/ShooterIntake/intakeActivate.h"
-#include "commands/ShooterIntake/intakeRetract.h"
-#include "commands/ShooterIntake/rapidFire.h"
-#include "commands/ShooterIntake/scoreAmp.h"
-#include "commands/ShooterIntake/spinup.h"
-
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
 
