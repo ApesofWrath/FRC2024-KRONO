@@ -79,6 +79,7 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
     intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
+    int counter;
 
     std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 

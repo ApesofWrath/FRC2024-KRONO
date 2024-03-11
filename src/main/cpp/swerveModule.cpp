@@ -16,7 +16,6 @@ swerveModule::swerveModule(const double module[])
     // Resets the swerve module motors and encoders to factory settings
     m_motorDrive.RestoreFactoryDefaults();
     m_motorTurn.RestoreFactoryDefaults();
-    //m_encoderTurn.ConfigFactoryDefault(); Deprecated
 
     // Sets both the drive motor and the turn motor to be inverted
     m_motorDrive.SetInverted(true);
@@ -34,9 +33,10 @@ swerveModule::swerveModule(const double module[])
     m_driveController.SetFeedbackDevice(m_encoderDrive);
     m_turnController.SetFeedbackDevice(m_encoderTurnIntegrated);
 
-    m_driveController.SetP(0.1);
+    m_driveController.SetP(0.2);
     m_driveController.SetI(0);
-    m_driveController.SetD(0);
+    m_driveController.SetD(0.007);
+
     m_driveController.SetFF(1.0/4.6);
     m_driveController.SetOutputRange(-1.0F, 1.0F);
 
@@ -73,8 +73,6 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_targetAngle = state.angle.Degrees().value();
     const double turnOutput = m_targetAngle;
 
-    //frc::SmartDashboard::PutNumber("TarWheelSpeed", targetWheelSpeed);
-
     units::radians_per_second_t targetMotorSpeed{
         (targetWheelSpeed * units::radian_t(2 * std::numbers::pi))
         / kWheelCircumference};
@@ -82,7 +80,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
-    frc::SmartDashboard::PutNumber("Target Wheel Speed", targetWheelSpeed.value());
+    frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Motor Speed", targetMotorSpeed.value());
 }
 
