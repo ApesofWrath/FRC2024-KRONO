@@ -36,6 +36,9 @@ RobotContainer::RobotContainer() {
 
     frc::SmartDashboard::PutData(&m_chooser);
     
+    // Start Timer
+    timer.Start();
+  
 }
 
 // All the button commands are set in this function
