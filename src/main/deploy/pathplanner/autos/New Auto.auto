@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3411831855773926,
-      "y": 5.573251724243164
+      "x": 1.324524164199829,
+      "y": 5.53
     },
-    "rotation": 0.0
+    "rotation": -4.360368101131817e-20
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3NoteCenter.1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3NoteCenter.2"
+            "pathName": "New Path.1"
           }
         }
       ]

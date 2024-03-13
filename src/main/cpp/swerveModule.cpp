@@ -44,9 +44,9 @@ swerveModule::swerveModule(const double module[])
     m_driveController.SetFeedbackDevice(m_encoderDrive);
     m_turnController.SetFeedbackDevice(m_encoderTurnIntegrated);
 
-    m_driveController.SetP(0.2);
+    m_driveController.SetP(0.3);
     m_driveController.SetI(0);
-    m_driveController.SetD(0.007);
+    m_driveController.SetD(0.2);
     //m_driveController.SetFF(1/107.9101*2); //(0.5*1023.0)/(22100.0*0.5)
     m_driveController.SetFF(1.0/4.6);
     m_driveController.SetOutputRange(-1.0F, 1.0F);
@@ -76,7 +76,7 @@ frc::SwerveModuleState swerveModule::GetState() {
 
 // Applies the wanted speed and direction to the turn and drive motors
 void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
-    const auto state = CustomOptimize(
+    const auto state = frc::SwerveModuleState::Optimize(
         referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees));
     //This returns the position in +-Cancoder units counting forever, as opposed to absolulte -180 to +180 deg.
 
