@@ -4,15 +4,16 @@ using namespace shooterConstants;
 using namespace intakeConstants;
 using namespace generalConstants;
 
-intakeshooter::intakeshooter()
+intakeshooter::intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator)
 : m_intakeMotorLeft(kIntakeMotorLeft),
 m_intakeMotorRight(kIntakeMotorRight),
 m_shooterMotorLeft(kMotorShooterLeft, rev::CANSparkMax::MotorType::kBrushless),
 m_shooterMotorRight(kMotorShooterRight, rev::CANSparkMax::MotorType::kBrushless),
 m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless),
-m_BeambreakCanifier(kBeambreakCanifier)
+m_BeambreakCanifier(kBeambreakCanifier),
+m_controllerMain(controllerMain),
+m_controllerOperator(controllerOperator)
 {
-
     //Kraken Settings
     m_intakeMotorRight.SetControl(ctre::phoenix6::controls::Follower(kIntakeMotorLeft, false));
     motorOutputConfigs.WithNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Coast);
@@ -165,7 +166,7 @@ void intakeshooter::Periodic() {
             break;
         case::intakeshooterStates::BACKOFF:
             allowSpinup = false;
-
+            
             gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
             m_rotationMotorController.SetReference(0.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); //retract intake when holding note
@@ -175,11 +176,18 @@ void intakeshooter::Periodic() {
             currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::NOTEFORWARD : intakeshooterStates::BACKOFF;
 
             intakeState = "BACKOFF";
+
+            m_controllerMain->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 1.0);
+            m_controllerOperator->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 1.0);
+
             break;
         case intakeshooterStates::NOTEFORWARD:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1_tps));
 
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::NOTEFORWARD;
+
+            m_controllerMain->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 0.0);
+            m_controllerOperator->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 0.0);
 
             intakeState = "NOTEFORWARD";
             break;
@@ -295,6 +303,7 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
     // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
+    frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
     frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
 }
 
