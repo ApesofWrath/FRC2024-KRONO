@@ -79,7 +79,6 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
     intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
-    int counter;
 
     std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 
@@ -87,4 +86,5 @@ class intakeshooter : public frc2::SubsystemBase {
     double shootAngle; // set the angle at which we are shooting based off of the limelight
     double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
     int ampBackCount = 0;
+    int ampWaitCounter = 0;
 };

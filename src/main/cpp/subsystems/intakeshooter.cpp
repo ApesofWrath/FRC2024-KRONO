@@ -73,9 +73,9 @@ m_BeambreakCanifier(kBeambreakCanifier)
     m_rotationEncoder.SetVelocityConversionFactor(kRotationsToDegrees / 60.0);
 
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
-    m_rotationMotorController.SetP(0.00002); // 0.00004
+    m_rotationMotorController.SetP(0.00002);
     m_rotationMotorController.SetI(0);
-    m_rotationMotorController.SetD(0.15); // 0.0
+    m_rotationMotorController.SetD(0.15);
     m_rotationMotorController.SetFF(1.0 / 275.0);
     m_rotationMotorController.SetOutputRange(-1.0F, 1.0F);
     m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(2.0);
@@ -242,15 +242,15 @@ void intakeshooter::Periodic() {
 
             if (m_rotationEncoder.GetPosition() > 19.8) {
                 currentIntakeshooterState = intakeshooterStates::SCOREAMP;
-                counter = 0;
+                ampWaitCounter = 0;
             }
 
             intakeState = "AIMAMP";
             break;
         case intakeshooterStates::SCOREAMP:
-            if (counter < 50){
-                counter++;
-            }else{
+            if (ampWaitCounter < 50) {
+                ampWaitCounter++;
+            } else {
                 currentLimitsConfigs.WithStatorCurrentLimit(80.0);
                 
                 m_intakeMotorLeft.GetConfigurator().Apply(currentLimitsConfigs);
@@ -295,7 +295,7 @@ void intakeshooter::Periodic() {
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
 
-            if (m_rotationEncoder.GetPosition() < 1.0) { // TODO: do we need this if?
+            if (m_rotationEncoder.GetPosition() < 1.0) {
                 m_rotationEncoder.SetPosition(0.0);
                 currentIntakeshooterState = intakeshooterStates::IDLE;
             }
