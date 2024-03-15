@@ -164,7 +164,7 @@ void intakeshooter::Periodic() {
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set speeds seperatly for spin while shooting
 
-            if (m_rotationEncoder.GetPosition() < 1){
+            if (m_rotationEncoder.GetPosition() < 0){
                 m_rotationEncoder.SetPosition(0);
             }
 
