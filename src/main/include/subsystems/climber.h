@@ -1,6 +1,7 @@
 #pragma once
 
 #include <numbers>
+#include <lib/SparkUtil.h>
 #include <units/length.h>
 #include <rev/CANSparkMax.h>
 #include <Constants.h>

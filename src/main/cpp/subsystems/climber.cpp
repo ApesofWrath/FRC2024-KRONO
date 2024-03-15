@@ -9,6 +9,19 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     // Left and Right Climber Motors
     m_climberMotorLeft.RestoreFactoryDefaults();
     m_climberMotorRight.RestoreFactoryDefaults();
+    std::vector<std::function<rev::REVLibError()>> climberMotorLeftConfigs = {
+        [this]() {return m_climberMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);},
+        [this]() {return m_climberMotorLeft.SetSmartCurrentLimit(40.0);},
+        [this]() {return m_climberMotorLeft.SetInverted(true);},
+        [this]() {return m_climberMotorLeftController.SetP(0.65);},
+        [this]() {return m_climberMotorLeftController.SetI(0.0004);},
+        [this]() {return m_climberMotorLeftController.SetD(0.0);},
+        [this]() {return m_climberMotorLeftController.SetFF(0.0);},
+        [this]() {return m_climberMotorLeftController.SetOutputRange(-1.0F,1.0F);},
+        [this]() {return m_climberMotorLeftController.SetIZone(0.25);},
+        [this]() {return m_climberMotorLeftEncoder.SetPositionConversionFactor((kRotationsToInchTelescoping) * (kTelescopingRatio));},
+        [this]() {return m_climberMotorLeftEncoder.SetVelocityConversionFactor(((kRotationsToInchTelescoping) * (kTelescopingRatio)) / 60.0);}
+    };
 
     m_climberMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_climberMotorRight.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
