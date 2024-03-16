@@ -52,7 +52,7 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
 
   // bind horizontal alignment (note that the code infrastructure for vertical alignment is on SVR, so we need to merge before testing)
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(Allign(&m_drivetrain, &m_vision).ToPtr());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(Align(&m_drivetrain, &m_vision).ToPtr());
   
   // ShooterIntake buttons
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftBumper).OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA

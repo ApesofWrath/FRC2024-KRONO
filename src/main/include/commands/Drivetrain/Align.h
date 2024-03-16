@@ -12,9 +12,9 @@
 
 
 
-class Allign : public frc2::CommandHelper<frc2::Command, Allign> {
+class Align : public frc2::CommandHelper<frc2::Command, Align> {
     public:
-    explicit Allign(drivetrain* m_drivetrain, vision* m_vision);
+    explicit Align(drivetrain* m_drivetrain, vision* m_vision);
 
     void Initialize() override;
 

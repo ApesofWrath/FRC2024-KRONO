@@ -1,15 +1,15 @@
-#include "commands/Drivetrain/Allign.h" // relevant header file
+#include "commands/Drivetrain/Align.h" // relevant header file
 using namespace visionConstants::fieldConstants;
 
-Allign::Allign(drivetrain* drivetrain, vision* vision) : m_drivetrain{drivetrain}, m_vision{vision} {
-    SetName("Allign"); // set the ?? name
+Align::Align(drivetrain* drivetrain, vision* vision) : m_drivetrain{drivetrain}, m_vision{vision} {
+    SetName("Align"); // set the ?? name
     AddRequirements({m_drivetrain}); // require the m_drivetrain pointer
 }
 
 
-void Allign::Initialize() { printf("Allign Initialized \n"); } // print debug message on initialization
+void Align::Initialize() { printf("Align Initialized \n"); } // print debug message on initialization
 
-void Allign::Execute() {
+void Align::Execute() {
     // Get Robot's XY Position
     std::vector<double> robot_pose = m_vision->GetBotPose();
     std::vector<double> robot_position{robot_pose[0], robot_pose[1]};
@@ -36,4 +36,4 @@ void Allign::Execute() {
     m_drivetrain->SwerveDrive(0_mps, 0_mps, units::angular_velocity::radians_per_second_t(desired_angle), true);
 }
 
-bool Allign::IsFinished() { return true; } // return when ?? who knows!
+bool Align::IsFinished() { return true; } // return when ?? who knows!

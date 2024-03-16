@@ -23,7 +23,7 @@
 #include "commands/Drivetrain/ZeroGyro.h"
 #include "commands/Drivetrain/NormalSpeed.h"
 #include "commands/Drivetrain/SlowDown.h"
-#include "commands/Drivetrain/Allign.h"
+#include "commands/Drivetrain/Align.h"
 
 #include "commands/shooterintake/fire.h"
 #include "commands/shooterintake/intakeActivate.h"
@@ -40,7 +40,7 @@
 #include "commands/ExtendClimber.h"
 #include "commands/RetractClimber.h"
 #include "subsystems/vision.h"
-#include "commands/Drivetrain/Allign.h"
+#include "commands/Drivetrain/Align.h"
 #include "commands/shooterintake/intakeRetract.h"
 #include "commands/shooterintake/scoreAmp.h"
 #include "commands/LeftClimbToggle.h"
