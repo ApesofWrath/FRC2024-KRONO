@@ -12,7 +12,7 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     std::vector<std::function<rev::REVLibError()>> climberMotorLeftConfigs = {
         [this]() {return m_climberMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);},
         [this]() {return m_climberMotorLeft.SetSmartCurrentLimit(40.0);},
-        [this]() {return m_climberMotorLeft.SetInverted(true);},
+        [this]() {return m_sparkUtil.setInvert(&m_climberMotorLeft, true);},
         [this]() {return m_climberMotorLeftController.SetP(0.65);},
         [this]() {return m_climberMotorLeftController.SetI(0.0004);},
         [this]() {return m_climberMotorLeftController.SetD(0.0);},
@@ -23,6 +23,7 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
         [this]() {return m_climberMotorLeftEncoder.SetVelocityConversionFactor(((kRotationsToInchTelescoping) * (kTelescopingRatio)) / 60.0);}
     };
 
+    m_sparkUtil.configure(&m_climberMotorLeft, climberMotorLeftConfigs);
     m_climberMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_climberMotorRight.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 

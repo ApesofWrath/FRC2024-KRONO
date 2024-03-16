@@ -24,3 +24,7 @@ void SparkUtil::configure(rev::CANSparkBase* spark, std::function<rev::REVLibErr
         configure(spark, config, attempt + 1);
     }
 }
+rev::REVLibError SparkUtil::setInvert(rev::CANSparkBase* spark, bool isInverted) {
+    spark->SetInverted(isInverted);
+    return spark->GetLastError();
+}

@@ -54,4 +54,5 @@ class climber : public frc2::SubsystemBase {
 
     bool lToggle = false;
     bool rToggle = false;
+    SparkUtil m_sparkUtil;
 }; 
