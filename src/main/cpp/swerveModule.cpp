@@ -27,7 +27,7 @@ swerveModule::swerveModule(const double module[])
     m_motorTurn.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     // Sets current limits for the swerve module motors
-    m_motorDrive.SetSmartCurrentLimit(60.0);
+    m_motorDrive.SetSmartCurrentLimit(40.0);
     m_motorTurn.SetSmartCurrentLimit(20.0);
 
     // Adds and sets the encoder offset to each swerve module encoder
