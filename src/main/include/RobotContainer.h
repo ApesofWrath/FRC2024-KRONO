@@ -17,6 +17,7 @@
 #include <frc2/command/InstantCommand.h>
 #include <frc2/Command/Button/CommandXboxController.h>
 #include <frc2/command/button/JoystickButton.h>
+#include <ctre/phoenix/CANifier.h>
 
 #include "Constants.h"
 #include "commands/Drivetrain/Drive.h"
@@ -33,6 +34,7 @@
 
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
+#include "subsystems/LED.h"`
 
 #include "MathFunctions.h"
 
@@ -65,10 +67,14 @@ class RobotContainer {
   frc2::CommandPtr GetAutonomousCommand();
 
  private:
+  
   // The robot's subsystems and commands are defined here...
+  ctre::phoenix::CANifier BeambreakLEDCanifier{intakeConstants::kBeambreakCanifier};
+
   drivetrain m_drivetrain;
-  intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator};
+  intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator, BeambreakLEDCanifier, BeambreakLEDCanifier};
   climber m_climber;
+  LED m_LED{BeambreakLEDCanifier};
 
   frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();

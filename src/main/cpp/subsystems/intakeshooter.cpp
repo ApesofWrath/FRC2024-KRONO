@@ -4,15 +4,16 @@ using namespace shooterConstants;
 using namespace intakeConstants;
 using namespace generalConstants;
 
-intakeshooter::intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator)
+intakeshooter::intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator, ctre::phoenix::CANifier& beambreakCanifier, LED LED)
 : m_intakeMotorLeft(kIntakeMotorLeft),
 m_intakeMotorRight(kIntakeMotorRight),
 m_shooterMotorLeft(kMotorShooterLeft, rev::CANSparkMax::MotorType::kBrushless),
 m_shooterMotorRight(kMotorShooterRight, rev::CANSparkMax::MotorType::kBrushless),
 m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless),
-m_BeambreakCanifier(kBeambreakCanifier),
+m_BeambreakCanifier(beambreakCanifier),
 m_controllerMain(controllerMain),
-m_controllerOperator(controllerOperator)
+m_controllerOperator(controllerOperator), 
+m_LED(LED)
 {
     //Kraken Settings
     m_intakeMotorRight.SetControl(ctre::phoenix6::controls::Follower(kIntakeMotorLeft, false));
@@ -37,7 +38,7 @@ m_controllerOperator(controllerOperator)
 
     m_velocityIntake.WithSlot(0);
     m_velocityIntake.WithEnableFOC(false);
-
+    
     //Neos
     m_shooterMotorLeft.RestoreFactoryDefaults();
     m_shooterMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
