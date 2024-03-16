@@ -15,8 +15,8 @@ drivetrain::drivetrain() {
         [this](){ return GetRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](frc::ChassisSpeeds speeds){ DriveRobotRelativeSpeeds(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            PIDConstants(0.5, 0.0, 0.0), // Translation PID constants
-            PIDConstants(10.0, 0.0, 0.0), // Rotation PID constants
+            PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
             units::meters_per_second_t(4.5), // Max module speed, in m/s
             units::meter_t(13.625_in), // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
