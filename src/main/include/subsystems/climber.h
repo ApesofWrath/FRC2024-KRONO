@@ -2,36 +2,55 @@
 
 #include <numbers>
 #include <units/length.h>
-#include <rev/SparkRelativeEncoder.h>
 #include <rev/CANSparkMax.h>
-#include <rev/SparkMaxPIDController.h>
 #include <Constants.h>
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
 using namespace climberConstants;
 
-enum class telescopeStates {
-    EXTENDED,
-    UNEXTENDED
+enum class extendingStates {
+    INIT,
+    SOLEXTEND,
+    EXTEND,
+    WAITING,
+    CLOSESOLENOIDS,
+    RETRACT,
+    POSTRETRACT
 };
 
 class climber : public frc2::SubsystemBase {
     public:
     climber();
-	void SetHeight(double height);
+	/* void SetHeight(double height);
     void TelescopeToggle();
-    void TelescopeToggle(telescopeStates state);
+    void TelescopeToggle(telescopeStates state); */
+
+    void climberExtend();
+    void climberRetract();
+
+    void leftClimbToggle();
+    void rightClimbToggle();
     void Periodic();
 
     private:
     rev::CANSparkMax m_climberMotorLeft;
     rev::CANSparkMax m_climberMotorRight;
-    //rev::SparkMaxPIDController m_rollerMotor1Controller = m_rollerMotor1.GetPIDController();
-    rev::SparkMaxPIDController m_climberMotorLeftController = m_climberMotorLeft.GetPIDController();
-    rev::SparkMaxPIDController m_climberMotorRightController = m_climberMotorRight.GetPIDController();
-    rev::SparkMaxRelativeEncoder m_climberMotorLeftEncoder = m_climberMotorLeft.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kHallSensor, 42);
-    rev::SparkMaxRelativeEncoder m_climberMotorRightEncoder = m_climberMotorRight.GetEncoder(rev::SparkMaxRelativeEncoder::Type::kHallSensor, 42);
+    rev::SparkPIDController m_climberMotorLeftController = m_climberMotorLeft.GetPIDController();
+    rev::SparkPIDController m_climberMotorRightController = m_climberMotorRight.GetPIDController();
+    rev::SparkRelativeEncoder m_climberMotorLeftEncoder = m_climberMotorLeft.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
+    rev::SparkRelativeEncoder m_climberMotorRightEncoder = m_climberMotorRight.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
 
-    telescopeStates currentTelescopeState = telescopeStates::UNEXTENDED;
+    rev::CANSparkMax m_climberSolenoidLeft;
+    rev::CANSparkMax m_climberSolenoidRight;
+
+    extendingStates currentExtendState = extendingStates::INIT;
+
+    int solCount = 0;
+    std::string climbState = "";
+
+    bool lToggle = false;
+    bool rToggle = false;
 }; 

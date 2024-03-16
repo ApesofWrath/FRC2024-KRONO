@@ -27,7 +27,7 @@ swerveModule::swerveModule(const double module[])
     m_motorTurn.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     // Sets current limits for the swerve module motors
-    m_motorDrive.SetSmartCurrentLimit(80.0);
+    m_motorDrive.SetSmartCurrentLimit(40.0);
     m_motorTurn.SetSmartCurrentLimit(20.0);
 
     // Adds and sets the encoder offset to each swerve module encoder
@@ -44,11 +44,11 @@ swerveModule::swerveModule(const double module[])
     m_driveController.SetFeedbackDevice(m_encoderDrive);
     m_turnController.SetFeedbackDevice(m_encoderTurnIntegrated);
 
-    m_driveController.SetP(0.01);
+    m_driveController.SetP(0.2);
     m_driveController.SetI(0);
-    m_driveController.SetD(0);
+    m_driveController.SetD(0.007);
     //m_driveController.SetFF(1/107.9101*2); //(0.5*1023.0)/(22100.0*0.5)
-    m_driveController.SetFF(1.0/73.0);
+    m_driveController.SetFF(1.0/4.6);
     m_driveController.SetOutputRange(-1.0F, 1.0F);
 
     m_turnController.SetP(0.015); //0.55
@@ -61,8 +61,8 @@ swerveModule::swerveModule(const double module[])
     m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * std::numbers::pi * (kFinalTurnRatio));
     m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * std::numbers::pi * (kFinalTurnRatio)) / 60.0);
 
-    m_encoderDrive.SetPositionConversionFactor(kWheelDiameter.value() * 2.0 * std::numbers::pi * (kFinalDriveRatio));
-    m_encoderDrive.SetVelocityConversionFactor(kWheelDiameter.value() * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
+    m_encoderDrive.SetPositionConversionFactor((kWheelDiameter.value() / 2.0) * 2.0 * std::numbers::pi * (kFinalDriveRatio));
+    m_encoderDrive.SetVelocityConversionFactor((kWheelDiameter.value() / 2.0) * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
 }
 
 // Gets the position of the swerve module drive motor and turn motor
@@ -84,14 +84,16 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_targetAngle = state.angle.Degrees().value();
     const double turnOutput = m_targetAngle;
 
+    //frc::SmartDashboard::PutNumber("TarWheelSpeed", targetWheelSpeed);
+
     units::radians_per_second_t targetMotorSpeed{
         (targetWheelSpeed * units::radian_t(2 * std::numbers::pi))
         / kWheelCircumference};
-    m_driveController.SetReference(targetMotorSpeed.value(), rev::CANSparkMax::ControlType::kVelocity);
+    m_driveController.SetReference(targetWheelSpeed.value(), rev::CANSparkMax::ControlType::kVelocity);
     m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
-    frc::SmartDashboard::PutNumber("Target Wheel Speed", targetWheelSpeed.value());
+    frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Motor Speed", targetMotorSpeed.value());
 }
 
@@ -123,7 +125,7 @@ frc::SwerveModuleState swerveModule::CustomOptimize(const frc::SwerveModuleState
 
     // frc::SmartDashboard::PutNumber("Desired Angle", optAngle.Degrees().value());
     // frc::SmartDashboard::PutNumber("Neo Encoder Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderTurnIntegrated.GetPosition());
-    //frc::SmartDashboard::PutNumber("Neo Encoder Vel " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetVelocity());
+    frc::SmartDashboard::PutNumber("Neo Encoder Vel " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetVelocity());
     // frc::SmartDashboard::PutNumber("Neo Encoder Drive Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetPosition());
     
     //frc::SmartDashboard::PutNumber("Motor " + std::to_string(m_motorTurn.GetDeviceID()) + " Desired Angle", m_motorTurn.GetClosedLoopTarget());

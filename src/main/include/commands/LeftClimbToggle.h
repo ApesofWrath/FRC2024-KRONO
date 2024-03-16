@@ -3,11 +3,11 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "subsystems/intakeshooter.h"
+#include "subsystems/climber.h"
 
-class fireAMP : public frc2::CommandHelper<frc2::Command, fireAMP> {
+class LeftClimbToggle : public frc2::CommandHelper<frc2::Command, LeftClimbToggle> {
     public:
-    explicit fireAMP(intakeshooter* intake);
+    explicit LeftClimbToggle(climber* climber);
 
     void Initialize() override;
 
@@ -16,5 +16,5 @@ class fireAMP : public frc2::CommandHelper<frc2::Command, fireAMP> {
     bool IsFinished() override;
 
     private:
-    intakeshooter* m_intake;
+    climber* m_climber;
 };

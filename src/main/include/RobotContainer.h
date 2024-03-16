@@ -24,17 +24,33 @@
 #include "commands/Drivetrain/NormalSpeed.h"
 #include "commands/Drivetrain/SlowDown.h"
 #include "commands/Drivetrain/Allign.h"
+
+#include "commands/shooterintake/fire.h"
+#include "commands/shooterintake/intakeActivate.h"
+#include "commands/shooterintake/intakeRetract.h"
+#include "commands/shooterintake/rapidFire.h"
+#include "commands/shooterintake/scoreAmp.h"
+#include "commands/shooterintake/spinup.h"
+
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
+
 #include "MathFunctions.h"
-#include "commands/SetClimber.h"
+
+#include "commands/ExtendClimber.h"
+#include "commands/RetractClimber.h"
 #include "subsystems/vision.h"
 #include "commands/Drivetrain/Allign.h"
+#include "commands/shooterintake/intakeRetract.h"
+#include "commands/shooterintake/scoreAmp.h"
+#include "commands/LeftClimbToggle.h"
+#include "commands/RightClimbToggle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
+
 #include <memory>
 
 
@@ -50,16 +66,19 @@ class RobotContainer {
   RobotContainer();
   
   frc2::CommandPtr GetAutonomousCommand();
+
  private:
   // The robot's subsystems and commands are defined here...
   drivetrain m_drivetrain;
-  intakeshooter m_intakeshooter;
+  intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator};
+  climber m_climber;
   vision m_vision;
 
   frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();
 
   // Controller creation
-  frc::Joystick m_controllerMain{controllerConstants::kControllerMainID};
-  frc2::CommandXboxController m_controllerOperator{controllerConstants::kControllerAuxID};
+  frc2::CommandXboxController m_controllerMain{controllerConstants::kControllerMainID};
+  frc2::CommandXboxController m_controllerOperator{controllerConstants::kControllerCmdID};
+  frc2::CommandXboxController m_controllerAlt{controllerConstants::kControllerAltID};
 };

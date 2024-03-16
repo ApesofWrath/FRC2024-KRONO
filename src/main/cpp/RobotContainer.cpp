@@ -9,23 +9,31 @@ RobotContainer::RobotContainer() : m_drivetrain(&m_vision) {
   
 
   // Initialize all of your commands and subsystems here
-  pathplanner::NamedCommands::registerCommand("test", std::make_shared<frc2::PrintCommand>("This works :3"));
+  pathplanner::NamedCommands::registerCommand("spinup", std::move(spinup(&m_intakeshooter, 110.0).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("fire", std::move(fire(&m_intakeshooter).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(intakeActivate(&m_intakeshooter).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(intakeRetract(&m_intakeshooter).ToPtr()));
+  pathplanner::NamedCommands::registerCommand("rapidFire", std::move(rapidFire(&m_intakeshooter).ToPtr()));
   // Configure the button bindings
   ConfigureButtonBindings();
 
   // $ CONTROLLER INPUTS FOR SWERVE DRIVE BELOW
   m_drivetrain.SetDefaultCommand(Drive(
     &m_drivetrain,
-    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetX()), controllerConstants::kControllerCurve)); },
-    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetY()), controllerConstants::kControllerCurve)); },
-    [this] { return (-m_controllerMain.GetRawAxis(4)); }));
+    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftX()), controllerConstants::kControllerCurve)); },
+    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftY()), controllerConstants::kControllerCurve)); },
+    [this] { return (m_controllerMain.GetRawAxis(4)); }));
   
 
     m_chooser.SetDefaultOption("DoNothing", "DoNothing");
-    m_chooser.AddOption("3Note", "3Note");
+    m_chooser.AddOption("2NoteCenter", "2NoteCenter");
+    m_chooser.AddOption("2NoteAmpSide", "2NoteAmpSide");
+    m_chooser.AddOption("3NoteAmpSide", "3NoteAmpSide");
+    m_chooser.AddOption("3NoteCenter", "3NoteCenter");
     m_chooser.AddOption("4Note", "4Note");
-    m_chooser.AddOption("test", "test");
-    m_chooser.AddOption("path", "path");
+    m_chooser.AddOption("Backup", "Backup");
+    m_chooser.AddOption("Preload", "Preload");
+    m_chooser.AddOption("PreloadBackupCenter", "PreloadBackupCenter");
 
     frc::SmartDashboard::PutData(&m_chooser);
     
@@ -45,6 +53,22 @@ void RobotContainer::ConfigureButtonBindings() {
 
   // bind horizontal alignment (note that the code infrastructure for vertical alignment is on SVR, so we need to merge before testing)
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kA).OnTrue(Allign(&m_drivetrain, &m_vision).ToPtr());
+  
+  // ShooterIntake buttons
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftBumper).OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter, 111.5).ToPtr()); // spinup for far speaker shot (7 feet from speaker) !!!!96.6
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kX).OnTrue(spinup(&m_intakeshooter, 110.0).ToPtr()); // spinup for near speaker shot (right at speaker) Y
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightBumper).OnTrue(fire(&m_intakeshooter).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kA).OnTrue(intakeRetract(&m_intakeshooter).ToPtr()); //leftbumper
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kY).OnTrue(scoreAmp(&m_intakeshooter).ToPtr());
+  
+  // Climber Buttons
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftStick).OnTrue(ExtendClimber(&m_climber).ToPtr());
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightStick).OnTrue(RetractClimber(&m_climber).ToPtr());
+
+  // Climber Zero Maintinence Buttons
+  frc2::JoystickButton(&m_controllerAlt, frc::XboxController::Button::kLeftBumper).OnTrue(LeftClimbToggle(&m_climber).ToPtr());
+  frc2::JoystickButton(&m_controllerAlt, frc::XboxController::Button::kRightBumper).OnTrue(RightClimbToggle(&m_climber).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
