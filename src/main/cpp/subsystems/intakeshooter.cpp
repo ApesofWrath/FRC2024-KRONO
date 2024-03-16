@@ -11,6 +11,7 @@ m_shooterMotorLeft(kMotorShooterLeft, rev::CANSparkMax::MotorType::kBrushless),
 m_shooterMotorRight(kMotorShooterRight, rev::CANSparkMax::MotorType::kBrushless),
 m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless),
 m_BeambreakCanifier(kBeambreakCanifier),
+m_Pigeon(kPigeon),
 m_controllerMain(controllerMain),
 m_controllerOperator(controllerOperator)
 {
@@ -121,7 +122,7 @@ void intakeshooter::rapidFire() {
 }
 
 void intakeshooter::fire() {
-    if (m_rotationEncoder.GetPosition() >= 60) {
+    if (m_rotationEncoder.GetPosition() >= 50) {
         currentIntakeshooterState = intakeshooterStates::FIRE;
     }
 }
@@ -135,6 +136,11 @@ bool intakeshooter::shooterAtSpeed() {
 }
 
 void intakeshooter::Periodic() {
+    // Set position of rotation encoder to pigeon position
+    m_rotationEncoder.SetPosition(-m_Pigeon.GetPitch().GetValueAsDouble());
+
+    frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
+
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
         case intakeshooterStates::IDLE:
@@ -143,23 +149,23 @@ void intakeshooter::Periodic() {
             m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
 
             gravityFF = 0.0;
-            m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // set the angle 
+            m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set speeds seperatly for spin while shooting
             // currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding (for preloads)
-            if (m_rotationEncoder.GetPosition() < 0){
+            /* if (m_rotationEncoder.GetPosition() < 0){
                 m_rotationEncoder.SetPosition(0);
-            }
+            } */
 
             intakeState = "IDLE";
             break;
         case intakeshooterStates::INTAKING:
-            gravityFF = 0.03 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+            gravityFF = 0.03 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(45_tps)); //!!!!!!30
-            m_rotationMotorController.SetReference(126.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // !!!!!!118.0
+            m_rotationMotorController.SetReference(kIntakeIntakingAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // !!!!!!118.0
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
 
@@ -170,9 +176,9 @@ void intakeshooter::Periodic() {
         case::intakeshooterStates::BACKOFF:
             allowSpinup = false;
             
-            gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+            gravityFF = 0.1 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
 
-            m_rotationMotorController.SetReference(0.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); //retract intake when holding note
+            m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); //retract intake when holding note
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-5_tps));
 
@@ -202,7 +208,7 @@ void intakeshooter::Periodic() {
             intakeState = "HOLDING";
             break;
         case intakeshooterStates::SPINUP:
-            gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+            gravityFF = 0.1 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (180.0/M_PI))));
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
@@ -228,11 +234,11 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::AIMAMP:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
 
-            gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+            gravityFF = 0.1 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
 
-            m_rotationMotorController.SetReference(26, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
+            m_rotationMotorController.SetReference(kIntakeAmpAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
 
-            if (m_rotationEncoder.GetPosition() > 25.8) {
+            if (m_rotationEncoder.GetPosition() < -50) {
                 currentIntakeshooterState = intakeshooterStates::SCOREAMP;
                 counter = 0;
             }
@@ -240,9 +246,9 @@ void intakeshooter::Periodic() {
             intakeState = "AIMAMP";
             break;
         case intakeshooterStates::SCOREAMP:
-            if (counter < 50){
+            if (counter < 50) {
                 counter++;
-            }else{
+            } else {
                 currentLimitsConfigs.WithStatorCurrentLimit(80.0);
                 
                 m_intakeMotorLeft.GetConfigurator().Apply(currentLimitsConfigs);
