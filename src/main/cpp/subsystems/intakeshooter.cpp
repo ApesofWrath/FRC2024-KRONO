@@ -38,37 +38,38 @@ m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless)
     m_velocityIntake.WithEnableFOC(false);
 
     //Neos
-    m_shooterMotorLeft.RestoreFactoryDefaults();
-    m_shooterMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-    m_shooterMotorLeft.SetSmartCurrentLimit(40.0);
+    std::vector<std::function<rev::REVLibError()>> shooterMotorLeftConfigs = {
+        [this]() {return m_shooterMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);},
+        [this]() {return m_shooterMotorLeft.SetSmartCurrentLimit(40.0);},
+        [this]() {return m_shooterMotorLeftController.SetP(0.0003);},
+        [this]() {return m_shooterMotorLeftController.SetI(0.0);},
+        [this]() {return m_shooterMotorLeftController.SetD(0.0);},
+        [this]() {return m_shooterMotorLeftController.SetFF(1.0 / 5035.0);},
+        [this]() {return m_shooterMotorLeftController.SetOutputRange(-1.0F, 1.0F);},
+        [this]() {return m_shooterLeftEncoder.SetMeasurementPeriod(8.0);},
+        [this]() {return m_shooterLeftEncoder.SetAverageDepth(1.0);}
+    };
 
-    m_shooterMotorRight.RestoreFactoryDefaults();
-    m_shooterMotorRight.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-    m_shooterMotorRight.SetSmartCurrentLimit(40.0);
+    std::vector<std::function<rev::REVLibError()>> shooterMotorRightConfigs = {
+        [this]() {return m_shooterMotorRight.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);},
+        [this]() {return m_shooterMotorRight.SetSmartCurrentLimit(40.0);},
+        [this]() {return m_shooterMotorRightController.SetP(0.0003);},
+        [this]() {return m_shooterMotorRightController.SetI(0.0);},
+        [this]() {return m_shooterMotorRightController.SetD(0.0);},
+        [this]() {return m_shooterMotorRightController.SetFF(1.0 / 5035.0);},
+        [this]() {return m_shooterMotorRightController.SetOutputRange(-1.0F, 1.0F);},
+        [this]() {return m_shooterRightEncoder.SetMeasurementPeriod(8.0);},
+        [this]() {return m_shooterRightEncoder.SetAverageDepth(1.0);}
+    };
+
+    m_sparkUtil.configure(&m_shooterMotorLeft, shooterMotorLeftConfigs);
+    m_sparkUtil.configure(&m_shooterMotorRight, shooterMotorRightConfigs);
     
     // rotation motor
     m_rotationMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_rotationMotor.SetSmartCurrentLimit(80.0);
 
     // shooter motor controllers (left and right)
-    m_shooterMotorLeftController.SetP(0.0003);
-    m_shooterMotorLeftController.SetI(0);
-    m_shooterMotorLeftController.SetD(0);
-    m_shooterMotorLeftController.SetFF(1.0 / 5035.0);
-    m_shooterMotorLeftController.SetOutputRange(-1.0F, 1.0F);
-
-    m_shooterLeftEncoder.SetMeasurementPeriod(8.0);
-    m_shooterLeftEncoder.SetAverageDepth(1.0);
-
-    m_shooterMotorRightController.SetP(0.0003);
-    m_shooterMotorRightController.SetI(0);
-    m_shooterMotorRightController.SetD(0);
-    m_shooterMotorRightController.SetFF(1.0 / 5035.0);
-    m_shooterMotorRightController.SetOutputRange(-1.0F, 1.0F);
-
-    m_shooterRightEncoder.SetMeasurementPeriod(8.0);
-    m_shooterRightEncoder.SetAverageDepth(1.0);
-
     // rotation motor controller
     m_rotationEncoder.SetPositionConversionFactor(kRotationsToDegrees);
     m_rotationEncoder.SetVelocityConversionFactor(kRotationsToDegrees / 60.0);

@@ -14,6 +14,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/XboxController.h>
+#include <lib/SparkUtil.h>
 
 enum class intakeshooterStates { // proceed cyclically down list, each comment describes state & conditions for entering
     IDLE, // default state, wheels (except feeder) spinning slowly
@@ -76,8 +77,9 @@ class intakeshooter : public frc2::SubsystemBase {
 
     std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 
-    int shooterClearCount = 0;
     double shootAngle; // set the angle at which we are shooting based off of the limelight
     double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
     int ampBackCount = 0;
+
+    SparkUtil m_sparkUtil;
 };
