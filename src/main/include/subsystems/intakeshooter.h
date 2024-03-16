@@ -30,7 +30,8 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
     POSTFIRE, // after the note is fired, check if the note is gone before resuming idle
     RAPIDPOSTFIRE, // returns to intaking position instead of idle for quicker shots and less intake movement
-    ZEROING // after we fire, go back to neutral and then resume idle
+    ZEROING, // after we fire, go back to neutral and then resume idle
+    NOTHING
 };
 
 class intakeshooter : public frc2::SubsystemBase {
