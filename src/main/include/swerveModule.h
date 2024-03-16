@@ -9,6 +9,7 @@
 #include <rev/CANSparkMax.h>
 #include <ctre/phoenix6/CANcoder.hpp>
 #include "Constants.h"
+#include "lib/SparkUtil.h"
 
 class swerveModule {
  public:
@@ -27,19 +28,18 @@ class swerveModule {
 
  private:
   
-  ctre::phoenix6::hardware::CANcoder m_encoderTurn;
   rev::CANSparkMax m_motorDrive;
   rev::CANSparkMax m_motorTurn;
+  ctre::phoenix6::hardware::CANcoder m_encoderTurn;
   rev::SparkRelativeEncoder m_encoderDrive = m_motorDrive.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
   rev::SparkRelativeEncoder m_encoderTurnIntegrated = m_motorTurn.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
 
   rev::SparkPIDController m_driveController = m_motorDrive.GetPIDController();
   rev::SparkPIDController m_turnController = m_motorTurn.GetPIDController();
 
-  // const double m_encoderOffset;
   double m_targetAngle;
 
-  // hardwareSettings m_settings;
+  SparkUtil m_sparkUtil;
 };
 
 //yeah this whole thing down here thats kinda confusing actually does nothing lol, none of these added units are used anywhere

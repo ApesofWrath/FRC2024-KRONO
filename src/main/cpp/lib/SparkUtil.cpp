@@ -1,5 +1,5 @@
 #include <lib/SparkUtil.h>
-
+//Configures stuff properly because rev cant
 void SparkUtil::configure(rev::CANSparkBase* spark, std::vector<std::function<rev::REVLibError()>> config) {
     configure(spark, [spark]() {return spark->RestoreFactoryDefaults();}, 1);
     configure(spark, [spark]() {return spark->SetCANTimeout(50);}, 1);

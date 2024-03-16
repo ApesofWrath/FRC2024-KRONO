@@ -1,5 +1,5 @@
-#pragma once
 #include "subsystems/intakeshooter.h"
+
 using namespace shooterConstants;
 using namespace intakeConstants;
 using namespace generalConstants;
@@ -7,10 +7,10 @@ using namespace generalConstants;
 intakeshooter::intakeshooter()
 : m_intakeMotorLeft(kIntakeMotorLeft),
 m_intakeMotorRight(kIntakeMotorRight),
+m_BeambreakCanifier(kBeambreakCanifier),
 m_shooterMotorLeft(kMotorShooterLeft, rev::CANSparkMax::MotorType::kBrushless),
 m_shooterMotorRight(kMotorShooterRight, rev::CANSparkMax::MotorType::kBrushless),
-m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless),
-m_BeambreakCanifier(kBeambreakCanifier)
+m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless)
 {
 
     //Kraken Settings
@@ -192,7 +192,7 @@ void intakeshooter::Periodic() {
             m_shooterMotorLeftController.SetReference(4500, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motors diferently so we have spin monkey
             m_shooterMotorRightController.SetReference(-4000, rev::CANSparkMax::ControlType::kVelocity);
             
-            m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
+            m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
 
             intakeState = "SPINUP";
             break;
@@ -213,7 +213,7 @@ void intakeshooter::Periodic() {
 
             gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
-            m_rotationMotorController.SetReference(23, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
+            m_rotationMotorController.SetReference(23, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut);
 
             if (m_rotationEncoder.GetPosition() > 22.8) {
                 currentIntakeshooterState = intakeshooterStates::SCOREAMP;
@@ -233,7 +233,6 @@ void intakeshooter::Periodic() {
             if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
                  m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
             }
-            shooterClearCount++;
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
             //currentIntakeshooterState = shooterClearCount > 4 ? intakeshooterStates::POSTFIRE : currentIntakeshooterState;
             intakeState = "FIRE";
@@ -246,7 +245,6 @@ void intakeshooter::Periodic() {
             intakeState = "RAPIDFIRE";
             break;
         case::intakeshooterStates::POSTFIRE:
-            shooterClearCount = 0;
             currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::IDLE : intakeshooterStates::POSTFIRE;
 
             intakeState = "POSTFIRE";
