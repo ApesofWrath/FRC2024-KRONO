@@ -3,6 +3,8 @@
 #include <frc/MathUtil.h>
 #include <iostream>
 #include <numbers>
+#include <thread>
+#include <chrono>
 #include <frc/geometry/Rotation2d.h>
 using namespace drivetrainConstants::calculations;
 using namespace generalConstants;
@@ -13,10 +15,7 @@ swerveModule::swerveModule(const double module[])
     m_motorTurn(module[1], rev::CANSparkMax::MotorType::kBrushless),
     m_encoderTurn(module[2]) {
 
-    // Resets the swerve module motors and encoders to factory settings
-    m_motorDrive.RestoreFactoryDefaults();
-    m_motorTurn.RestoreFactoryDefaults();
-    std::vector<std::function<rev::REVLibError()>> motorDriveConfigs = {
+    /* std::vector<std::function<rev::REVLibError()>> motorDriveConfigs = {
         [this]() {return m_sparkUtil.setInvert(&m_motorDrive, true);},
         [this]() {return m_motorDrive.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);},
         [this]() {return m_motorDrive.SetSmartCurrentLimit(60.0);},
@@ -42,10 +41,10 @@ swerveModule::swerveModule(const double module[])
         [this]() {return m_turnController.SetOutputRange(-1.0F, 1.0F);},
         [this]() {return m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * std::numbers::pi * (kFinalTurnRatio));},
         [this]() {return m_encoderTurnIntegrated.SetPositionConversionFactor((2.0 * std::numbers::pi * (kFinalTurnRatio)) / 60.0);}
-    };
+    }; */
 
-    m_sparkUtil.configure(&m_motorDrive, motorDriveConfigs);
-    m_sparkUtil.configure(&m_motorTurn, motorTurnConfigs);
+    /* m_sparkUtil.configure(&m_motorDrive, motorDriveConfigs);
+    m_sparkUtil.configure(&m_motorTurn, motorTurnConfigs); */
 
     // Sets both the drive motor and the turn motor to be inverted
 
@@ -63,6 +62,62 @@ swerveModule::swerveModule(const double module[])
     //m_encoderTurn.ConfigFeedbackCoefficient(360.0 / 4096.0, std::string("deg"), ctre::phoenix::sensors::SensorTimeBase::PerSecond); Deprecated, canonical units used now
 
     // Sets the feedback device of the drive motor to the built in motor encoder and the feedback device of the turn motor to the external encoder
+
+    // Resets the swerve module motors and encoders to factory settings
+    m_motorDrive.RestoreFactoryDefaults();
+    m_motorTurn.RestoreFactoryDefaults();
+    //m_encoderTurn.ConfigFactoryDefault(); Deprecated
+
+    // Sets both the drive motor and the turn motor to be inverted
+    m_motorDrive.SetInverted(true);
+    m_motorTurn.SetInverted(true);
+
+    // Sets the idle mode of the swerve module motors to brake (Motors brake when not doing anything)
+    m_motorDrive.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    m_motorTurn.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+    // Sets current limits for the swerve module motors
+    m_motorDrive.SetSmartCurrentLimit(40.0);
+    m_motorTurn.SetSmartCurrentLimit(20.0);
+
+    // Adds and sets the encoder offset to each swerve module encoder
+    //m_encoderTurn.ConfigMagnetOffset(m_encoderOffset); Set in Phoenix Tuner
+
+    // Configurations and settings for the encoders
+    //m_encoderTurn.ConfigVelocityMeasurementPeriod(ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_100Ms);  Deprecated
+    //m_encoderTurn.ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180); Set in Phoenix Tuner
+    //m_encoderTurn.ConfigSensorDirection(false); Set in Phoenix Tuner
+    //m_encoderTurn.ConfigSensorInitializationStrategy(ctre::phoenix::sensors::SensorInitializationStrategy::BootToAbsolutePosition); Automatically done
+    //m_encoderTurn.ConfigFeedbackCoefficient(360.0 / 4096.0, std::string("deg"), ctre::phoenix::sensors::SensorTimeBase::PerSecond); Deprecated, canonical units used now
+
+    // Sets the feedback device of the drive motor to the built in motor encoder and the feedback device of the turn motor to the external encoder
+    m_driveController.SetFeedbackDevice(m_encoderDrive);
+    m_turnController.SetFeedbackDevice(m_encoderTurnIntegrated);
+
+    m_driveController.SetP(0.2);
+    m_driveController.SetI(0);
+    m_driveController.SetD(0.007);
+    //m_driveController.SetFF(1/107.9101*2); //(0.5*1023.0)/(22100.0*0.5)
+    m_driveController.SetFF(1.0/4.6);
+    m_driveController.SetOutputRange(-1.0F, 1.0F);
+
+    m_turnController.SetP(0.015); //0.55
+    m_turnController.SetI(0.0);
+    m_turnController.SetD(0.001); //0.3
+    m_turnController.SetFF(0.0);
+    m_turnController.SetOutputRange(-1.0F, 1.0F);
+
+    // Velocity values for the external turn encoder and the built in drive encoder
+    m_encoderTurnIntegrated.SetPositionConversionFactor(2.0 * std::numbers::pi * (kFinalTurnRatio));
+    m_encoderTurnIntegrated.SetVelocityConversionFactor((2.0 * std::numbers::pi * (kFinalTurnRatio)) / 60.0);
+
+    m_encoderDrive.SetPositionConversionFactor((kWheelDiameter.value() / 2.0) * 2.0 * std::numbers::pi * (kFinalDriveRatio));
+    m_encoderDrive.SetVelocityConversionFactor((kWheelDiameter.value() / 2.0) * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    m_motorDrive.BurnFlash();
+    m_motorTurn.BurnFlash();
 }
 
 // Gets the position of the swerve module drive motor and turn motor
