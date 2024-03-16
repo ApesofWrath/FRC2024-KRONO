@@ -73,7 +73,7 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
 
     //frc::SmartDashboard::PutNumber("xSpeed", xSpeed.value());
     // frc::SmartDashboard::PutNumber("ySpeed", ySpeed.value());
-    frc::SmartDashboard::PutNumber("zRotation", zRot.value());
+    frc::SmartDashboard::PutNumber("zRotation", units::degrees_per_second_t(zRot).value());
     frc::SmartDashboard::PutNumber("zRotation actual", m_navX.GetRate() * -1.0);
     frc::SmartDashboard::PutNumber("Robot Rotation", m_navX.GetRotation2d().Degrees().value());
     frc::SmartDashboard::PutNumber("navX Yaw", m_navX.GetYaw());
