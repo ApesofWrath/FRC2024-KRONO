@@ -1,5 +1,7 @@
 #pragma once
 
+#include <MathFunctions.h>
+
 #include <stdalign.h>
 #include <ctre/phoenix/CANifier.h>
 #include <frc2/command/CommandPtr.h>
@@ -8,11 +10,16 @@
 
 
 
+
 class LED : public frc2::SubsystemBase {
     public:
     LED(ctre::phoenix::CANifier& LEDCANifier);
+    // Set LED color to a blinking color, speed is in blinks per second
     void setBlinking(std::array<double, 3> RGB, double speed);
+    // set color of LED to a single solid color
     void setSolid(std::array<double, 3> RGB);
+    // Cycle between all the colors of the rainbow, speed is in full cycles per second
+    void setCycle(double speed);
     private:
     ctre::phoenix::CANifier& m_LEDCANifier;
     void Periodic();

@@ -6,17 +6,15 @@ using namespace ctre::phoenix;
 
 LED::LED(CANifier& LEDCanifier) : m_LEDCANifier{LEDCanifier} {
     // Set default behavior to solid white
-    setSolid({100.0, 100.0, 100.0});
+    setCycle(1);
 }
 
-// set color of LED to a single solid color
 void LED::setSolid(std::array<double, 3> RGB) {
     ledFunction = [RGB](){
         return RGB;
     };
 }
 
-// Set LED color to a blinking color, speed is in seconds
 void LED::setBlinking(std::array<double, 3> RGB, double speed) {
     ledFunction = [RGB, speed](){
         auto currentTime = std::chrono::system_clock::now().time_since_epoch();
@@ -24,12 +22,22 @@ void LED::setBlinking(std::array<double, 3> RGB, double speed) {
 
         std::array<double, 3> result;
 
-        if ( std::fmod(currentSeconds, speed)/speed >= 0.5){
+        if ( std::fmod(currentSeconds, 1/speed)*speed >= 0.5){
             result = RGB;
         }else{
             result = {0.0, 0.0, 0.0};
         }
         return result;
+    };
+}
+
+void LED::setCycle(double speed){
+    ledFunction = [speed](){
+        auto currentTime = std::chrono::system_clock::now().time_since_epoch();
+        double currentSeconds = std::chrono::duration_cast<std::chrono::seconds>(currentTime).count();
+        double hue = std::fmod(currentSeconds, 1/speed)*speed*360;
+        std::array<double, 3> RGB = MathFunctions::hueToRGB(hue);
+        return RGB;
     };
 }
 
