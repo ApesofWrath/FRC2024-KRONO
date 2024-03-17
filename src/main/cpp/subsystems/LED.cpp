@@ -41,15 +41,18 @@ void LED::setCycle(double speed){
     };
 }
 
+void LED::setBrightness(double percentBrightness){
+    brightness = std::clamp(percentBrightness, 0.0, 100.0);
+}
 
 
 void LED::Periodic() {
     // Get RGB value from lambda function
     std::array<double, 3> RGB = ledFunction();
 
-    m_LEDCANifier.SetLEDOutput(RGB[0], CANifier::LEDChannelB); // NOTE WHEN TESTING: Make sure channels are correct
-    m_LEDCANifier.SetLEDOutput(RGB[1], CANifier::LEDChannelA);
-    m_LEDCANifier.SetLEDOutput(RGB[2], CANifier::LEDChannelC);
+    m_LEDCANifier.SetLEDOutput(RGB[0]*brightness, CANifier::LEDChannelB); // NOTE WHEN TESTING: Make sure channels are correct
+    m_LEDCANifier.SetLEDOutput(RGB[1]*brightness, CANifier::LEDChannelA);
+    m_LEDCANifier.SetLEDOutput(RGB[2]*brightness, CANifier::LEDChannelC);
 
     }
 
