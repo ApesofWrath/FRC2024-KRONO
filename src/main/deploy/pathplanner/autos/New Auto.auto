@@ -2,19 +2,57 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.324524164199829,
-      "y": 5.53
+      "x": 1.3270862102508545,
+      "y": 5.58190393447876
     },
-    "rotation": -4.360368101131817e-20
+    "rotation": -4.537009139481772e-21
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "New Path.1"
+            "pathName": "3Note.1"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
           }
         }
       ]

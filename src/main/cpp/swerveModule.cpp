@@ -3,6 +3,8 @@
 #include <frc/MathUtil.h>
 #include <iostream>
 #include <numbers>
+#include <thread>
+#include <chrono>
 #include <frc/geometry/Rotation2d.h>
 using namespace drivetrainConstants::calculations;
 using namespace generalConstants;
@@ -27,7 +29,7 @@ swerveModule::swerveModule(const double module[])
     m_motorTurn.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     // Sets current limits for the swerve module motors
-    m_motorDrive.SetSmartCurrentLimit(60.0);
+    m_motorDrive.SetSmartCurrentLimit(40.0);
     m_motorTurn.SetSmartCurrentLimit(20.0);
 
     // Adds and sets the encoder offset to each swerve module encoder
@@ -63,6 +65,11 @@ swerveModule::swerveModule(const double module[])
 
     m_encoderDrive.SetPositionConversionFactor((kWheelDiameter.value() / 2.0) * 2.0 * std::numbers::pi * (kFinalDriveRatio));
     m_encoderDrive.SetVelocityConversionFactor((kWheelDiameter.value() / 2.0) * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    m_motorDrive.BurnFlash();
+    m_motorTurn.BurnFlash();
 }
 
 // Gets the position of the swerve module drive motor and turn motor
