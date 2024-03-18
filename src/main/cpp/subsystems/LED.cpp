@@ -2,7 +2,7 @@
 #include "subsystems/LED.h"
 
 using namespace ctre::phoenix;
-
+using namespace generalConstants;
 
 LED::LED(CANifier& LEDCanifier) : m_LEDCANifier{LEDCanifier} {
     // Set default behavior to solid white
@@ -17,8 +17,8 @@ void LED::setSolid(std::array<double, 3> RGB) {
 
 void LED::setBlinking(std::array<double, 3> RGB, double speed) {
     ledFunction = [RGB, speed](){
-        auto currentTime = std::chrono::system_clock::now().time_since_epoch();
-        double currentSeconds = std::chrono::duration_cast<std::chrono::seconds>(currentTime).count();
+        double currentSeconds = timer.Get().value();
+
 
         std::array<double, 3> result;
 
@@ -33,8 +33,7 @@ void LED::setBlinking(std::array<double, 3> RGB, double speed) {
 
 void LED::setCycle(double speed){
     ledFunction = [speed](){
-        auto currentTime = std::chrono::system_clock::now().time_since_epoch();
-        double currentSeconds = std::chrono::duration_cast<std::chrono::seconds>(currentTime).count();
+        double currentSeconds = timer.Get().value();
         double hue = std::fmod(currentSeconds, 1/speed)*speed*360;
         std::array<double, 3> RGB = MathFunctions::hueToRGB(hue);
         return RGB;
