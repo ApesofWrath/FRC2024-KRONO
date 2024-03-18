@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6884877930156866,
-      "y": 6.635333571419023
+      "x": 1.397372841835022,
+      "y": 5.6
     },
-    "rotation": 60.0
+    "rotation": 4.763711697130254e-27
   },
   "command": {
     "type": "sequential",
@@ -33,7 +33,32 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2NoteAmpSide.2"
+            "pathName": "3NoteCenter.1"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3NoteCenter.2"
           }
         },
         {
@@ -58,6 +83,6 @@
       ]
     }
   },
-  "folder": "PathPlanner Autos",
-  "choreoAuto": false
+  "folder": "Choreo Autos",
+  "choreoAuto": true
 }
