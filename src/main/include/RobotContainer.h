@@ -50,6 +50,8 @@
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 
+#include <frc/Timer.h>
+
 #include <memory>
 
 
@@ -63,8 +65,9 @@
 class RobotContainer {
  public:
   RobotContainer();
-  
   frc2::CommandPtr GetAutonomousCommand();
+
+  frc::Timer timer; 
 
  private:
   
