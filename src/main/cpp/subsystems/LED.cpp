@@ -100,11 +100,20 @@ void LEDmanager::Periodic(){
     if (frc::DriverStation::IsEnabled){
         auto intakeshooterState = m_intakeshooter.getState();
         switch (intakeshooterState) {
+
         case intakeshooterStates::IDLE:
             m_LED.setTeamColor();
             break;
+
         case intakeshooterStates::HOLDING:
             m_LED.setSolid(frc::Color::kOrange);
+        
+        case intakeshooterStates::SPINUP:
+            if (m_intakeshooter.shooterAtSpeed()){
+                m_LED.setSolid(frc::Color::kGreen);
+            } else {
+                m_LED.setBlinking(frc::Color::kYellow, 5.0);
+            }
         default:
             m_LED.setTeamColor();
         }
