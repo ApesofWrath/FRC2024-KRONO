@@ -18,21 +18,31 @@
 class LED : public frc2::SubsystemBase {
     public:
     LED(ctre::phoenix::CANifier& LEDCANifier);
+
     // Set LED color to a blinking color, speed is in blinks per second
     void setBlinking(std::array<double, 3> RGB, double speed);
+    void setBlinking(frc::Color color, double speed);
     // set color of LED to a single solid color
     void setSolid(std::array<double, 3> RGB);
+    void setSolid(frc::Color color);
+
     // Cycle between all the colors of the rainbow, speed is in full cycles per second
     void setCycle(double speed);
+
+    // Set brightness. Values <0 or >1 will be clamped
+    void setBrightness(double Brightness);
+
     // Set percent brightness. Values <0 or >100 will be clamped
-    void setBrightness(double percentBrightness);
+    void setBrightness(int percentBrightness);
     void setTeamColor();
+
+
     private:
     ctre::phoenix::CANifier& m_LEDCANifier;
     void Periodic();
     double brightness;
     // This lambda function is called to get the RGB values that the LEDs should be set to, and can be dynamically swapped with different lambda fucntions for different funcitonality
-    std::function<std::array<double, 3>()> ledFunction;
+    std::function<frc::Color()> ledFunction;
 };
 
 class LEDmanager : public frc2::SubsystemBase{

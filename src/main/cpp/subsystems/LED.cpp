@@ -10,20 +10,40 @@ LED::LED(CANifier& LEDCanifier) : m_LEDCANifier{LEDCanifier} {
 }
 
 void LED::setSolid(std::array<double, 3> RGB) {
-    ledFunction = [RGB](){
-        return RGB;
+    auto color = frc::Color(RGB[0], RGB[1], RGB[2]);
+    ledFunction = [color](){
+        return color;
+    };
+}
+void LED::setSolid(frc::Color color){
+    ledFunction = [color](){
+        return color;
     };
 }
 
 void LED::setBlinking(std::array<double, 3> RGB, double speed) {
-    ledFunction = [RGB, speed](){
+    auto color = frc::Color(RGB[0], RGB[1], RGB[2]);
+    ledFunction = [color, speed](){
         double currentSeconds = timer.Get().value();
 
-
-        std::array<double, 3> result;
+        frc::Color result;
 
         if ( std::fmod(currentSeconds, 1/speed)*speed >= 0.5){
-            result = RGB;
+            result = color;
+        }else{
+            result = {0.0, 0.0, 0.0};
+        }
+        return result;
+    };
+}
+void LED::setBlinking(frc::Color color, double speed) {
+    ledFunction = [color, speed](){
+        double currentSeconds = timer.Get().value();
+
+        frc::Color result;
+
+        if ( std::fmod(currentSeconds, 1/speed)*speed >= 0.5){
+            result = color;
         }else{
             result = {0.0, 0.0, 0.0};
         }
@@ -36,33 +56,39 @@ void LED::setCycle(double speed){
         double currentSeconds = timer.Get().value();
         double hue = std::fmod(currentSeconds, 1/speed)*speed*360;
         std::array<double, 3> RGB = MathFunctions::hueToRGB(hue);
-        return RGB;
+        frc::Color color = {RGB[0], RGB[1], RGB[2]};
+        return color;
     };
 }
 
-void LED::setBrightness(double percentBrightness){
-    brightness = std::clamp(percentBrightness, 0.0, 100.0);
+void LED::setBrightness(double brightness){
+    brightness = std::clamp(brightness, 0.0, 1.0)*100;
+}
+
+void LED::setBrightness(int percentBrightness){
+    brightness = std::clamp(brightness, 0.0, 100.0);
+
 }
 
 void LED::setTeamColor(){
     auto alliance = frc::DriverStation::GetAlliance();
     if (alliance == frc::DriverStation::Alliance::kRed){
-        setSolid({1.0, 0.0, 0.0});
+        setSolid(frc::Color::kRed);
     } else if (alliance == frc::DriverStation::Alliance::kBlue) {
-        setSolid({0.0, 0.0, 1.0});        
+        setSolid(frc::Color::kBlue);        
     } else {
-        setSolid({1.0, 1.0, 1.0});
+        setSolid(frc::Color::kWhite);
     }
 
 }
 
 void LED::Periodic() {
     // Get RGB value from lambda function
-    std::array<double, 3> RGB = ledFunction();
+    auto color = ledFunction();
 
-    m_LEDCANifier.SetLEDOutput(RGB[0]*brightness, CANifier::LEDChannelB); // NOTE WHEN TESTING: Make sure channels are correct
-    m_LEDCANifier.SetLEDOutput(RGB[1]*brightness, CANifier::LEDChannelA);
-    m_LEDCANifier.SetLEDOutput(RGB[2]*brightness, CANifier::LEDChannelC);
+    m_LEDCANifier.SetLEDOutput(color.red*brightness, CANifier::LEDChannelB); // NOTE WHEN TESTING: Make sure channels are correct
+    m_LEDCANifier.SetLEDOutput(color.green*brightness, CANifier::LEDChannelA);
+    m_LEDCANifier.SetLEDOutput(color.blue*brightness, CANifier::LEDChannelC);
 
     }
 
@@ -78,7 +104,7 @@ void LEDmanager::Periodic(){
             m_LED.setTeamColor();
             break;
         case intakeshooterStates::HOLDING:
-            m_LED.setSolid({0.988235294118, 0.498039215686, 0.0117647058824});
+            m_LED.setSolid(frc::Color::kOrange);
         default:
             m_LED.setTeamColor();
         }
