@@ -66,3 +66,23 @@ void LED::Periodic() {
 
     }
 
+ LEDmanager::LEDmanager(LED& LED, intakeshooter& intakeshooter) : m_LED{LED}, m_intakeshooter{intakeshooter} {
+
+}
+
+void LEDmanager::Periodic(){
+    if (frc::DriverStation::IsEnabled){
+        auto intakeshooterState = m_intakeshooter.getState();
+        switch (intakeshooterState) {
+        case intakeshooterStates::IDLE:
+            m_LED.setTeamColor();
+            break;
+        case intakeshooterStates::HOLDING:
+            m_LED.setSolid({0.988235294118, 0.498039215686, 0.0117647058824});
+        default:
+            m_LED.setTeamColor();
+        }
+    } else {
+        m_LED.setCycle(1.0);
+    }
+}

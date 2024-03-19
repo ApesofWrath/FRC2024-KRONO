@@ -1,6 +1,5 @@
 #pragma once
 
-#include <subsystems/LED.h>
 
 #include <numbers>
 #include <string>
@@ -38,7 +37,7 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
 
 class intakeshooter : public frc2::SubsystemBase {
     public:
-    intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator, ctre::phoenix::CANifier& beambreakCanifier, LED LED);
+    intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator, ctre::phoenix::CANifier& beambreakCanifier);
     void intakeActivate();
     void intakeRetract();
     void spinup();
@@ -54,7 +53,6 @@ class intakeshooter : public frc2::SubsystemBase {
     void Periodic() override;
     private:
 
-    LED& m_LED;
 
     frc2::CommandXboxController* m_controllerMain;
     frc2::CommandXboxController* m_controllerOperator;

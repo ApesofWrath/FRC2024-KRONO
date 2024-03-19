@@ -75,7 +75,7 @@ class RobotContainer {
   ctre::phoenix::CANifier BeambreakLEDCanifier{intakeConstants::kBeambreakCanifier};
 
   drivetrain m_drivetrain;
-  intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator, BeambreakLEDCanifier, BeambreakLEDCanifier};
+  intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator, BeambreakLEDCanifier};
   climber m_climber;
   LED m_LED{BeambreakLEDCanifier};
 

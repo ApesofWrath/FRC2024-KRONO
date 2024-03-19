@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <frc/Timer.h>
 #include <frc/DriverStation.h>
+#include <subsystems/intakeshooter.h>
+#include <frc/util/Color.h>
 
 
 
@@ -31,4 +33,14 @@ class LED : public frc2::SubsystemBase {
     double brightness;
     // This lambda function is called to get the RGB values that the LEDs should be set to, and can be dynamically swapped with different lambda fucntions for different funcitonality
     std::function<std::array<double, 3>()> ledFunction;
+};
+
+class LEDmanager : public frc2::SubsystemBase{
+    public:
+    LEDmanager(LED& LED, intakeshooter& intakeshooter);
+
+    private:
+    void Periodic();
+    LED& m_LED;
+    intakeshooter& m_intakeshooter;
 };
