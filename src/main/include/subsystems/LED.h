@@ -9,6 +9,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <algorithm>
 #include <frc/Timer.h>
+#include <frc/DriverStation.h>
 
 
 
@@ -23,6 +24,7 @@ class LED : public frc2::SubsystemBase {
     void setCycle(double speed);
     // Set percent brightness. Values <0 or >100 will be clamped
     void setBrightness(double percentBrightness);
+    void setTeamColor();
     private:
     ctre::phoenix::CANifier& m_LEDCANifier;
     void Periodic();

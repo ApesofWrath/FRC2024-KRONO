@@ -44,6 +44,17 @@ void LED::setBrightness(double percentBrightness){
     brightness = std::clamp(percentBrightness, 0.0, 100.0);
 }
 
+void LED::setTeamColor(){
+    auto alliance = frc::DriverStation::GetAlliance();
+    if (alliance == frc::DriverStation::Alliance::kRed){
+        setSolid({1.0, 0.0, 0.0});
+    } else if (alliance == frc::DriverStation::Alliance::kBlue) {
+        setSolid({0.0, 0.0, 1.0});        
+    } else {
+        setSolid({1.0, 1.0, 1.0});
+    }
+
+}
 
 void LED::Periodic() {
     // Get RGB value from lambda function
