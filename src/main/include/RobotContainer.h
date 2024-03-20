@@ -78,6 +78,7 @@ class RobotContainer {
   intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator, BeambreakLEDCanifier};
   climber m_climber;
   LED m_LED{BeambreakLEDCanifier};
+  LEDmanager m_LEDmanager{m_LED, m_intakeshooter};
 
   frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();
