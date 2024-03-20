@@ -30,6 +30,10 @@ swerveModule::swerveModule(const double module[])
     m_motorDrive.SetSmartCurrentLimit(60.0);
     m_motorTurn.SetSmartCurrentLimit(20.0);
 
+    // Burn all settings
+    m_motorDrive.BurnFlash();
+    m_motorTurn.BurnFlash();
+
     // Adds and sets the encoder offset to each swerve module encoder
     //m_encoderTurn.ConfigMagnetOffset(m_encoderOffset); Set in Phoenix Tuner
 
