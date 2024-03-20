@@ -49,14 +49,14 @@ class RobotContainer {
  private:
   // The robot's subsystems and commands are defined here...
   drivetrain m_drivetrain;
-  intakeshooter m_intakeshooter;
+  intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator};
   climber m_climber;
 
   frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();
 
   // Controller creation
-  frc::Joystick m_controllerMain{controllerConstants::kControllerMainID};
+  frc2::CommandXboxController m_controllerMain{controllerConstants::kControllerMainID};
   frc2::CommandXboxController m_controllerOperator{controllerConstants::kControllerCmdID};
   frc2::CommandXboxController m_controllerAlt{controllerConstants::kControllerAltID};
 };

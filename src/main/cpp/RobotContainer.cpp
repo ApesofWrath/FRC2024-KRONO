@@ -17,8 +17,8 @@ RobotContainer::RobotContainer() {
 
   // $ CONTROLLER INPUTS FOR SWERVE DRIVE BELOW
   m_drivetrain.SetDefaultCommand(m_drivetrain.SwerveDriveCommand(
-    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetX()), controllerConstants::kControllerCurve)); },
-    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetY()), controllerConstants::kControllerCurve)); },
+    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftX()), controllerConstants::kControllerCurve)); },
+    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftY()), controllerConstants::kControllerCurve)); },
     [this] { return (m_controllerMain.GetRawAxis(4)); }));
 
     m_chooser.SetDefaultOption("DoNothing", "DoNothing");

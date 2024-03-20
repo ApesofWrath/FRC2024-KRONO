@@ -15,6 +15,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/WaitUntilCommand.h>
 #include <frc/XboxController.h>
+#include <frc2/command/button/CommandXboxController.h>
 
 enum class intakeshooterStates { // proceed cyclically down list, each comment describes state & conditions for entering
     IDLE, // default state, wheels (except feeder) spinning slowly
@@ -35,7 +36,7 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
 
 class intakeshooter : public frc2::SubsystemBase {
     public:
-    intakeshooter();
+    intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator);
     void intakeActivate();
     void intakeRetract();
     void spinup(float angle);
@@ -55,6 +56,10 @@ class intakeshooter : public frc2::SubsystemBase {
 
     void Periodic() override;
     private:
+
+    frc2::CommandXboxController* m_controllerMain;
+    frc2::CommandXboxController* m_controllerOperator;
+
     ctre::phoenix6::hardware::TalonFX m_intakeMotorLeft;
     ctre::phoenix6::hardware::TalonFX m_intakeMotorRight;
 
