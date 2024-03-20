@@ -27,7 +27,7 @@ swerveModule::swerveModule(const double module[])
     m_motorTurn.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     // Sets current limits for the swerve module motors
-    m_motorDrive.SetSmartCurrentLimit(60.0);
+    m_motorDrive.SetSmartCurrentLimit(40.0);
     m_motorTurn.SetSmartCurrentLimit(20.0);
 
     // Burn all settings
@@ -48,9 +48,9 @@ swerveModule::swerveModule(const double module[])
     m_driveController.SetFeedbackDevice(m_encoderDrive);
     m_turnController.SetFeedbackDevice(m_encoderTurnIntegrated);
 
-    m_driveController.SetP(0.3);
+    m_driveController.SetP(0.2);
     m_driveController.SetI(0);
-    m_driveController.SetD(0.2);
+    m_driveController.SetD(0.007);
     //m_driveController.SetFF(1/107.9101*2); //(0.5*1023.0)/(22100.0*0.5)
     m_driveController.SetFF(1.0/4.6);
     m_driveController.SetOutputRange(-1.0F, 1.0F);
@@ -97,6 +97,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
+    frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Motor Speed", targetMotorSpeed.value());
 }
