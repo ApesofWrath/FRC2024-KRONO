@@ -1,7 +1,6 @@
 #pragma once
 
 #include <numbers>
-#include <lib/SparkUtil.h>
 #include <units/length.h>
 #include <rev/CANSparkMax.h>
 #include <Constants.h>
@@ -54,5 +53,4 @@ class climber : public frc2::SubsystemBase {
 
     bool lToggle = false;
     bool rToggle = false;
-    SparkUtil m_sparkUtil;
 }; 

@@ -14,8 +14,7 @@
 #include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/commands/FollowPathHolonomic.h>
-using namespace drivetrainConstants::swerveModules;
-using namespace drivetrainConstants::calculations;
+
 class drivetrain : public frc2::SubsystemBase {
  public:
   drivetrain();
@@ -50,19 +49,21 @@ class drivetrain : public frc2::SubsystemBase {
   double kslowConst = 1.0;
 
 private:
+  
   // navX
   AHRS m_navX{frc::SPI::kMXP};
   
   // Swervedrive dimensions
-  frc::Translation2d m_locationFrontRight{kModuleToCenterDist, -kModuleToCenterDist}; //9.875
-  frc::Translation2d m_locationRearRight{-kModuleToCenterDist, -kModuleToCenterDist};
-  frc::Translation2d m_locationFrontLeft{kModuleToCenterDist, kModuleToCenterDist};
-  frc::Translation2d m_locationRearLeft{-kModuleToCenterDist, kModuleToCenterDist};
+  frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in}; //9.875
+  frc::Translation2d m_locationRearRight{-9.875_in, -9.875_in};
+  frc::Translation2d m_locationFrontLeft{+9.875_in, +9.875_in};
+  frc::Translation2d m_locationRearLeft{-9.875_in, +9.875_in};
+
   // Creates new objects for each swerve module
-  swerveModule m_frontRight{kModuleFrontRight};
-  swerveModule m_rearRight{kModuleRearRight};
-  swerveModule m_frontLeft{kModuleFrontLeft};
-  swerveModule m_rearLeft{kModuleRearLeft};
+  swerveModule m_frontRight{drivetrainConstants::swerveModules::kModuleFrontRight};
+  swerveModule m_rearRight{drivetrainConstants::swerveModules::kModuleRearRight};
+  swerveModule m_frontLeft{drivetrainConstants::swerveModules::kModuleFrontLeft};
+  swerveModule m_rearLeft{drivetrainConstants::swerveModules::kModuleRearLeft};
 
   // Creates SwerveDrive Kinematics object
   frc::SwerveDriveKinematics<4> m_kinematics{m_locationFrontRight,
