@@ -92,7 +92,7 @@ void LED::Periodic() {
 
     }
 
- LEDmanager::LEDmanager(LED& LED, intakeshooter& intakeshooter) : m_LED{LED}, m_intakeshooter{intakeshooter} {
+LEDmanager::LEDmanager(LED& LED, intakeshooter& intakeshooter) : m_LED{LED}, m_intakeshooter{intakeshooter} {
 
 }
 
