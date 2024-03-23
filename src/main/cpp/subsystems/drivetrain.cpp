@@ -105,11 +105,6 @@ void drivetrain::UpdateOdometry() {
                       m_rearLeft.GetPosition()});
 }
 
-// Resets the gyro when function run
-void drivetrain::resetGyro() {
-    m_navX.ZeroYaw();
-}
-
 // Perodically (Constantly runs during periodic), updates the odometry of the swervedrive
 frc::Pose2d drivetrain::GetOdometry() {
     return m_odometry.GetEstimatedPosition();
@@ -142,19 +137,6 @@ void drivetrain::DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds
     m_rearRight.SetDesiredState(rearRight);
     m_frontLeft.SetDesiredState(frontLeft);
     m_rearLeft.SetDesiredState(rearLeft);
-}
-
-
-// Slow constant value
-void drivetrain::slowDown() {
-    kslowConst = 0.5;
-    printf("Slow Func");
-}
-
-// Normal speed value (should always be 1.0)
-void drivetrain::normalSpeed() {
-    kslowConst = 1.0;
-    printf("Normal Func");
 }
 
 void drivetrain::Periodic() {

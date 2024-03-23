@@ -43,8 +43,7 @@ class drivetrain : public frc2::SubsystemBase {
   void ResetOdometry(frc::Pose2d initPose);
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
   void DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
-  void slowDown();
-  void normalSpeed();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
