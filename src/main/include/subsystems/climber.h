@@ -12,13 +12,12 @@
 
 using namespace climberConstants;
 
-enum class extendingStates {
-    INIT,
-    SOLEXTEND,
-    EXTEND,
-    WAITING,
-    RETRACT,
-    POSTRETRACT
+enum class extendingStates { // Enter condition [id BUTTON] -> action [-> exit condition -> next state]
+    INIT, // DEFAULT, transition from EXTEND, transition from WAITING, transition from POSTRETRACT -> Do nothing
+    SOLEXTEND, // climberExtend [] -> activate solenoids, set motors -> 4 loops -> EXTEND
+    EXTEND, // transition from SOLEXTEND -> run extender motors ->-> INIT
+    RETRACT, // climberRetract [] -> deactivate solenoid, retract motors -> motors retracted -> POSTRETRACT
+    POSTRETRACT // transition from RETRACT -> set motors ->-> INIT
 };
 
 class climber : public frc2::SubsystemBase {
