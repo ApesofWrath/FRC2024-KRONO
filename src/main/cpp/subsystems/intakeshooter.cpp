@@ -76,9 +76,9 @@ m_controllerOperator(controllerOperator)
     m_rotationEncoder.SetVelocityConversionFactor(kRotationsToDegrees / 60.0);
 
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
-    m_rotationMotorController.SetP(0.00002); // 0.00002
+    m_rotationMotorController.SetP(0.0); // 0.00002
     m_rotationMotorController.SetI(0.0); // 0
-    m_rotationMotorController.SetD(0.27); // 0.15
+    m_rotationMotorController.SetD(0.0); // 0.15
     m_rotationMotorController.SetFF(1.0 / 275.0);
 
     m_rotationMotorController.SetIZone(4.0);
@@ -164,7 +164,7 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::INTAKING:
             gravityFF = 0.03 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
 
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(45_tps)); //!!!!!!30
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-45_tps)); //!!!!!!30
             m_rotationMotorController.SetReference(kIntakeIntakingAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // !!!!!!118.0
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
@@ -180,7 +180,7 @@ void intakeshooter::Periodic() {
 
             m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); //retract intake when holding note
 
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-5_tps));
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(5_tps));
 
             currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::NOTEFORWARD : intakeshooterStates::BACKOFF;
 
@@ -191,7 +191,7 @@ void intakeshooter::Periodic() {
 
             break;
         case intakeshooterStates::NOTEFORWARD:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1_tps));
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-1_tps));
 
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::NOTEFORWARD;
 
@@ -220,7 +220,7 @@ void intakeshooter::Periodic() {
             intakeState = "SPINUP";
             break;
         case intakeshooterStates::AMPBACK:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1_tps));
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-1_tps));
 
             ampBackCount++;
 
@@ -254,7 +254,7 @@ void intakeshooter::Periodic() {
                 m_intakeMotorLeft.GetConfigurator().Apply(currentLimitsConfigs);
                 m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
 
-                m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-26_tps));
+                m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(26_tps));
                 //currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::IDLE : intakeshooterStates::SCOREAMP; // if the canifier's limit backward input is tripped, switch to postfire
 
                 intakeState = "SCOREAMP";
@@ -262,7 +262,7 @@ void intakeshooter::Periodic() {
             break;
         case intakeshooterStates::FIRE: //in the hole
             if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
-                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
+                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-50_tps)); // set the speed of the intake motor
             }
             shooterClearCount++;
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
@@ -271,7 +271,7 @@ void intakeshooter::Periodic() {
             break;
         case intakeshooterStates::RAPIDFIRE:
             if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
-                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
+                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-50_tps)); // set the speed of the intake motor
             }
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::RAPIDPOSTFIRE : intakeshooterStates::RAPIDFIRE;
             intakeState = "RAPIDFIRE";
