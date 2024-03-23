@@ -29,6 +29,10 @@ swerveModule::swerveModule(const double module[])
     m_motorDrive.SetSmartCurrentLimit(40.0);
     m_motorTurn.SetSmartCurrentLimit(20.0);
 
+    // Burn all settings
+    m_motorDrive.BurnFlash();
+    m_motorTurn.BurnFlash();
+
     // Sets the feedback device of the drive motor to the built in motor encoder and the feedback device of the turn motor to the external encoder
     m_driveController.SetFeedbackDevice(m_encoderDrive);
     m_turnController.SetFeedbackDevice(m_encoderTurnIntegrated);
@@ -65,7 +69,7 @@ frc::SwerveModuleState swerveModule::GetState() {
 
 // Applies the wanted speed and direction to the turn and drive motors
 void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
-    const auto state = CustomOptimize(
+    const auto state = frc::SwerveModuleState::Optimize(
         referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees));
     //This returns the position in +-Cancoder units counting forever, as opposed to absolulte -180 to +180 deg.
 
@@ -80,6 +84,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
+    frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Motor Speed", targetMotorSpeed.value());
 }

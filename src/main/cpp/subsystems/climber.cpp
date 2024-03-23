@@ -55,6 +55,12 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     // Set Climber Positions for Encoders
     m_climberMotorLeftEncoder.SetPosition(0.2);
     m_climberMotorRightEncoder.SetPosition(0.2);
+
+    // Burn all settings
+    m_climberMotorLeft.BurnFlash();
+    m_climberMotorRight.BurnFlash();
+    m_climberSolenoidLeft.BurnFlash();
+    m_climberSolenoidRight.BurnFlash();
 }
 
 void climber::climberRetract() {

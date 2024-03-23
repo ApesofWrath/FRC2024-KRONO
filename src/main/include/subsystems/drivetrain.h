@@ -68,7 +68,7 @@ private:
   AHRS m_navX{frc::SPI::kMXP};
   
   // Swervedrive dimensions
-  frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in};
+  frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in}; //9.875
   frc::Translation2d m_locationRearRight{-9.875_in, -9.875_in};
   frc::Translation2d m_locationFrontLeft{+9.875_in, +9.875_in};
   frc::Translation2d m_locationRearLeft{-9.875_in, +9.875_in};

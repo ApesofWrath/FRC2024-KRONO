@@ -89,6 +89,9 @@ m_controllerOperator(controllerOperator)
     m_rotationMotorController.SetSmartMotionMaxVelocity(125.0);
     m_rotationMotorController.SetSmartMotionMaxAccel(750.0);
 
+    // Burn after reading (2008)
+    m_shooterMotorLeft.BurnFlash();
+    m_shooterMotorRight.BurnFlash();
     m_rotationMotor.BurnFlash();
 }
 
