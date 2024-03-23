@@ -178,8 +178,8 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::INTAKING:
             gravityFF = 0.03 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(45_tps)); //!!!!!!30
-            m_rotationMotorController.SetReference(126.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // !!!!!!118.0
+            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(45_tps));
+            m_rotationMotorController.SetReference(126.0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut);
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
 
@@ -272,7 +272,7 @@ void intakeshooter::Periodic() {
 
             intakeState = "SCOREAMP";
             break;
-        case intakeshooterStates::FIRE: //in the hole
+        case intakeshooterStates::FIRE:
             if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
                  m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
             }
