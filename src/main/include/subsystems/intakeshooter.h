@@ -9,6 +9,7 @@
 #include <rev/CANSparkMax.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix/CANifier.h>
+#include <ctre/phoenix6/Pigeon2.hpp>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandPtr.h>
@@ -68,6 +69,8 @@ class intakeshooter : public frc2::SubsystemBase {
     ctre::phoenix6::controls::VelocityDutyCycle m_velocityIntake{0_tps};
 
     ctre::phoenix::CANifier m_BeambreakCanifier;
+
+    ctre::phoenix6::hardware::Pigeon2 m_Pigeon;
 
     rev::CANSparkMax m_shooterMotorLeft;
     rev::CANSparkMax m_shooterMotorRight;
