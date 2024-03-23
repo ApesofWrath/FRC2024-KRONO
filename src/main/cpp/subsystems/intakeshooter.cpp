@@ -76,15 +76,15 @@ m_controllerOperator(controllerOperator)
     m_rotationEncoder.SetVelocityConversionFactor(kRotationsToDegrees / 60.0);
 
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
-    m_rotationMotorController.SetP(0.0); // 0.00002
-    m_rotationMotorController.SetI(0.0); // 0
-    m_rotationMotorController.SetD(0.0); // 0.15
-    m_rotationMotorController.SetFF(1.0 / 275.0);
+    m_rotationMotorController.SetP(0.000000000000000000000000000000000000000000001); // 0.00002
+    m_rotationMotorController.SetI(0.0000000000000000000000000001); // 0
+    m_rotationMotorController.SetD(0.0000000000000000000000000000000000000000003); // 0.15
+    m_rotationMotorController.SetFF(1.0 / 400.0);
 
     m_rotationMotorController.SetIZone(4.0);
 
     m_rotationMotorController.SetOutputRange(-1.0F, 1.0F);
-    m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(2.0);
+    m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(1.0);
     m_rotationMotor.EnableVoltageCompensation(12.0);
 
     m_rotationMotorController.SetSmartMotionMaxVelocity(125.0);
@@ -208,7 +208,7 @@ void intakeshooter::Periodic() {
             intakeState = "HOLDING";
             break;
         case intakeshooterStates::SPINUP:
-            gravityFF = 0.1 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (180.0/M_PI))));
+            gravityFF = 0.0 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (180.0/M_PI))));
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
