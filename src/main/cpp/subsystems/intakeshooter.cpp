@@ -232,18 +232,6 @@ void intakeshooter::Periodic() {
 
             intakeState = "SPINUP";
             break;
-        case intakeshooterStates::AMPBACK:
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(1_tps));
-
-            ampBackCount++;
-
-            if (ampBackCount > 5) {
-                currentIntakeshooterState = intakeshooterStates::AIMAMP;
-                ampBackCount = 0;
-            }
-
-            intakeState = "AMPBACK";
-            break;
         case intakeshooterStates::AIMAMP:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
 
@@ -299,22 +287,6 @@ void intakeshooter::Periodic() {
             currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::INTAKING : intakeshooterStates::RAPIDPOSTFIRE;
 
             intakeState = "RAPIDPOSTFIRE";
-            break;
-        case::intakeshooterStates::ZEROING:
-            gravityFF = 0.0;
-
-            m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // set the angle 
-            m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
-
-            m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
-            m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
-
-            if (m_rotationEncoder.GetPosition() < 1.0) {
-                m_rotationEncoder.SetPosition(0.0);
-                currentIntakeshooterState = intakeshooterStates::IDLE;
-            }
-
-            intakeState = "ZEROING";
             break;
     }
 

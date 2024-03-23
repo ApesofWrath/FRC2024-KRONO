@@ -24,14 +24,12 @@ enum class intakeshooterStates { // Enter condition [id BUTTON] -> action [-> ex
     NOTEFORWARD, // transition from BACKOFF -> move note forward, rumble controllers -> canifier LIMR tripped -> HOLDING
     HOLDING, // transition from NOTEFORWARD -> stop moving the note, allowSpinup
     SPINUP, // spinup [op B X] -> angle correctly for speaker and get shooter wheels up to speed
-    AMPBACK, // ??? -> move note backwards -> 5 loops -> AIMAMP
     AIMAMP, // scoreAmp [op Y], transition from AIMAMP -> angle correctly for amp -> amp angle is correct -> SCOREAMP 
     SCOREAMP, // transition from AIMAMP -> wait 50 loops, apply current limit, spin left motor
     FIRE, // fire [op RB] -> ensure correct angle, spin up left wheel, iterate shooterClearCount -> canifyer LIMF tripped -> POSTFIRE
     POSTFIRE, // after rapidFireCommand [auton], after fire, transition from FIRE -> reset shooterClearCount -> canifyer LIMF tripped -> IDLE
     RAPIDFIRE, // rapidFire [auton] -> set the correct angle, spin up left wheel -> canifier LIMF tripped -> RAPIDPOSTFIRE
     RAPIDPOSTFIRE, // transition from RAPIDFIRE -> -> canifier LIMF tripped -> INTAKING
-    ZEROING // ??? -> zero everything -> rotator zeroed -> IDLE
 };
 
 class intakeshooter : public frc2::SubsystemBase {
