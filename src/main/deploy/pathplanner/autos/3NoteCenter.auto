@@ -2,15 +2,34 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3411831855773926,
-      "y": 5.573251724243164
+      "x": 1.397372841835022,
+      "y": 5.6
     },
-    "rotation": 0.0
+    "rotation": 4.763711697130254e-27
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
         {
           "type": "path",
           "data": {
@@ -18,9 +37,47 @@
           }
         },
         {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "3NoteCenter.2"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "fire"
+                }
+              }
+            ]
           }
         }
       ]

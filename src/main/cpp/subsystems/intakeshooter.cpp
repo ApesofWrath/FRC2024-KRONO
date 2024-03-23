@@ -154,7 +154,7 @@ intakeshooterStates intakeshooter::getState() {
 }
 
 bool intakeshooter::shooterAtSpeed() {
-    return m_shooterLeftEncoder.GetVelocity() > 3500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 5500.0 + kShooterRPMTolerance;
+    return m_shooterLeftEncoder.GetVelocity() > 4500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 4500.0 + kShooterRPMTolerance;
 }
 
 void intakeshooter::Periodic() {

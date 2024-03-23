@@ -35,7 +35,6 @@ class drivetrain : public frc2::SubsystemBase {
   frc2::CommandPtr SwerveDriveCommand(std::function<double()> xSpeed, std::function<double()> ySpeed, std::function<double()> zRotation);
 
   void UpdateOdometry();
-  void AddDataFromVision();
   void resetGyro();
   frc2::CommandPtr resetGyroCommand();
 
@@ -43,6 +42,9 @@ class drivetrain : public frc2::SubsystemBase {
   void ResetOdometry180(frc::Pose2d initPose);
   void ResetOdometry(frc::Pose2d initPose);
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
+  void DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
+  void slowDown();
+  void normalSpeed();
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
