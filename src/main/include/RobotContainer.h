@@ -17,6 +17,8 @@
 #include <frc2/command/InstantCommand.h>
 #include <frc2/Command/Button/CommandXboxController.h>
 #include <frc2/command/button/JoystickButton.h>
+#include <commands/Drivetrain/Align.h>
+#include <subsystems/vision.h>
 
 #include "Constants.h"
 #include "commands/Drivetrain/Drive.h"
@@ -69,6 +71,7 @@ class RobotContainer {
   drivetrain m_drivetrain;
   intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator};
   climber m_climber;
+  vision m_vision;
 
   frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();

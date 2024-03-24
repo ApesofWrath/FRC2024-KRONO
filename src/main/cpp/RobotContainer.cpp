@@ -50,6 +50,10 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnTrue(SlowDown(&m_drivetrain).ToPtr());
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
   
+  // Align
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).WhileTrue(Align(&m_vision, &m_drivetrain).ToPtr());
+
+
   // ShooterIntake buttons
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftBumper).OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kB).OnTrue(spinup(&m_intakeshooter, 96.6).ToPtr()); // spinup for far speaker shot (7 feet from speaker) !!!!96.6 (111.5)
