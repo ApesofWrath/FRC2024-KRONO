@@ -16,6 +16,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc/XboxController.h>
 #include <frc2/command/button/CommandXboxController.h>
+#include <frc/trajectory/TrapezoidProfile.h>
 
 enum class intakeshooterStates { // proceed cyclically down list, each comment describes state & conditions for entering
     IDLE, // default state, wheels (except feeder) spinning slowly
@@ -51,6 +52,9 @@ class intakeshooter : public frc2::SubsystemBase {
 
     void Periodic() override;
     private:
+    frc::TrapezoidProfile<units::degree> m_profile{{175_deg_per_s, 750_deg_per_s_sq}};
+    frc::TrapezoidProfile<units::degree>::State m_currentState;
+    frc::TrapezoidProfile<units::degree>::State m_goalState;
 
     frc2::CommandXboxController* m_controllerMain;
     frc2::CommandXboxController* m_controllerOperator;
@@ -87,6 +91,5 @@ class intakeshooter : public frc2::SubsystemBase {
 
     int shooterClearCount = 0;
     double shootAngle; // set the angle at which we are shooting based off of the limelight
-    double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
     int ampBackCount = 0;
 };

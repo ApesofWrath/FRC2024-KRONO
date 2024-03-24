@@ -81,14 +81,8 @@ m_controllerOperator(controllerOperator)
     m_rotationMotorController.SetD(0.0); // 0.15
     m_rotationMotorController.SetFF(1.0 / 275.0);
 
-    m_rotationMotorController.SetIZone(4.0);
-
     m_rotationMotorController.SetOutputRange(-1.0F, 1.0F);
-    m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(2.0);
     m_rotationMotor.EnableVoltageCompensation(12.0);
-
-    m_rotationMotorController.SetSmartMotionMaxVelocity(125.0);
-    m_rotationMotorController.SetSmartMotionMaxAccel(750.0);
 
     m_rotationMotor.BurnFlash();
 }
@@ -138,8 +132,8 @@ bool intakeshooter::shooterAtSpeed() {
 void intakeshooter::Periodic() {
     // Set position of rotation encoder to pigeon position
     m_rotationEncoder.SetPosition(-m_Pigeon.GetPitch().GetValueAsDouble());
-
     frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
+    m_currentState = frc::TrapezoidProfile<units::degree>::State{units::degree_t{m_rotationEncoder.GetPosition()}, units::degree_t{m_rotationEncoder.GetVelocity()}};
 
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
@@ -147,9 +141,8 @@ void intakeshooter::Periodic() {
             currentLimitsConfigs.WithStatorCurrentLimit(25.0);
             m_intakeMotorLeft.GetConfigurator().Apply(currentLimitsConfigs);
             m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
-
-            gravityFF = 0.0;
-            m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 
+            m_goalState = m_profile.Calculate(20_ms, m_currentState, frc::TrapezoidProfile<units::degree>::State{units::degree_t{kIntakeResetAngle}, 0_deg_per_s});
+            m_rotationMotorController.SetReference(m_goalState.position.value(), rev::CANSparkMax::ControlType::kPosition); // 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
@@ -162,10 +155,10 @@ void intakeshooter::Periodic() {
             intakeState = "IDLE";
             break;
         case intakeshooterStates::INTAKING:
-            gravityFF = 0.03 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-45_tps)); //!!!!!!30
-            m_rotationMotorController.SetReference(kIntakeIntakingAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // !!!!!!118.0
+            m_goalState = m_profile.Calculate(20_ms, m_currentState, frc::TrapezoidProfile<units::degree>::State{units::degree_t{kIntakeIntakingAngle}, 0_deg_per_s});
+            m_rotationMotorController.SetReference(m_goalState.position.value(), rev::CANSparkMax::ControlType::kPosition);
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
 
@@ -175,10 +168,9 @@ void intakeshooter::Periodic() {
             break;
         case::intakeshooterStates::BACKOFF:
             allowSpinup = false;
-            
-            gravityFF = 0.1 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
-
-            m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); //retract intake when holding note
+        
+            m_goalState = m_profile.Calculate(20_ms, m_currentState, frc::TrapezoidProfile<units::degree>::State{units::degree_t{kIntakeResetAngle}, 0_deg_per_s});
+            m_rotationMotorController.SetReference(m_goalState.position.value(), rev::CANSparkMax::ControlType::kPosition); //retract intake when holding note
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(5_tps));
 
@@ -208,15 +200,14 @@ void intakeshooter::Periodic() {
             intakeState = "HOLDING";
             break;
         case intakeshooterStates::SPINUP:
-            gravityFF = 0.1 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (180.0/M_PI))));
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
             m_shooterMotorLeftController.SetReference(4500, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motors diferently so we have spin monkey
             m_shooterMotorRightController.SetReference(-4000, rev::CANSparkMax::ControlType::kVelocity);
             
-            m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
-
+            m_goalState = m_profile.Calculate(20_ms, m_currentState, frc::TrapezoidProfile<units::degree>::State{units::degree_t{shootAngle}, 0_deg_per_s});
+            m_rotationMotorController.SetReference(m_goalState.position.value(), rev::CANSparkMax::ControlType::kPosition);
             intakeState = "SPINUP";
             break;
         case intakeshooterStates::AMPBACK:
@@ -234,10 +225,8 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::AIMAMP:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
 
-            gravityFF = 0.1 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
-
-            m_rotationMotorController.SetReference(kIntakeAmpAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
-
+            m_goalState = m_profile.Calculate(20_ms, m_currentState, frc::TrapezoidProfile<units::degree>::State{units::degree_t{kIntakeAmpAngle}, 0_deg_per_s});
+            m_rotationMotorController.SetReference(m_goalState.position.value(), rev::CANSparkMax::ControlType::kPosition);
             if (m_rotationEncoder.GetPosition() < -50) {
                 currentIntakeshooterState = intakeshooterStates::SCOREAMP;
                 counter = 0;
@@ -288,9 +277,9 @@ void intakeshooter::Periodic() {
             intakeState = "RAPIDPOSTFIRE";
             break;
         case::intakeshooterStates::ZEROING:
-            gravityFF = 0.0;
 
-            m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // set the angle 
+            m_goalState = m_profile.Calculate(20_ms, m_currentState, frc::TrapezoidProfile<units::degree>::State{0_deg, 0_deg_per_s});
+            m_rotationMotorController.SetReference(m_goalState.position.value(), rev::CANSparkMax::ControlType::kPosition); // set the angle 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
 
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity);
