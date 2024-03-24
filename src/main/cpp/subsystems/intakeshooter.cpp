@@ -134,7 +134,7 @@ void intakeshooter::Periodic() {
     // Set position of rotation encoder to pigeon position
     m_rotationEncoder.SetPosition(-m_Pigeon.GetPitch().GetValueAsDouble());
     frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
-    m_currentState = frc::TrapezoidProfile<units::degree>::State{units::degree_t{m_rotationEncoder.GetPosition()}, units::degree_t{m_rotationEncoder.GetVelocity()}};
+    m_currentState = frc::TrapezoidProfile<units::degree>::State{units::degree_t{m_rotationEncoder.GetPosition()}, units::degrees_per_second_t{m_rotationEncoder.GetVelocity()}};
 
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
@@ -309,6 +309,6 @@ void intakeshooter::Periodic() {
 }
 
 void intakeshooter::applyVoltage() {
-    m_rotationMotor.SetVoltage(0.0_V);
+    m_rotationMotorController.SetReference(1.0, rev::ControlType::kVoltage);
 }
 
