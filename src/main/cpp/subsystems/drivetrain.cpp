@@ -38,28 +38,16 @@ void drivetrain::resetGyro() {
     m_navX.ZeroYaw();
 }
 
-frc2::CommandPtr drivetrain::resetGyroCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
-    return frc2::Subsystem::RunOnce([this]() {this->resetGyro();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
-}
-
 // Slow constant value
 void drivetrain::slowDown() {
     kslowConst = 0.5;
     printf("Slow Func");
 }
 
-frc2::CommandPtr drivetrain::slowDownCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
-    return frc2::Subsystem::RunOnce([this]() {this->slowDown();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
-}
-
 // Normal speed value (should always be 1.0)
 void drivetrain::normalSpeed() {
     kslowConst = 1.0;
     printf("Normal Func");
-}
-
-frc2::CommandPtr drivetrain::normalSpeedCommand() { // return pointer to setter command w/ AndThen for the command's IsFinished
-    return frc2::Subsystem::RunOnce([this]() {this->normalSpeed();}).AndThen(frc2::WaitUntilCommand([this]() {return true;}).ToPtr());
 }
 
 // Sets Desired States of the swerve modules for swervedrive
@@ -92,10 +80,6 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
     m_rearRight.SetDesiredState(rearRight);
     m_frontLeft.SetDesiredState(frontLeft);
     m_rearLeft.SetDesiredState(rearLeft);
-}
-
-frc2::CommandPtr drivetrain::SwerveDriveCommand(std::function<double()> xSpeed, std::function<double()> ySpeed, std::function<double()> zRotation) { // oh lird
-    return frc2::Subsystem::RunOnce([this, xSpeed, ySpeed, zRotation]() {this->SwerveDrive(-m_ySpeedLimiter.Calculate(frc::ApplyDeadband((m_ySpeed() * kslowConst), 0.08)) * drivetrainConstants::calculations::kChassisMaxSpeed, -m_xSpeedLimiter.Calculate(frc::ApplyDeadband((m_xSpeed() * kslowConst), 0.08)) * drivetrainConstants::calculations::kChassisMaxSpeed, -m_zRotationLimiter.Calculate(frc::ApplyDeadband((m_zRotation() * kslowConst), 0.20)) * drivetrainConstants::calculations::kModuleMaxAngularVelocity, true);}).AndThen(frc2::WaitUntilCommand([this]() {return false;}).ToPtr());
 }
 
 // Updates the odometry of the swervedrive

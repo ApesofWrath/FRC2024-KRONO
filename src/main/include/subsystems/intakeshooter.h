@@ -14,7 +14,6 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
-#include <frc2/command/WaitUntilCommand.h>
 #include <frc/XboxController.h>
 #include <frc2/command/button/CommandXboxController.h>
 
@@ -38,18 +37,13 @@ class intakeshooter : public frc2::SubsystemBase {
     intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator);
     void intakeActivate();
     void intakeRetract();
-    void spinup(float angle);
+    void spinup();
     void scoreAmp();
+    void spinup(float angle);
     void fire();
     void rapidFire();
     intakeshooterStates getState();
     bool shooterAtSpeed();
-    frc2::CommandPtr intakeActivateCommand();
-    frc2::CommandPtr intakeRetractCommand();
-    frc2::CommandPtr spinupCommand(float angle);
-    frc2::CommandPtr scoreAmpCommand();
-    frc2::CommandPtr fireCommand();
-    frc2::CommandPtr rapidFireCommand();
 
     bool allowSpinup = true;
 

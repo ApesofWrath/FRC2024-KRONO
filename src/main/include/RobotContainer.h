@@ -19,11 +19,27 @@
 #include <frc2/command/button/JoystickButton.h>
 
 #include "Constants.h"
+#include "commands/Drivetrain/Drive.h"
+#include "commands/Drivetrain/ZeroGyro.h"
+#include "commands/Drivetrain/NormalSpeed.h"
+#include "commands/Drivetrain/SlowDown.h"
+
+#include "commands/ShooterIntake/fire.h"
+#include "commands/ShooterIntake/intakeActivate.h"
+#include "commands/ShooterIntake/intakeRetract.h"
+#include "commands/ShooterIntake/rapidFire.h"
+#include "commands/ShooterIntake/scoreAmp.h"
+#include "commands/ShooterIntake/spinup.h"
+
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
-#include "subsystems/climber.h"
 
 #include "MathFunctions.h"
+
+#include "commands/Climber/ExtendClimber.h"
+#include "commands/Climber/RetractClimber.h"
+#include "commands/Climber/LeftClimbToggle.h"
+#include "commands/Climber/RightClimbToggle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
