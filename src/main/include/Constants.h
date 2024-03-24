@@ -48,12 +48,11 @@ namespace intakeConstants {
     const auto ON_SPEED = 10.0_tps;
     constexpr int kBeambreakCanifier = 18;
     constexpr int kIntakeAngleTolerance = 2;
-    constexpr int kPigeon = 22;
 
-    constexpr double kIntakeResetAngle = -66.138; // 0 for encoder
-    constexpr double kIntakeSpeakerAngle = 56.42; // 114.5 for encoder
-    constexpr double kIntakeAmpAngle = -51.24; // 26 for encoder
-    constexpr double kIntakeIntakingAngle = 61.34; // 126 for encoder
+    constexpr double kIntakeResetAngle = 0;
+    constexpr double kIntakeSpeakerAngle = 144.5; // 
+    constexpr double kIntakeAmpAngle = 26;
+    constexpr double kIntakeIntakingAngle = 126;
 }
 
 namespace shooterConstants {
