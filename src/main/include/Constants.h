@@ -50,10 +50,13 @@ namespace intakeConstants {
     constexpr int kIntakeAngleTolerance = 2;
     constexpr int kPigeon = 22;
 
-    constexpr double kIntakeResetAngle = -66.138; // 0 for encoder
-    constexpr double kIntakeSpeakerAngle = 56.42; // 114.5 for encoder
-    constexpr double kIntakeAmpAngle = -51.24; // 26 for encoder
-    constexpr double kIntakeIntakingAngle = 61.34; // 126 for encoder
+    constexpr double kIntakeResetAngle = 0; // 0 for encoder; -66.138 pigeon
+    constexpr double kIntakeSpeakerAngle = 114.5; // 114.5 for encoder; 56.42 pigeon
+    constexpr double kIntakeAmpAngle = 26; // 26 for encoder; -51.24 pigeon
+    constexpr double kIntakeIntakingAngle = 126; // 126 for encoder; 61.34 pigeon
+
+    /* 246.138 - 180 + (-66.138) = 0
+    246.138 - 180 + (56.42) =   */
 }
 
 namespace shooterConstants {

@@ -24,6 +24,7 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     NOTEFORWARD,
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
+    SPINUPPIGEON,
     AMPBACK,
     AIMAMP,
     SCOREAMP,
