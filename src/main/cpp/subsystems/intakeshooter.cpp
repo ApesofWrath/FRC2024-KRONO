@@ -308,3 +308,7 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
 }
 
+void intakeshooter::applyVoltage() {
+    m_rotationMotor.SetVoltage(0.0_V);
+}
+

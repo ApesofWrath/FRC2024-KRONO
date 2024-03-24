@@ -61,9 +61,13 @@ void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftStick).OnTrue(ExtendClimber(&m_climber).ToPtr());
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightStick).OnTrue(RetractClimber(&m_climber).ToPtr());
 
+  frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kStart).WhileTrue(applyVoltage(&m_intakeshooter).ToPtr());
+
   // Climber Zero Maintinence Buttons
   frc2::JoystickButton(&m_controllerAlt, frc::XboxController::Button::kLeftBumper).OnTrue(LeftClimbToggle(&m_climber).ToPtr());
   frc2::JoystickButton(&m_controllerAlt, frc::XboxController::Button::kRightBumper).OnTrue(RightClimbToggle(&m_climber).ToPtr());
+
+
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

@@ -52,6 +52,7 @@ class intakeshooter : public frc2::SubsystemBase {
     bool allowSpinup = true;
 
     void Periodic() override;
+    void applyVoltage();
     private:
     frc::TrapezoidProfile<units::degree> m_profile{{175_deg_per_s, 750_deg_per_s_sq}};
     frc::TrapezoidProfile<units::degree>::State m_currentState;

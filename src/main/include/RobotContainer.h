@@ -18,6 +18,7 @@
 #include <frc2/Command/Button/CommandXboxController.h>
 #include <frc2/command/button/JoystickButton.h>
 
+
 #include "Constants.h"
 #include "commands/Drivetrain/Drive.h"
 #include "commands/Drivetrain/ZeroGyro.h"
@@ -30,6 +31,7 @@
 #include "commands/shooterintake/rapidFire.h"
 #include "commands/shooterintake/scoreAmp.h"
 #include "commands/shooterintake/spinup.h"
+#include "commands/shooterintake/applyVoltage.h"
 
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
