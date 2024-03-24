@@ -17,6 +17,7 @@
 #include <frc/XboxController.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include <frc/trajectory/TrapezoidProfile.h>
+#include <frc/controller/ArmFeedForward.h>
 
 enum class intakeshooterStates { // proceed cyclically down list, each comment describes state & conditions for entering
     IDLE, // default state, wheels (except feeder) spinning slowly
@@ -55,7 +56,7 @@ class intakeshooter : public frc2::SubsystemBase {
     frc::TrapezoidProfile<units::degree> m_profile{{175_deg_per_s, 750_deg_per_s_sq}};
     frc::TrapezoidProfile<units::degree>::State m_currentState;
     frc::TrapezoidProfile<units::degree>::State m_goalState;
-
+    frc::ArmFeedforward m_armFeedforward{0.0_V, 0.0_V, 0.0_V / 1.0_rad_per_s};
     frc2::CommandXboxController* m_controllerMain;
     frc2::CommandXboxController* m_controllerOperator;
 
