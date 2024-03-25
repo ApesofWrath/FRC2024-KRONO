@@ -9,6 +9,7 @@
 #include <rev/CANSparkMax.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix/CANifier.h>
+#include <ctre/phoenix6/Pigeon2.hpp>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandPtr.h>
@@ -22,7 +23,8 @@ enum class intakeshooterStates { // Enter condition [id BUTTON] -> action [-> ex
     BACKOFF, // transition from INTAKING -> retract, feed note backwards out of mechanism (prevent excess grinding & early shots) -> canifier LIMR tripped -> NOTEFORWARD
     NOTEFORWARD, // transition from BACKOFF -> move note forward, rumble controllers -> canifier LIMR tripped -> HOLDING
     HOLDING, // transition from NOTEFORWARD -> stop moving the note, allowSpinup
-    SPINUP, // spinup [op B X] -> angle correctly for speaker and get shooter wheels up to speed
+    SPINUP, // spinup [op B X] -> angle correctly for speaker and get shooter wheels up to speed -> correct position -> SPINUPPIGEON
+    SPINUPPIGEON, // transition from SPINUP -> correct angle using pigeon
     AIMAMP, // scoreAmp [op Y], transition from AIMAMP -> angle correctly for amp -> amp angle is correct -> SCOREAMP 
     SCOREAMP, // transition from AIMAMP -> wait 50 loops, apply current limit, spin left motor
     FIRE, // fire [op RB] -> ensure correct angle, spin up left wheel, iterate shooterClearCount -> canifyer LIMF tripped -> POSTFIRE
@@ -62,6 +64,8 @@ class intakeshooter : public frc2::SubsystemBase {
     ctre::phoenix6::controls::VelocityDutyCycle m_velocityIntake{0_tps};
 
     ctre::phoenix::CANifier m_BeambreakCanifier;
+
+    ctre::phoenix6::hardware::Pigeon2 m_Pigeon;
 
     rev::CANSparkMax m_shooterMotorLeft;
     rev::CANSparkMax m_shooterMotorRight;

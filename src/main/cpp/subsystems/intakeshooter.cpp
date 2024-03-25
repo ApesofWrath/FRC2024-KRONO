@@ -11,6 +11,7 @@ m_shooterMotorLeft(kMotorShooterLeft, rev::CANSparkMax::MotorType::kBrushless),
 m_shooterMotorRight(kMotorShooterRight, rev::CANSparkMax::MotorType::kBrushless),
 m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless),
 m_BeambreakCanifier(kBeambreakCanifier),
+m_Pigeon(kPigeon),
 m_controllerMain(controllerMain),
 m_controllerOperator(controllerOperator)
 {
@@ -19,7 +20,7 @@ m_controllerOperator(controllerOperator)
     motorOutputConfigs.WithNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Coast);
 
     currentLimitsConfigs.WithStatorCurrentLimitEnable(true);
-    currentLimitsConfigs.WithStatorCurrentLimit(25.0);
+    currentLimitsConfigs.WithStatorCurrentLimit(40.0);
 
     // Kraken PID Values
     slotZeroConfigs.WithKP(0.008);
@@ -70,24 +71,38 @@ m_controllerOperator(controllerOperator)
     m_shooterRightEncoder.SetMeasurementPeriod(8.0);
     m_shooterRightEncoder.SetAverageDepth(1.0);
 
-    // rotation motor controller
+    // rotation motor controller (SLOT 0) ENCODER GAINS
     m_rotationEncoder.SetPositionConversionFactor(kRotationsToDegrees);
     m_rotationEncoder.SetVelocityConversionFactor(kRotationsToDegrees / 60.0);
 
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
-    m_rotationMotorController.SetP(0.00002);
-    m_rotationMotorController.SetI(0.0);
-    m_rotationMotorController.SetD(0.27);
-    m_rotationMotorController.SetFF(1.0 / 275.0);
+    m_rotationMotorController.SetP(0.013, 0); // 0.00002
+    m_rotationMotorController.SetI(0.0, 0); // 0
+    m_rotationMotorController.SetD(0.27, 0); // 0.15
+    m_rotationMotorController.SetFF(1.0 / 275.0, 0);
 
-    m_rotationMotorController.SetIZone(4.0);
+    m_rotationMotorController.SetIZone(4.0, 0);
 
-    m_rotationMotorController.SetOutputRange(-1.0F, 1.0F);
-    m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(2.0);
+    m_rotationMotorController.SetOutputRange(-1.0F, 1.0F, 0);
+    m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(2.0, 0);
     m_rotationMotor.EnableVoltageCompensation(12.0);
 
-    m_rotationMotorController.SetSmartMotionMaxVelocity(125.0);
-    m_rotationMotorController.SetSmartMotionMaxAccel(750.0);
+    m_rotationMotorController.SetSmartMotionMaxVelocity(175.0, 0);
+    m_rotationMotorController.SetSmartMotionMaxAccel(750.0, 0);
+
+    // rotation motor controller (SLOT 1) PIGEON GAINS
+    m_rotationMotorController.SetP(0.04, 1); // 0.00002
+    m_rotationMotorController.SetI(0.0002, 1); // 0
+    m_rotationMotorController.SetD(0.05, 1); // 0.15
+    m_rotationMotorController.SetFF(0.0, 1);
+
+    m_rotationMotorController.SetIZone(4.0, 1);
+
+    m_rotationMotorController.SetOutputRange(-1.0F, 1.0F, 1);
+    m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(1.0, 1);
+
+    m_rotationMotorController.SetSmartMotionMaxVelocity(125.0, 1);
+    m_rotationMotorController.SetSmartMotionMaxAccel(750.0, 1);
 
     // Burn after reading (2008)
     m_shooterMotorLeft.BurnFlash();
@@ -134,15 +149,20 @@ bool intakeshooter::shooterAtSpeed() {
 }
 
 void intakeshooter::Periodic() {
+    frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
+    frc::SmartDashboard::PutNumber("Ab Angle", 246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
         case intakeshooterStates::IDLE:
-            currentLimitsConfigs.WithStatorCurrentLimit(25.0);
+            currentLimitsConfigs.WithStatorCurrentLimit(40.0);
             m_intakeMotorLeft.GetConfigurator().Apply(currentLimitsConfigs);
             m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
 
             gravityFF = 0.0;
-            m_rotationMotorController.SetReference(0, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // set the angle 
+            m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 
+            m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
@@ -209,7 +229,20 @@ void intakeshooter::Periodic() {
             
             m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
 
+            if (abs(m_rotationEncoder.GetPosition() - shootAngle) < 2.0) {
+                currentIntakeshooterState = intakeshooterStates::SPINUPPIGEON;
+            }
+
             intakeState = "SPINUP";
+            break;
+        case intakeshooterStates::SPINUPPIGEON:
+            m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+
+            gravityFF = 0.1 * sin(((M_PI/3.0) - (246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
+            
+            m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kPosition, 1, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
+
+            intakeState = "SPINUPPIGEON";
             break;
         case intakeshooterStates::AIMAMP:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
@@ -218,7 +251,7 @@ void intakeshooter::Periodic() {
 
             m_rotationMotorController.SetReference(26, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
 
-            if (m_rotationEncoder.GetPosition() > 25.8) {
+            if (m_rotationEncoder.GetPosition() > 25) {
                 currentIntakeshooterState = intakeshooterStates::SCOREAMP;
                 ampWaitCounter = 0;
             }
@@ -234,15 +267,25 @@ void intakeshooter::Periodic() {
                 m_intakeMotorLeft.GetConfigurator().Apply(currentLimitsConfigs);
                 m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
 
-                m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-26_tps));
+                m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(20_tps));
+                //currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::IDLE : intakeshooterStates::SCOREAMP; // if the canifier's limit backward input is tripped, switch to postfire
+
+                intakeState = "SCOREAMP";
             }
 
             intakeState = "SCOREAMP";
             break;
-        case intakeshooterStates::FIRE:
-            if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
-                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(50_tps)); // set the speed of the intake motor
-            }
+        case intakeshooterStates::FIRE: //in the hole
+            currentLimitsConfigs.WithStatorCurrentLimit(80.0);
+            m_intakeMotorLeft.GetConfigurator().Apply(currentLimitsConfigs);
+            m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
+
+            m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+
+            //if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
+                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-50_tps)); // set the speed of the intake motor
+            //}
+            
             shooterClearCount++;
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
  
@@ -271,10 +314,12 @@ void intakeshooter::Periodic() {
 
     frc::SmartDashboard::PutNumber("Intake Rot", m_rotationEncoder.GetPosition());
     frc::SmartDashboard::PutString("Intake/Shooter State: ", intakeState);
+    frc::SmartDashboard::PutNumber("Rot Output", m_rotationMotor.GetAppliedOutput());
 
     frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
+    // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
     frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
 }
 
