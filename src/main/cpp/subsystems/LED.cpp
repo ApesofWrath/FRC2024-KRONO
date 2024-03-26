@@ -6,6 +6,7 @@ using namespace generalConstants;
 
 LED::LED(CANifier& LEDCanifier) : m_LEDCANifier{LEDCanifier} {
     // Set default behavior to solid white
+    setBrightness(100);
     setCycle(1);
 }
 
@@ -37,6 +38,7 @@ void LED::setBlinking(std::array<double, 3> RGB, double speed) {
     };
 }
 void LED::setBlinking(frc::Color color, double speed) {
+
     ledFunction = [color, speed](){
         double currentSeconds = timer.Get().value();
 
@@ -52,6 +54,7 @@ void LED::setBlinking(frc::Color color, double speed) {
 }
 
 void LED::setCycle(double speed){
+
     ledFunction = [speed](){
         double currentSeconds = timer.Get().value();
         double hue = std::fmod(currentSeconds, 1/speed)*speed*360;
@@ -61,12 +64,12 @@ void LED::setCycle(double speed){
     };
 }
 
-void LED::setBrightness(double brightness){
-    brightness = std::clamp(brightness, 0.0, 1.0)*100;
+void LED::setBrightness(double setBrightness){
+    brightness = std::clamp(setBrightness, 0.0, 1.0)*100;
 }
 
 void LED::setBrightness(int percentBrightness){
-    brightness = std::clamp(brightness, 0.0, 100.0);
+    brightness = std::clamp(percentBrightness, 0, 100);
 
 }
 
@@ -87,17 +90,20 @@ void LED::Periodic() {
     auto color = ledFunction();
 
     m_LEDCANifier.SetLEDOutput(color.red*brightness, CANifier::LEDChannelB); // NOTE WHEN TESTING: Make sure channels are correct
-    m_LEDCANifier.SetLEDOutput(color.green*brightness, CANifier::LEDChannelA);
-    m_LEDCANifier.SetLEDOutput(color.blue*brightness, CANifier::LEDChannelC);
+    m_LEDCANifier.SetLEDOutput(color.green*brightness, CANifier::LEDChannelC);
+    m_LEDCANifier.SetLEDOutput(color.blue*brightness, CANifier::LEDChannelA);
 
     }
 
 LEDmanager::LEDmanager(LED& LED, intakeshooter& intakeshooter) : m_LED{LED}, m_intakeshooter{intakeshooter} {
-
+    frc::SmartDashboard::PutNumber("LED Brightness", 1.0);
 }
 
+
 void LEDmanager::Periodic(){
-    if (frc::DriverStation::IsEnabled){
+    double brightness =  frc::SmartDashboard::GetNumber("LED Brightness", 1.0)/100;
+    m_LED.setBrightness(brightness);
+    if (frc::DriverStation::IsEnabled()){
         auto intakeshooterState = m_intakeshooter.getState();
         switch (intakeshooterState) {
 
