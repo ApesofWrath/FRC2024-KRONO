@@ -10,6 +10,7 @@
 #include <rev/CANSparkMax.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix/CANifier.h>
+#include <ctre/phoenix6/Pigeon2.hpp>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandPtr.h>
@@ -25,6 +26,7 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     NOTEFORWARD,
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
+    SPINUPPIGEON,
     AMPBACK,
     AIMAMP,
     SCOREAMP,
@@ -67,6 +69,8 @@ class intakeshooter : public frc2::SubsystemBase {
     ctre::phoenix6::controls::VelocityDutyCycle m_velocityIntake{0_tps};
 
     ctre::phoenix::CANifier& m_BeambreakCanifier;
+
+    ctre::phoenix6::hardware::Pigeon2 m_Pigeon;
 
     rev::CANSparkMax m_shooterMotorLeft;
     rev::CANSparkMax m_shooterMotorRight;
