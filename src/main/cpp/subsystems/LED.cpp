@@ -17,12 +17,14 @@ void LED::setSolid(std::array<double, 3> RGB) {
     };
 }
 void LED::setSolid(frc::Color color){
+
     ledFunction = [color](){
         return color;
     };
 }
 
 void LED::setBlinking(std::array<double, 3> RGB, double speed) {
+
     auto color = frc::Color(RGB[0], RGB[1], RGB[2]);
     ledFunction = [color, speed](){
         double currentSeconds = timer.Get().value();
@@ -38,6 +40,7 @@ void LED::setBlinking(std::array<double, 3> RGB, double speed) {
     };
 }
 void LED::setBlinking(frc::Color color, double speed) {
+
 
     ledFunction = [color, speed](){
         double currentSeconds = timer.Get().value();
@@ -104,24 +107,32 @@ void LEDmanager::Periodic(){
     double brightness =  frc::SmartDashboard::GetNumber("LED Brightness", 1.0)/100;
     m_LED.setBrightness(brightness);
     if (frc::DriverStation::IsEnabled()){
-        auto intakeshooterState = m_intakeshooter.getState();
+        intakeshooterStates intakeshooterState = m_intakeshooter.getState();
         switch (intakeshooterState) {
 
         case intakeshooterStates::IDLE:
             m_LED.setTeamColor();
+
             break;
 
         case intakeshooterStates::HOLDING:
-            m_LED.setSolid(frc::Color::kOrange);
+            m_LED.setSolid(frc::Color::kTeal);
+
+            break;
+
         
-        case intakeshooterStates::SPINUP:
+        case intakeshooterStates::SPINUPPIGEON:
             if (m_intakeshooter.shooterAtSpeed()){
                 m_LED.setSolid(frc::Color::kGreen);
             } else {
-                m_LED.setBlinking(frc::Color::kYellow, 5.0);
+                m_LED.setBlinking(frc::Color::kOrange, 5.0);
             }
+
+            break;
         default:
             m_LED.setTeamColor();
+
+            break;
         }
     } else {
         m_LED.setCycle(1.0);

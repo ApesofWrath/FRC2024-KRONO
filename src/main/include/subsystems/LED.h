@@ -12,6 +12,7 @@
 #include <frc/DriverStation.h>
 #include <subsystems/intakeshooter.h>
 #include <frc/util/Color.h>
+#include <string.h>
 
 
 
