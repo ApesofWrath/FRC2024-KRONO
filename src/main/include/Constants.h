@@ -4,6 +4,7 @@
 #include <units/time.h>
 #include <units/velocity.h>
 #include <numbers>
+#include <frc/Timer.h>
     
 /**
  * This header contains hold robot-wide numerical or boolean constants ONLY.
@@ -13,6 +14,10 @@
  */
 namespace generalConstants {
     constexpr double kRotationsToDegrees = 360.0;
+    
+    // Declare Global Timer Object
+    // To use, include <frc/Timer.h>
+    extern frc::Timer timer; 
 }
 namespace visionConstants {
     //How fast the robot attempts to correct its self
