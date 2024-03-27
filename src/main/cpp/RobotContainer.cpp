@@ -4,6 +4,8 @@
 
 #include "RobotContainer.h"
 
+
+using namespace generalConstants;
 RobotContainer::RobotContainer() {
 
   // Initialize all of your commands and subsystems here
@@ -32,9 +34,13 @@ RobotContainer::RobotContainer() {
     m_chooser.AddOption("Backup", "Backup");
     m_chooser.AddOption("Preload", "Preload");
     m_chooser.AddOption("PreloadBackupCenter", "PreloadBackupCenter");
+    m_chooser.AddOption("New Auto", "New Auto");
 
     frc::SmartDashboard::PutData(&m_chooser);
     
+    // Start Timer
+    timer.Start();
+  
 }
 
 // All the button commands are set in this function

@@ -4,13 +4,13 @@ using namespace shooterConstants;
 using namespace intakeConstants;
 using namespace generalConstants;
 
-intakeshooter::intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator)
+intakeshooter::intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator, ctre::phoenix::CANifier& beambreakCanifier)
 : m_intakeMotorLeft(kIntakeMotorLeft),
 m_intakeMotorRight(kIntakeMotorRight),
 m_shooterMotorLeft(kMotorShooterLeft, rev::CANSparkMax::MotorType::kBrushless),
 m_shooterMotorRight(kMotorShooterRight, rev::CANSparkMax::MotorType::kBrushless),
 m_rotationMotor(kIntakeRotationMotor, rev::CANSparkMax::MotorType::kBrushless),
-m_BeambreakCanifier(kBeambreakCanifier),
+m_BeambreakCanifier(beambreakCanifier),
 m_Pigeon(kPigeon),
 m_controllerMain(controllerMain),
 m_controllerOperator(controllerOperator)
@@ -38,7 +38,7 @@ m_controllerOperator(controllerOperator)
 
     m_velocityIntake.WithSlot(0);
     m_velocityIntake.WithEnableFOC(false);
-
+    
     //Neos
     m_shooterMotorLeft.RestoreFactoryDefaults();
     m_shooterMotorLeft.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
@@ -142,7 +142,7 @@ intakeshooterStates intakeshooter::getState() {
 }
 
 bool intakeshooter::shooterAtSpeed() {
-    return m_shooterLeftEncoder.GetVelocity() > 3500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 5500.0 + kShooterRPMTolerance;
+    return m_shooterLeftEncoder.GetVelocity() > 4500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 4500.0 + kShooterRPMTolerance;
 }
 
 void intakeshooter::Periodic() {
@@ -342,6 +342,7 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
+    frc::SmartDashboard::PutBoolean("Shooter At Speed", shooterAtSpeed());
     // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
     frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
 }

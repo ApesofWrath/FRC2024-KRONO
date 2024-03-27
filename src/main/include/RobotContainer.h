@@ -17,6 +17,7 @@
 #include <frc2/command/InstantCommand.h>
 #include <frc2/Command/Button/CommandXboxController.h>
 #include <frc2/command/button/JoystickButton.h>
+#include <ctre/phoenix/CANifier.h>
 #include <commands/Drivetrain/Align.h>
 #include <subsystems/vision.h>
 
@@ -35,6 +36,7 @@
 
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
+#include "subsystems/LED.h"`
 
 #include "MathFunctions.h"
 
@@ -51,6 +53,8 @@
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 
+#include <frc/Timer.h>
+
 #include <memory>
 
 
@@ -61,17 +65,23 @@
  * scheduler calls).  Instead, the structure of the robot (including subsystems,
  * commands, and button mappings) should be declared here.
  */
+
 class RobotContainer {
  public:
   RobotContainer();
-  
   frc2::CommandPtr GetAutonomousCommand();
 
+
  private:
+  
   // The robot's subsystems and commands are defined here...
+  ctre::phoenix::CANifier BeambreakLEDCanifier{intakeConstants::kBeambreakCanifier};
+
   drivetrain m_drivetrain;
-  intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator};
+  intakeshooter m_intakeshooter{&m_controllerMain, &m_controllerOperator, BeambreakLEDCanifier};
   climber m_climber;
+  LED m_LED{BeambreakLEDCanifier};
+  LEDmanager m_LEDmanager{m_LED, m_intakeshooter};
   vision m_vision;
 
   frc::SendableChooser<std::string> m_chooser;
