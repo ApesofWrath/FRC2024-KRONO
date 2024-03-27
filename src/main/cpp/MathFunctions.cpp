@@ -19,7 +19,7 @@ std::array<double, 3> MathFunctions::hueToRGB(double hue){
     double normalizedHue = std::fmod(hue, 360);
     double chroma = 1;
     double hue_prime = normalizedHue/60;
-    double X = 1-abs(std::fmod(hue_prime, 2)-1);
+    double X = chroma * (1.0 - std::abs(std::fmod(hue_prime, 2.0) - 1.0));
     std::array<double, 3> result;
     if (hue_prime < 1){
         result = {chroma, X, 0};
