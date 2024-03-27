@@ -1544,6 +1544,7 @@
                     "controlIntervalCount": 40
                 }
             ],
+            "trajectoryWaypoints": [],
             "constraints": [
                 {
                     "scope": [
@@ -2507,6 +2508,7 @@
                     "controlIntervalCount": 40
                 }
             ],
+            "trajectoryWaypoints": [],
             "constraints": [
                 {
                     "scope": [
@@ -4812,6 +4814,7 @@
                     "controlIntervalCount": 40
                 }
             ],
+            "trajectoryWaypoints": [],
             "constraints": [
                 {
                     "scope": [
