@@ -116,11 +116,7 @@ void intakeshooter::intakeRetract() {
 }
 
 void intakeshooter::spinup(float angle) { // provide manual angle control before vision is finished
-    if (std::isnan(angle)) {
-        printf("The code will now fail in a very obvious way by using NaN for the angle.\nReplace this with the code to set angle using vision when it's done.");
-    } else {
-        shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
-    }
+    shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
 
     if (allowSpinup) {
         currentIntakeshooterState = intakeshooterStates::SPINUP;
@@ -222,7 +218,7 @@ void intakeshooter::Periodic() {
             intakeState = "HOLDING";
             break;
         case intakeshooterStates::SPINUP:
-            gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
+            gravityFF = 0.05 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
@@ -240,7 +236,7 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::SPINUPPIGEON:
             m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
 
-            gravityFF = 0.1 * sin(((M_PI/3.0) - (246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
+            gravityFF = 0.05 * sin(((M_PI/3.0) - (246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
             
             m_rotationMotorController.SetReference(shootAngle, rev::CANSparkMax::ControlType::kPosition, 1, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 110 angle for close shot speaker, 90 for far shot (originally), 93 from 12-14 feet (Tuesday), 99 from 3-4 feet away
 

@@ -21,16 +21,8 @@ namespace generalConstants {
 }
 namespace visionConstants {
     //How fast the robot attempts to correct its self
-    constexpr double errorMultiplier = -0.025;
-    //The minumum error for the robot to move
-    constexpr double errorMinimum = 0.0;
-
-    constexpr double xAlignMultiplier = 0.5;
-    constexpr double yAlignMultiplier = 0;
-    constexpr double yawAlignMultiplier = 0.0;
-    // Robots distance from the April Tag it will align its self with
-    constexpr double AlignDistance = 10.0;
-    constexpr double rotationDistance = 1.0;
+    constexpr double Kp = -0.1;
+    constexpr double min_command = 0.05;
 }
 
 // IDs for controllers
