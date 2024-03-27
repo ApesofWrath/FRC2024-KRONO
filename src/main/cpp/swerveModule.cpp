@@ -32,6 +32,10 @@ swerveModule::swerveModule(const double module[])
     m_motorDrive.SetSmartCurrentLimit(40.0);
     m_motorTurn.SetSmartCurrentLimit(20.0);
 
+    // Burn all settings
+    m_motorDrive.BurnFlash();
+    m_motorTurn.BurnFlash();
+
     // Adds and sets the encoder offset to each swerve module encoder
     //m_encoderTurn.ConfigMagnetOffset(m_encoderOffset); Set in Phoenix Tuner
 
@@ -49,7 +53,6 @@ swerveModule::swerveModule(const double module[])
     m_driveController.SetP(0.3);
     m_driveController.SetI(0);
     m_driveController.SetD(0.2);
-    //m_driveController.SetFF(1/107.9101*2); //(0.5*1023.0)/(22100.0*0.5)
     m_driveController.SetFF(1.0/4.6);
     m_driveController.SetOutputRange(-1.0F, 1.0F);
 
@@ -100,6 +103,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
+    frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Motor Speed", targetMotorSpeed.value());
 }
