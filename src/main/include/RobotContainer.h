@@ -18,6 +18,8 @@
 #include <frc2/Command/Button/CommandXboxController.h>
 #include <frc2/command/button/JoystickButton.h>
 #include <ctre/phoenix/CANifier.h>
+#include <commands/Drivetrain/Align.h>
+#include <subsystems/vision.h>
 
 #include "Constants.h"
 #include "commands/Drivetrain/Drive.h"
@@ -77,6 +79,7 @@ class RobotContainer {
   climber m_climber;
   LED m_LED{BeambreakLEDCanifier};
   LEDmanager m_LEDmanager{m_LED, m_intakeshooter};
+  vision m_vision;
 
   frc::SendableChooser<std::string> m_chooser;
   void ConfigureButtonBindings();

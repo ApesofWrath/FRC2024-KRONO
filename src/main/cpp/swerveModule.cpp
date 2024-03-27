@@ -39,10 +39,9 @@ swerveModule::swerveModule(const double module[])
     m_driveController.SetFeedbackDevice(m_encoderDrive);
     m_turnController.SetFeedbackDevice(m_encoderTurnIntegrated);
 
-    m_driveController.SetP(0.2);
+    m_driveController.SetP(0.3);
     m_driveController.SetI(0);
-    m_driveController.SetD(0.007);
-
+    m_driveController.SetD(0.2);
     m_driveController.SetFF(1.0/4.6);
     m_driveController.SetOutputRange(-1.0F, 1.0F);
 
