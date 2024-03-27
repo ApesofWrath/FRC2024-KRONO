@@ -44,6 +44,7 @@
 #include "commands/shooterintake/scoreAmp.h"
 #include "commands/LeftClimbToggle.h"
 #include "commands/RightClimbToggle.h"
+#include "commands/shooterintake/AutoAngle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>

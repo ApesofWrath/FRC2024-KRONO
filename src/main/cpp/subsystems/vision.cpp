@@ -12,6 +12,9 @@ vision::vision() : m_networkTable(nt::NetworkTableInstance::GetDefault().GetTabl
 
 // This method will be called once per scheduler run
 void vision::Periodic() {
+    double distance = getDistance();
+    frc::SmartDashboard::PutNumber("Apriltag distance", distance);
+
 }
 
 double vision::getHeadingError(){
@@ -35,20 +38,23 @@ double vision::getHeadingError(){
 
 double vision::getDistance(){
     double targetOffsetAngle_Vertical = m_networkTable->GetNumber("ty",0.0);
-
+    auto pose = m_networkTable->GetNumberArray("targetpose_robotspace", std::vector<double>(6));
+    double distance_m = sqrt(pow(pose[0], 2)+pow(pose[2], 2));
+    double distance_in = distance_m*39.37;
+    return distance_in;
     // how many degrees back is your limelight rotated from perfectly vertical?
-    double limelightMountAngleDegrees = 25.0; 
+    // double limelightMountAngleDegrees = 40.0; 
 
-    // distance from the center of the Limelight lens to the floor
-    double limelightLensHeightInches = 20.0; 
+    // // distance from the center of the Limelight lens to the floor
+    // double limelightLensHeightInches = 13.75; 
 
-    // distance from the target to the floor
-    double goalHeightInches = 60.0; 
+    // // distance from the target to the floor
+    // double goalHeightInches = 57.13; 
 
-    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+    // double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    // double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
-    //calculate distance
-    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/tan(angleToGoalRadians);
-    return distanceFromLimelightToGoalInches;
+    // //calculate distance
+    // double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/tan(angleToGoalRadians);
+    // return distanceFromLimelightToGoalInches;
 }

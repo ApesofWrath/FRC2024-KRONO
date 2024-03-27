@@ -9,6 +9,7 @@
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableValue.h"
+#include "frc/smartdashboard/SmartDashboard.h"
 
 #include <Constants.h>
 class vision : public frc2::SubsystemBase {
