@@ -14,8 +14,6 @@
 #include <frc/util/Color.h>
 #include <string.h>
 
-
-
 class LED : public frc2::SubsystemBase {
     public:
     LED(ctre::phoenix::CANifier& LEDCANifier);
@@ -36,7 +34,6 @@ class LED : public frc2::SubsystemBase {
     // Set percent brightness. Values <0 or >100 will be clamped
     void setBrightness(int percentBrightness);
     void setTeamColor();
-
 
     private:
     ctre::phoenix::CANifier& m_LEDCANifier;
