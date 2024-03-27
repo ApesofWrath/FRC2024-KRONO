@@ -6,6 +6,8 @@
 
 AutoAngle::AutoAngle(intakeshooter* intakeshooter, vision* vision) : m_intakeshooter{intakeshooter}, m_vision{vision} {
   AddRequirements({intakeshooter});
+
+  // Add points for interpolating map
   m_interpolatingMap.insert(0.0, 0.0);
 }
 
@@ -15,6 +17,9 @@ void AutoAngle::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void AutoAngle::Execute() {
+  double distance = m_vision->getDistance();
+  double angle{m_interpolatingMap[distance]};
+  m_intakeshooter->spinup(angle);
 }
 
 // Called once the command ends or is interrupted.

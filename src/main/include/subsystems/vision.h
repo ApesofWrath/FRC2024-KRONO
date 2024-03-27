@@ -15,6 +15,7 @@ class vision : public frc2::SubsystemBase {
  public:
   vision();
   double getHeadingError();
+  double getDistance();
   
 
   /**

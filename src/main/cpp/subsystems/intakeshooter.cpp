@@ -116,11 +116,7 @@ void intakeshooter::intakeRetract() {
 }
 
 void intakeshooter::spinup(float angle) { // provide manual angle control before vision is finished
-    if (std::isnan(angle)) {
-        printf("The code will now fail in a very obvious way by using NaN for the angle.\nReplace this with the code to set angle using vision when it's done.");
-    } else {
-        shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
-    }
+    shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
 
     if (allowSpinup) {
         currentIntakeshooterState = intakeshooterStates::SPINUP;
