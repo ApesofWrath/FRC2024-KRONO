@@ -17,7 +17,7 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureButtonBindings();
 
-  // $ CONTROLLER INPUTS FOR SWERVE DRIVE BELOW
+  // CONTROLLER INPUTS FOR SWERVE DRIVE BELOW
   m_drivetrain.SetDefaultCommand(Drive(
     &m_drivetrain,
     [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftX()), controllerConstants::kControllerCurve)); },
@@ -34,6 +34,7 @@ RobotContainer::RobotContainer() {
     m_chooser.AddOption("Backup", "Backup");
     m_chooser.AddOption("Preload", "Preload");
     m_chooser.AddOption("PreloadBackupCenter", "PreloadBackupCenter");
+    m_chooser.AddOption("New Auto", "New Auto");
 
     frc::SmartDashboard::PutData(&m_chooser);
     
@@ -44,7 +45,6 @@ RobotContainer::RobotContainer() {
 
 // All the button commands are set in this function
 void RobotContainer::ConfigureButtonBindings() {
-
   // Zeroing for swervedrive command
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kStart).OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
 
@@ -65,21 +65,11 @@ void RobotContainer::ConfigureButtonBindings() {
   // Climber Buttons
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftStick).OnTrue(ExtendClimber(&m_climber).ToPtr());
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kRightStick).OnTrue(RetractClimber(&m_climber).ToPtr());
-
-  // Climber Zero Maintinence Buttons
-  frc2::JoystickButton(&m_controllerAlt, frc::XboxController::Button::kLeftBumper).OnTrue(LeftClimbToggle(&m_climber).ToPtr());
-  frc2::JoystickButton(&m_controllerAlt, frc::XboxController::Button::kRightBumper).OnTrue(RightClimbToggle(&m_climber).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   using namespace pathplanner;
-  if (m_chooser.GetSelected() == "DoNothing") {
-    return frc2::WaitCommand(15_s).ToPtr();
-  }
-  else {
-    return PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
-  }
-  
+  return m_chooser.GetSelected() == "DoNothing" ? frc2::WaitCommand(15_s).ToPtr() : PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
 }
 
 

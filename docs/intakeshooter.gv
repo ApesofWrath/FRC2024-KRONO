@@ -1,0 +1,47 @@
+/* circo -Tsvg intakeshooter.gv -o intakeshooter.svg; imv intakeshooter.svg
+blue: happens upon user input of stated controller button
+black: happens automatically based off of stated condition
+*/
+digraph {
+	rankdir=LR;
+
+	intakeRetract [label="intakeRetract()\n(A)",color=blue];
+	intakeActivate [label="intakeActivate()\n(LB)",color=blue];
+	spinup [label="spinup()\n(B/X)",color=blue];
+	scoreAmp [label="scoreAmp()\n(Y)",color=blue];
+	fire [label="fire()\n(RB)",color=blue];
+	rapidFire [label="rapidFire()\n(auton)",color=blue];
+
+	IDLE[shape=record,label="IDLE|apply current limits\ngo to angle zero speed"];
+	INTAKING[shape=record,label="INTAKING|intake angles down\nspin wheels"];
+	BACKOFF[shape=record,label="BACKOFF|retract\nfeed note backwards out of mechanism"];
+	NOTEFORWARD[shape=record,label="NOTEFORWARD|move note forward\nrumble controllers"];
+	HOLDING[shape=record,label="HOLDING|stop moving the note"];
+	SPINUP[shape=record,label="SPINUP|angle correctly for speaker\nget shooter wheels up to speed"];
+	SPINUPPIGEON[shape=record,label="SPINUPPIGEON|correct angle using pigeon"];
+	AIMAMP[shape=record,label="AIMAMP|angle correctly for amp"];
+	SCOREAMP[shape=record,label="SCOREAMP|wait 50 loops\napply current limit\nspin left motor"];
+	FIRE[shape=record,label="FIRE|ensure correct angle\nspin up left wheel\niterate shooterClearCount"];
+	POSTFIRE[shape=record,label="POSTFIRE|reset shooterClearCount"];
+	RAPIDFIRE[shape=record,label="RAPIDFIRE|set the correct angle\nspin up left wheel"];
+	RAPIDPOSTFIRE[shape=record,label="RAPIDPOSTFIRE"];
+
+	intakeRetract -> IDLE [color=blue];
+	intakeActivate -> INTAKING [color=blue];
+	spinup -> SPINUP [color=blue];
+	scoreAmp -> AIMAMP [color=blue];
+	fire -> FIRE [color=blue];
+	rapidFire -> RAPIDFIRE [color=blue];
+	INTAKING -> BACKOFF [label="canifier\nLIMR tripped"];
+	INTAKING -> intakeRetract [color=blue];
+	BACKOFF -> NOTEFORWARD [label="canifier\nLIMR tripped"];
+	NOTEFORWARD -> HOLDING [label="canifier\nLIMR tripped"];
+	HOLDING -> { spinup; scoreAmp} [color=blue];
+	SPINUP -> SPINUPPIGEON [label="correct\nposition"];
+	SPINUPPIGEON -> fire [color=blue];
+	AIMAMP -> SCOREAMP [label="amp angle\nis correct"];
+	FIRE -> POSTFIRE [label="canifyer\nLIMF tripped"];
+	POSTFIRE -> IDLE [label="canifyer\nLIMF tripped"];
+	RAPIDFIRE -> RAPIDPOSTFIRE [label="canifier\nLIMF tripped"];
+	RAPIDPOSTFIRE -> INTAKING [label="canifier\nLIMF tripped"];
+}

@@ -3,6 +3,8 @@
 #include <frc/MathUtil.h>
 #include <iostream>
 #include <numbers>
+#include <thread>
+#include <chrono>
 #include <frc/geometry/Rotation2d.h>
 using namespace drivetrainConstants::calculations;
 using namespace generalConstants;
@@ -16,7 +18,6 @@ swerveModule::swerveModule(const double module[])
     // Resets the swerve module motors and encoders to factory settings
     m_motorDrive.RestoreFactoryDefaults();
     m_motorTurn.RestoreFactoryDefaults();
-    //m_encoderTurn.ConfigFactoryDefault(); Deprecated
 
     // Sets both the drive motor and the turn motor to be inverted
     m_motorDrive.SetInverted(true);
@@ -30,15 +31,9 @@ swerveModule::swerveModule(const double module[])
     m_motorDrive.SetSmartCurrentLimit(40.0);
     m_motorTurn.SetSmartCurrentLimit(20.0);
 
-    // Adds and sets the encoder offset to each swerve module encoder
-    //m_encoderTurn.ConfigMagnetOffset(m_encoderOffset); Set in Phoenix Tuner
-
-    // Configurations and settings for the encoders
-    //m_encoderTurn.ConfigVelocityMeasurementPeriod(ctre::phoenix::sensors::SensorVelocityMeasPeriod::Period_100Ms);  Deprecated
-    //m_encoderTurn.ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180); Set in Phoenix Tuner
-    //m_encoderTurn.ConfigSensorDirection(false); Set in Phoenix Tuner
-    //m_encoderTurn.ConfigSensorInitializationStrategy(ctre::phoenix::sensors::SensorInitializationStrategy::BootToAbsolutePosition); Automatically done
-    //m_encoderTurn.ConfigFeedbackCoefficient(360.0 / 4096.0, std::string("deg"), ctre::phoenix::sensors::SensorTimeBase::PerSecond); Deprecated, canonical units used now
+    // Burn all settings
+    m_motorDrive.BurnFlash();
+    m_motorTurn.BurnFlash();
 
     // Sets the feedback device of the drive motor to the built in motor encoder and the feedback device of the turn motor to the external encoder
     m_driveController.SetFeedbackDevice(m_encoderDrive);
@@ -47,7 +42,7 @@ swerveModule::swerveModule(const double module[])
     m_driveController.SetP(0.2);
     m_driveController.SetI(0);
     m_driveController.SetD(0.007);
-    //m_driveController.SetFF(1/107.9101*2); //(0.5*1023.0)/(22100.0*0.5)
+
     m_driveController.SetFF(1.0/4.6);
     m_driveController.SetOutputRange(-1.0F, 1.0F);
 
@@ -63,6 +58,11 @@ swerveModule::swerveModule(const double module[])
 
     m_encoderDrive.SetPositionConversionFactor((kWheelDiameter.value() / 2.0) * 2.0 * std::numbers::pi * (kFinalDriveRatio));
     m_encoderDrive.SetVelocityConversionFactor((kWheelDiameter.value() / 2.0) * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    m_motorDrive.BurnFlash();
+    m_motorTurn.BurnFlash();
 }
 
 // Gets the position of the swerve module drive motor and turn motor
@@ -76,15 +76,13 @@ frc::SwerveModuleState swerveModule::GetState() {
 
 // Applies the wanted speed and direction to the turn and drive motors
 void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
-    const auto state = CustomOptimize(
+    const auto state = frc::SwerveModuleState::Optimize(
         referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees));
     //This returns the position in +-Cancoder units counting forever, as opposed to absolulte -180 to +180 deg.
 
     const auto targetWheelSpeed{state.speed};
     m_targetAngle = state.angle.Degrees().value();
     const double turnOutput = m_targetAngle;
-
-    //frc::SmartDashboard::PutNumber("TarWheelSpeed", targetWheelSpeed);
 
     units::radians_per_second_t targetMotorSpeed{
         (targetWheelSpeed * units::radian_t(2 * std::numbers::pi))
@@ -93,6 +91,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
+    frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
     frc::SmartDashboard::PutNumber("Target Motor Speed", targetMotorSpeed.value());
 }
@@ -123,13 +122,7 @@ frc::SwerveModuleState swerveModule::CustomOptimize(const frc::SwerveModuleState
     }
     optAngle = currentAngle.Degrees() + difference;
 
-    // frc::SmartDashboard::PutNumber("Desired Angle", optAngle.Degrees().value());
-    // frc::SmartDashboard::PutNumber("Neo Encoder Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderTurnIntegrated.GetPosition());
     frc::SmartDashboard::PutNumber("Neo Encoder Vel " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetVelocity());
-    // frc::SmartDashboard::PutNumber("Neo Encoder Drive Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetPosition());
-    
-    //frc::SmartDashboard::PutNumber("Motor " + std::to_string(m_motorTurn.GetDeviceID()) + " Desired Angle", m_motorTurn.GetClosedLoopTarget());
-    //frc::SmartDashboard::PutNumber("Motor " + std::to_string(m_motorTurn.GetDeviceID()) + " Real Angle", m_motorTurn.GetSelectedSensorPosition());
 
     return {optSpeed, optAngle};
 }

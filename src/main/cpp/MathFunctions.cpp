@@ -21,28 +21,18 @@ std::array<double, 3> MathFunctions::hueToRGB(double hue){
     double hue_prime = normalizedHue/60;
     double X = chroma * (1.0 - std::abs(std::fmod(hue_prime, 2.0) - 1.0));
     std::array<double, 3> result;
-    if (hue_prime < 1){
+    if (hue_prime < 1) {
         result = {chroma, X, 0};
-    
-    }else if (hue_prime < 2){
+    } else if (hue_prime < 2){
         result = {X, chroma, 0};
-    }else if (hue_prime < 3){
+    } else if (hue_prime < 3){
         result = {0, chroma, X};
-    }else if (hue_prime < 4){
+    } else if (hue_prime < 4){
         result = {0, X, chroma};
-    }else if (hue_prime < 5){
+    } else if (hue_prime < 5){
         result = {X, 0, chroma};
-    }else{
+    } else {
         result = {chroma, 0, X};
     }
     return result;
-    
 }
-
-// double MathFunctions::getPointed(std::vector<std::vector<double>>){
-//     minVal = 
-// }
-
-// double MathFunctions::POVDistance(std::vector<double> origin, std::vector<double> angle, std::vector<double> target){
-//     centered = 
-// }

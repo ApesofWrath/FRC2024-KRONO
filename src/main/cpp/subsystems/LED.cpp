@@ -12,52 +12,26 @@ LED::LED(CANifier& LEDCanifier) : m_LEDCANifier{LEDCanifier} {
 
 void LED::setSolid(std::array<double, 3> RGB) {
     auto color = frc::Color(RGB[0], RGB[1], RGB[2]);
-    ledFunction = [color](){
-        return color;
-    };
+    LED::setSolid(color);
 }
 void LED::setSolid(frc::Color color){
-
-    ledFunction = [color](){
-        return color;
-    };
+    ledFunction = [color](){ return color; };
 }
 
 void LED::setBlinking(std::array<double, 3> RGB, double speed) {
-
-    auto color = frc::Color(RGB[0], RGB[1], RGB[2]);
-    ledFunction = [color, speed](){
-        double currentSeconds = timer.Get().value();
-
-        frc::Color result;
-
-        if ( std::fmod(currentSeconds, 1/speed)*speed >= 0.5){
-            result = color;
-        }else{
-            result = {0.0, 0.0, 0.0};
-        }
-        return result;
-    };
+    return LED::setBlinking(frc::Color(RGB[0], RGB[1], RGB[2]), speed);
 }
+
 void LED::setBlinking(frc::Color color, double speed) {
-
-
     ledFunction = [color, speed](){
         double currentSeconds = timer.Get().value();
 
         frc::Color result;
-
-        if ( std::fmod(currentSeconds, 1/speed)*speed >= 0.5){
-            result = color;
-        }else{
-            result = {0.0, 0.0, 0.0};
-        }
-        return result;
+        return std::fmod(currentSeconds, 1/speed)*speed >= 0.5 ? color : frc::Color {0.0, 0.0, 0.0};
     };
 }
 
 void LED::setCycle(double speed){
-
     ledFunction = [speed](){
         double currentSeconds = timer.Get().value();
         double hue = std::fmod(currentSeconds, 1/speed)*speed*360;
@@ -78,14 +52,11 @@ void LED::setBrightness(int percentBrightness){
 
 void LED::setTeamColor(){
     auto alliance = frc::DriverStation::GetAlliance();
-    if (alliance == frc::DriverStation::Alliance::kRed){
-        setSolid(frc::Color::kRed);
-    } else if (alliance == frc::DriverStation::Alliance::kBlue) {
-        setSolid(frc::Color::kBlue);        
-    } else {
-        setSolid(frc::Color::kWhite);
-    }
-
+    setSolid(
+        alliance == frc::DriverStation::Alliance::kRed ? frc::Color::kRed :
+        alliance == frc::DriverStation::Alliance::kBlue ? frc::Color::kBlue :
+        frc::Color::kWhite
+    );
 }
 
 void LED::Periodic() {
@@ -95,8 +66,7 @@ void LED::Periodic() {
     m_LEDCANifier.SetLEDOutput(color.red*brightness, CANifier::LEDChannelB); // NOTE WHEN TESTING: Make sure channels are correct
     m_LEDCANifier.SetLEDOutput(color.green*brightness, CANifier::LEDChannelC);
     m_LEDCANifier.SetLEDOutput(color.blue*brightness, CANifier::LEDChannelA);
-
-    }
+}
 
 LEDmanager::LEDmanager(LED& LED, intakeshooter& intakeshooter) : m_LED{LED}, m_intakeshooter{intakeshooter} {
     frc::SmartDashboard::PutNumber("LED Brightness", 1.0);
@@ -119,7 +89,6 @@ void LEDmanager::Periodic(){
             m_LED.setSolid(frc::Color::kTeal);
 
             break;
-
         
         case intakeshooterStates::SPINUPPIGEON:
             if (m_intakeshooter.shooterAtSpeed()){

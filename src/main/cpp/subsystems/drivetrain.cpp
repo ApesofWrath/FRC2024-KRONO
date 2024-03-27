@@ -13,10 +13,10 @@ drivetrain::drivetrain() {
         [this](){ return GetOdometry(); }, // Robot pose supplier
         [this](frc::Pose2d pose){ ResetOdometry(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
         [this](){ return GetRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        [this](frc::ChassisSpeeds speeds){ SwerveDrive(speeds.vx, speeds.vy, speeds.omega, false); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        [this](frc::ChassisSpeeds speeds){ DriveRobotRelativeSpeeds(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            PIDConstants(0.5, 0.0, 0.0), // Translation PID constants
-            PIDConstants(0.0, 0.0, 0.0), // Rotation PID constants
+            PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
             units::meters_per_second_t(4.5), // Max module speed, in m/s
             units::meter_t(13.625_in), // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -27,10 +27,7 @@ drivetrain::drivetrain() {
             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
             auto alliance = frc::DriverStation::GetAlliance();
-            if (alliance) {
-                return alliance.value() == frc::DriverStation::Alliance::kRed;
-            }
-            return false;
+            return alliance.value() == frc::DriverStation::Alliance::kRed;
         },
         this // Reference to this subsystem to set requirements
     );
@@ -71,8 +68,6 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
     drivetrainConstants::calculations::kModuleMaxAngularVelocity
     );
 
-    //frc::SmartDashboard::PutNumber("xSpeed", xSpeed.value());
-    // frc::SmartDashboard::PutNumber("ySpeed", ySpeed.value());
     frc::SmartDashboard::PutNumber("zRotation", zRot.value());
     frc::SmartDashboard::PutNumber("zRotation actual", m_navX.GetRate() * -1.0);
     frc::SmartDashboard::PutNumber("Robot Rotation", m_navX.GetRotation2d().Degrees().value());
@@ -114,32 +109,25 @@ void drivetrain::ResetOdometry(frc::Pose2d initPose) {
 }
 
 frc::ChassisSpeeds drivetrain::GetRobotRelativeSpeeds(){
-    frc::ChassisSpeeds speeds = m_kinematics.ToChassisSpeeds(m_frontRight.GetState(), m_rearRight.GetState(), m_frontLeft.GetState(), m_rearLeft.GetState());
-    return frc::ChassisSpeeds::FromFieldRelativeSpeeds(speeds.vx, speeds.vy, speeds.omega, m_navX.GetRotation2d());
+    return m_kinematics.ToChassisSpeeds(m_frontRight.GetState(), m_rearRight.GetState(), m_frontLeft.GetState(), m_rearLeft.GetState());
+}
+
+void drivetrain::DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds) {
+    frc::ChassisSpeeds targetSpeeds = frc::ChassisSpeeds::Discretize(robotRelativeSpeeds, 0.2_s);
+    auto moduleStates = m_kinematics.ToSwerveModuleStates(targetSpeeds);
+    auto [frontRight, rearRight, frontLeft, rearLeft] = moduleStates;
+
+    m_frontRight.SetDesiredState(frontRight);
+    m_rearRight.SetDesiredState(rearRight);
+    m_frontLeft.SetDesiredState(frontLeft);
+    m_rearLeft.SetDesiredState(rearLeft);
 }
 
 void drivetrain::Periodic() {
     UpdateOdometry();
-    // if (m_vision.TargetFound())
-    // {
-    //     AddDataFromVision();
-    // }
-    // Test posting angle to Dashboard.
-    /*frc::SmartDashboard::PutNumber("Front Right Angle", m_frontRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Rear Right Angle", m_rearRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Front Left Angle", m_frontLeft.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Rear Left Angle", m_rearLeft.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-
-    frc::SmartDashboard::PutNumber("Front Right TARGET", m_frontRight.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Rear Right TARGET", m_rearRight.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Front Left TARGET", m_frontLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle)); */
-    // frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
     frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
     frc::SmartDashboard::PutNumber("Odometry Y", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Translation().Y()));
     frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));
-
-    
 }
 
 void drivetrain::SimulationPeriodic() {}

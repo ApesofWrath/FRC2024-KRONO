@@ -4,8 +4,7 @@
 
 #include "Robot.h"
 
-void Robot::RobotInit() {
-}
+void Robot::RobotInit() {}
 
 /**
  * This function is called every robot packet, no matter the mode. Use
@@ -59,19 +58,7 @@ void Robot::TeleopPeriodic() {}
 /**
  * This function is called periodically during test mode.
  */
-void Robot::TestPeriodic() {
-  // Vision visionSubsystem;
-  // // visionSubsystem.SelectPipeline(1);
-  // // if (m_controllerMain.GetRawButton(1)){
-  // visionSubsystem.SelectPipeline(0);
-  // }
-  //   if (m_controllerMain.GetRawButton(2)){
-  //   visionSubsystem.SelectPipeline(1);
-  // }
-    
-  // frc::SmartDashboard::PutNumber("Target X", visionSubsystem.GetTargetX());
-  
-  }
+void Robot::TestPeriodic() {}
 
 
 #ifndef RUNNING_FRC_TESTS

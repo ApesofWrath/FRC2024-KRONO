@@ -25,12 +25,13 @@ class drivetrain : public frc2::SubsystemBase {
                    bool fieldRelative);
 
   void UpdateOdometry();
-  void AddDataFromVision();
   void resetGyro();
   frc::Pose2d GetOdometry();
   void ResetOdometry180(frc::Pose2d initPose);
   void ResetOdometry(frc::Pose2d initPose);
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
+  void DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -54,7 +55,7 @@ private:
   AHRS m_navX{frc::SPI::kMXP};
   
   // Swervedrive dimensions
-  frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in};
+  frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in}; //9.875
   frc::Translation2d m_locationRearRight{-9.875_in, -9.875_in};
   frc::Translation2d m_locationFrontLeft{+9.875_in, +9.875_in};
   frc::Translation2d m_locationRearLeft{-9.875_in, +9.875_in};

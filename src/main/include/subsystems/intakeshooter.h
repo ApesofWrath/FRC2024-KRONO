@@ -18,23 +18,20 @@
 #include <frc/XboxController.h>
 #include <frc2/command/button/CommandXboxController.h>
 
-
-enum class intakeshooterStates { // proceed cyclically down list, each comment describes state & conditions for entering
-    IDLE, // default state, wheels (except feeder) spinning slowly
-    INTAKING, // enter on intake button, intake angles down & spins wheels
-    BACKOFF, // feed note backwards out of mechanism to prevent excess grinding & early shots
-    NOTEFORWARD,
-    HOLDING, // enter on note at correct position (sensor), ensure note position correctness
-    SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
-    SPINUPPIGEON,
-    AMPBACK,
-    AIMAMP,
-    SCOREAMP,
-    RAPIDFIRE, // do not bind to a button - for auto use only(goes to rapidpostfire state)
-    FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
-    POSTFIRE, // after the note is fired, check if the note is gone before resuming idle
-    RAPIDPOSTFIRE, // returns to intaking position instead of idle for quicker shots and less intake movement
-    ZEROING // after we fire, go back to neutral and then resume idle
+enum class intakeshooterStates { // Enter condition [id BUTTON] -> action [-> exit condition -> next state]
+    IDLE, // DEFAULT, intakeRetract [op A], transition from IDLE -> apply current limits, go to angle zero speed zero
+    INTAKING, // intakeActivate [op LB], transition from RAPIDPOSTFIRE -> intake angles down & spins wheels -> canifier LIMR tripped -> BACKOFF
+    BACKOFF, // transition from INTAKING -> retract, feed note backwards out of mechanism (prevent excess grinding & early shots) -> canifier LIMR tripped -> NOTEFORWARD
+    NOTEFORWARD, // transition from BACKOFF -> move note forward, rumble controllers -> canifier LIMR tripped -> HOLDING
+    HOLDING, // transition from NOTEFORWARD -> stop moving the note, allowSpinup
+    SPINUP, // spinup [op B X] -> angle correctly for speaker and get shooter wheels up to speed -> correct position -> SPINUPPIGEON
+    SPINUPPIGEON, // transition from SPINUP -> correct angle using pigeon
+    AIMAMP, // scoreAmp [op Y], transition from AIMAMP -> angle correctly for amp -> amp angle is correct -> SCOREAMP 
+    SCOREAMP, // transition from AIMAMP -> wait 50 loops, apply current limit, spin left motor
+    FIRE, // fire [op RB] -> ensure correct angle, spin up left wheel, iterate shooterClearCount -> canifyer LIMF tripped -> POSTFIRE
+    POSTFIRE, // after rapidFireCommand [auton], after fire, transition from FIRE -> reset shooterClearCount -> canifyer LIMF tripped -> IDLE
+    RAPIDFIRE, // rapidFire [auton] -> set the correct angle, spin up left wheel -> canifier LIMF tripped -> RAPIDPOSTFIRE
+    RAPIDPOSTFIRE, // transition from RAPIDFIRE -> -> canifier LIMF tripped -> INTAKING
 };
 
 class intakeshooter : public frc2::SubsystemBase {
@@ -85,7 +82,6 @@ class intakeshooter : public frc2::SubsystemBase {
     rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
     intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
-    int counter;
 
     std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 
@@ -93,4 +89,5 @@ class intakeshooter : public frc2::SubsystemBase {
     double shootAngle; // set the angle at which we are shooting based off of the limelight
     double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
     int ampBackCount = 0;
+    int ampWaitCounter = 0;
 };

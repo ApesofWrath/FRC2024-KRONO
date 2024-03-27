@@ -36,17 +36,5 @@ class swerveModule {
   rev::SparkPIDController m_driveController = m_motorDrive.GetPIDController();
   rev::SparkPIDController m_turnController = m_motorTurn.GetPIDController();
 
-  // const double m_encoderOffset;
   double m_targetAngle;
-
-  // hardwareSettings m_settings;
 };
-
-//yeah this whole thing down here thats kinda confusing actually does nothing lol, none of these added units are used anywhere
-// namespace units {
-//   UNIT_ADD(angle, native_unit, native_units, nu, unit<std::ratio<360, 2048>, units::degrees>) 2048 clicks per rotation.
-//   UNIT_ADD(angular_velocity, native_units_per_decisecond, native_units_per_decisecond, nu_per_ds,
-//            compound_unit<native_units, inverse<deciseconds>>)  clicks per 100ms (standard FX output).
-//   UNIT_ADD(angle, drive_gearing, drive_gearing, dratio, unit<std::ratio<27, 4>, units::degrees>)
-//   UNIT_ADD(length, wheel_circumference, wheel_circumferences, wcrc, unit<std::ratio<32, 100>, units::meters>)
-// }

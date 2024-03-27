@@ -1,4 +1,4 @@
-#include "commands/shooterintake/rapidFire.h" // relevent header file
+#include "commands/ShooterIntake/rapidFire.h" // relevent header file
 
 rapidFire::rapidFire(intakeshooter* intake) : m_intake{intake} { // constructor for command class
     SetName("rapidFire"); // set the ?? name

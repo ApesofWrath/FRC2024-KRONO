@@ -1,0 +1,24 @@
+/* sfdp -Tsvg climber.gv -o climber.svg; imv climber.svg
+blue: happens upon user input of stated controller button
+black: happens automatically based off of stated condition
+*/
+digraph {
+	rankdir=LR;
+
+	climberRetract [label="climberRetract()\n(RS)",color=blue];
+	climberActivate [label="climberActivate()\n(LS)",color=blue];
+
+	INIT[shape=record,label="INIT",root="true"];
+	SOLEXTEND[shape=record,label="SOLEXTEND|activate solenoids\nset motors"];
+	EXTEND[shape=record,label="EXTEND|run extender motors"];
+	RETRACT[shape=record,label="RETRACT|deactivate solenoid\nretract motors"];
+	POSTRETRACT[shape=record,label="POSTRETRACT|set motors"];
+
+	EXTEND -> INIT;
+	SOLEXTEND -> EXTEND[label="4 loops"];
+	RETRACT -> POSTRETRACT[label="motors retracted"]
+	POSTRETRACT -> INIT;
+	climberRetract -> RETRACT[color=blue];
+	climberActivate -> SOLEXTEND[color=blue];
+	INIT -> { climberRetract; climberActivate } [color=blue];
+}
