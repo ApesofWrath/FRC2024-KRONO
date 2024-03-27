@@ -25,12 +25,14 @@ class drivetrain : public frc2::SubsystemBase {
                    bool fieldRelative);
 
   void UpdateOdometry();
-  void AddDataFromVision();
   void resetGyro();
   frc::Pose2d GetOdometry();
   void ResetOdometry180(frc::Pose2d initPose);
   void ResetOdometry(frc::Pose2d initPose);
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
+  void DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
+  void slowDown();
+  void normalSpeed();
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -42,9 +44,6 @@ class drivetrain : public frc2::SubsystemBase {
    */
   void SimulationPeriodic() override;
 
-  void slowDown();
-  void normalSpeed();
-  void driveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
 
   double kslowConst = 1.0;
 

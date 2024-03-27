@@ -2,21 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.2542914308886268,
-      "y": 6.892517043179449
+      "x": 0.6884877930156866,
+      "y": 6.635333571419023
     },
-    "rotation": 0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2NoteAmpSide.1"
-          }
-        },
         {
           "type": "sequential",
           "data": {
