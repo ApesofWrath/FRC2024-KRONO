@@ -55,11 +55,11 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
 
     //frc::SmartDashboard::PutNumber("xSpeed", xSpeed.value());
     // frc::SmartDashboard::PutNumber("ySpeed", ySpeed.value());
-    frc::SmartDashboard::PutNumber("zRotation", units::degrees_per_second_t(zRot).value());
-    frc::SmartDashboard::PutNumber("zRotation actual", m_navX.GetRate() * -1.0);
-    frc::SmartDashboard::PutNumber("Robot Rotation", m_navX.GetRotation2d().Degrees().value());
-    frc::SmartDashboard::PutNumber("navX Yaw", m_navX.GetYaw());
-    frc::SmartDashboard::PutNumber("Od Rob Rot", m_odometry.GetEstimatedPosition().Rotation().Degrees().value());
+    // frc::SmartDashboard::PutNumber("zRotation", units::degrees_per_second_t(zRot).value());
+    // frc::SmartDashboard::PutNumber("zRotation actual", m_navX.GetRate() * -1.0);
+    // frc::SmartDashboard::PutNumber("Robot Rotation", m_navX.GetRotation2d().Degrees().value());
+    // frc::SmartDashboard::PutNumber("navX Yaw", m_navX.GetYaw());
+    // frc::SmartDashboard::PutNumber("Od Rob Rot", m_odometry.GetEstimatedPosition().Rotation().Degrees().value());
     
     auto [frontRight, rearRight, frontLeft, rearLeft] = moduleStates;
 
@@ -145,9 +145,9 @@ void drivetrain::Periodic() {
     frc::SmartDashboard::PutNumber("Front Left TARGET", m_frontLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
     frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle)); */
     // frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
-    frc::SmartDashboard::PutNumber("Odometry Y", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Translation().Y()));
-    frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));
+    // frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
+    // frc::SmartDashboard::PutNumber("Odometry Y", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Translation().Y()));
+    // frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));
 
     
 }

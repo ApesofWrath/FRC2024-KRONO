@@ -149,8 +149,8 @@ bool intakeshooter::shooterAtSpeed() {
 }
 
 void intakeshooter::Periodic() {
-    frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
-    frc::SmartDashboard::PutNumber("Ab Angle", 246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+    // frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
+    // frc::SmartDashboard::PutNumber("Ab Angle", 246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
 
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
@@ -342,11 +342,11 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutString("Intake/Shooter State: ", intakeState);
     frc::SmartDashboard::PutNumber("Rot Output", m_rotationMotor.GetAppliedOutput());
 
-    frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
-    frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
-    frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
+    // frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
+    // frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
+    // frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
     frc::SmartDashboard::PutBoolean("Shooter At Speed", shooterAtSpeed());
     // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
-    frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
+    // frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
 }
 
