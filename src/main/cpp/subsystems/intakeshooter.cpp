@@ -146,7 +146,7 @@ intakeshooterStates intakeshooter::getState() {
 }
 
 bool intakeshooter::shooterAtSpeed() {
-    return m_shooterLeftEncoder.GetVelocity() > 3500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 5500.0 + kShooterRPMTolerance;
+    return m_shooterLeftEncoder.GetVelocity() > 4500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 4500.0 + kShooterRPMTolerance;
 }
 
 void intakeshooter::Periodic() {
@@ -346,6 +346,7 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
+    frc::SmartDashboard::PutBoolean("Shooter At Speed", shooterAtSpeed());
     // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
     frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
 }

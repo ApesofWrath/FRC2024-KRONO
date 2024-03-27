@@ -3,6 +3,8 @@
 #include <frc/MathUtil.h>
 #include <iostream>
 #include <numbers>
+#include <thread>
+#include <chrono>
 #include <frc/geometry/Rotation2d.h>
 using namespace drivetrainConstants::calculations;
 using namespace generalConstants;
@@ -44,9 +46,9 @@ swerveModule::swerveModule(const double module[])
     m_driveController.SetFeedbackDevice(m_encoderDrive);
     m_turnController.SetFeedbackDevice(m_encoderTurnIntegrated);
 
-    m_driveController.SetP(0.2);
+    m_driveController.SetP(0.3);
     m_driveController.SetI(0);
-    m_driveController.SetD(0.007);
+    m_driveController.SetD(0.2);
     //m_driveController.SetFF(1/107.9101*2); //(0.5*1023.0)/(22100.0*0.5)
     m_driveController.SetFF(1.0/4.6);
     m_driveController.SetOutputRange(-1.0F, 1.0F);
@@ -63,6 +65,11 @@ swerveModule::swerveModule(const double module[])
 
     m_encoderDrive.SetPositionConversionFactor((kWheelDiameter.value() / 2.0) * 2.0 * std::numbers::pi * (kFinalDriveRatio));
     m_encoderDrive.SetVelocityConversionFactor((kWheelDiameter.value() / 2.0) * (2.0 * std::numbers::pi * (kFinalDriveRatio)) / 60.0);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    m_motorDrive.BurnFlash();
+    m_motorTurn.BurnFlash();
 }
 
 // Gets the position of the swerve module drive motor and turn motor
@@ -76,7 +83,7 @@ frc::SwerveModuleState swerveModule::GetState() {
 
 // Applies the wanted speed and direction to the turn and drive motors
 void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
-    const auto state = CustomOptimize(
+    const auto state = frc::SwerveModuleState::Optimize(
         referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees));
     //This returns the position in +-Cancoder units counting forever, as opposed to absolulte -180 to +180 deg.
 
