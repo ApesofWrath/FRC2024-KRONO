@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <numbers>
 #include <string>
 #include <iostream>
@@ -35,7 +36,7 @@ enum class intakeshooterStates { // Enter condition [id BUTTON] -> action [-> ex
 
 class intakeshooter : public frc2::SubsystemBase {
     public:
-    intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator);
+    intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator, ctre::phoenix::CANifier& beambreakCanifier);
     void intakeActivate();
     void intakeRetract();
     void spinup();
@@ -51,6 +52,7 @@ class intakeshooter : public frc2::SubsystemBase {
     void Periodic() override;
     private:
 
+
     frc2::CommandXboxController* m_controllerMain;
     frc2::CommandXboxController* m_controllerOperator;
 
@@ -63,7 +65,7 @@ class intakeshooter : public frc2::SubsystemBase {
 
     ctre::phoenix6::controls::VelocityDutyCycle m_velocityIntake{0_tps};
 
-    ctre::phoenix::CANifier m_BeambreakCanifier;
+    ctre::phoenix::CANifier& m_BeambreakCanifier;
 
     ctre::phoenix6::hardware::Pigeon2 m_Pigeon;
 
