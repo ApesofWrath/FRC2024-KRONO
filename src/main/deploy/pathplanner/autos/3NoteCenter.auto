@@ -5,7 +5,7 @@
       "x": 1.397372841835022,
       "y": 5.6
     },
-    "rotation": 4.763711697130254e-27
+    "rotation": 5.438769314369609e-29
   },
   "command": {
     "type": "sequential",
@@ -41,6 +41,12 @@
           "data": {
             "commands": [
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "spinup"
@@ -65,6 +71,12 @@
           "type": "sequential",
           "data": {
             "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
               {
                 "type": "named",
                 "data": {

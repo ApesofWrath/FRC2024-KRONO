@@ -339,7 +339,7 @@ void intakeshooter::Periodic() {
     }
 
     frc::SmartDashboard::PutNumber("Intake Rot", m_rotationEncoder.GetPosition());
-    frc::SmartDashboard::PutString("Intake/Shooter State: ", intakeState);
+    frc::SmartDashboard::PutString("Intake Shooter State", intakeState);
     frc::SmartDashboard::PutNumber("Rot Output", m_rotationMotor.GetAppliedOutput());
 
     frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
