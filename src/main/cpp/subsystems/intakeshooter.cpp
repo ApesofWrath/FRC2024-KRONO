@@ -76,9 +76,9 @@ m_controllerOperator(controllerOperator)
     m_rotationEncoder.SetVelocityConversionFactor(kRotationsToDegrees / 60.0);
 
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
-    m_rotationMotorController.SetP(0.013, 0); // 0.00002
+    m_rotationMotorController.SetP(0.005, 0); // 0.00002
     m_rotationMotorController.SetI(0.0, 0); // 0
-    m_rotationMotorController.SetD(0.27, 0); // 0.15
+    m_rotationMotorController.SetD(0.09, 0); // 0.15
     m_rotationMotorController.SetFF(1.0 / 275.0, 0);
 
     m_rotationMotorController.SetIZone(4.0, 0);
@@ -93,7 +93,7 @@ m_controllerOperator(controllerOperator)
     // rotation motor controller (SLOT 1) PIGEON GAINS
     m_rotationMotorController.SetP(0.04, 1); // 0.00002
     m_rotationMotorController.SetI(0.0002, 1); // 0
-    m_rotationMotorController.SetD(0.05, 1); // 0.15
+    m_rotationMotorController.SetD(0.09, 1); // 0.15
     m_rotationMotorController.SetFF(0.0, 1);
 
     m_rotationMotorController.SetIZone(4.0, 1);
@@ -101,8 +101,8 @@ m_controllerOperator(controllerOperator)
     m_rotationMotorController.SetOutputRange(-1.0F, 1.0F, 1);
     m_rotationMotorController.SetSmartMotionAllowedClosedLoopError(1.0, 1);
 
-    m_rotationMotorController.SetSmartMotionMaxVelocity(125.0, 1);
-    m_rotationMotorController.SetSmartMotionMaxAccel(750.0, 1);
+    m_rotationMotorController.SetSmartMotionMaxVelocity(200.0, 1);
+    m_rotationMotorController.SetSmartMotionMaxAccel(500.0, 1);
 
     // Burn after reading (2008)
     m_shooterMotorLeft.BurnFlash();
@@ -161,7 +161,10 @@ void intakeshooter::Periodic() {
 
             gravityFF = 0.0;
             m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 
-            m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+
+            if (m_rotationEncoder.GetPosition() < 5.0){
+                m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+            }
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
