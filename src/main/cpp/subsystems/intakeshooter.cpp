@@ -152,6 +152,23 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
     frc::SmartDashboard::PutNumber("Ab Angle", 246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
 
+    rollingSamples[rollingSample] = m_rotationEncoder.GetPosition();
+    rollSampSum = 0.0;
+
+    for (int i = 0; i < 10; i++) {
+        rollSampSum += rollingSamples[i];
+    }
+
+    rollSampAvg = rollSampSum / 10.0;
+
+    rollingSample++;
+
+    if (rollingSample > 9) {
+        rollingSample = 0;
+    }
+
+    frc::SmartDashboard::PutNumber("Roll Samp Avg", rollSampAvg);   
+
     // intakeshooter state machine
     switch (currentIntakeshooterState) {
         case intakeshooterStates::IDLE:
@@ -301,9 +318,9 @@ void intakeshooter::Periodic() {
 
             m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
 
-            //if (m_rotationEncoder.GetPosition() > shootAngle - kIntakeAngleTolerance && m_rotationEncoder.GetPosition() < shootAngle + kIntakeAngleTolerance){
+            if (rollSampAvg > shootAngle - kIntakeAngleTolerance && rollSampAvg < shootAngle + kIntakeAngleTolerance){
                  m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-50_tps)); // set the speed of the intake motor
-            //}
+            }
             
             shooterClearCount++;
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire

@@ -93,4 +93,10 @@ class intakeshooter : public frc2::SubsystemBase {
     double shootAngle; // set the angle at which we are shooting based off of the limelight
     double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
     int ampBackCount = 0;
+
+    double rollingSamples[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    int rollingSample = 0;
+    double rollSampSum = 0.0;
+    double rollSampAvg = 0.0;
 };

@@ -44,7 +44,7 @@ namespace intakeConstants {
     const auto IDLE_SPEED = 2.5_tps;
     const auto ON_SPEED = 10.0_tps;
     constexpr int kBeambreakCanifier = 18;
-    constexpr int kIntakeAngleTolerance = 2;
+    constexpr int kIntakeAngleTolerance = 1;
     constexpr int kPigeon = 22;
 
     constexpr double kIntakeResetAngle = 0; // 0 for encoder; -66.138 pigeon
