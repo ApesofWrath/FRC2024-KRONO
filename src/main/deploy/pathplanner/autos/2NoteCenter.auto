@@ -22,6 +22,12 @@
                 }
               },
               {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.5
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "rapidFire"
@@ -64,6 +70,12 @@
                 "type": "named",
                 "data": {
                   "name": "spinup"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 3.5
                 }
               },
               {
