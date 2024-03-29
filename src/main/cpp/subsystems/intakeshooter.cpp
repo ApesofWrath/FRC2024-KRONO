@@ -222,6 +222,10 @@ void intakeshooter::Periodic() {
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
             
+            if (m_rotationEncoder.GetPosition() < 5.0){
+                m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+            }
+            
             intakeState = "HOLDING";
             break;
         case intakeshooterStates::SPINUP:
