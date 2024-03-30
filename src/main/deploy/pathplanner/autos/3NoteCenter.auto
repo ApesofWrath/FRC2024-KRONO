@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.397372841835022,
-      "y": 5.6
+      "x": 1.3,
+      "y": 5.5
     },
-    "rotation": 5.438769314369609e-29
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
@@ -31,9 +31,16 @@
           }
         },
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "3NoteCenter.1"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Backup"
+                }
+              }
+            ]
           }
         },
         {
@@ -41,11 +48,18 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 1.0
+                  "pathName": "Return"
                 }
-              },
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
               {
                 "type": "named",
                 "data": {
@@ -64,19 +78,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3NoteCenter.2"
+            "pathName": "3Note.1"
           }
         },
         {
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.0
-                }
-              },
               {
                 "type": "named",
                 "data": {
@@ -95,6 +103,6 @@
       ]
     }
   },
-  "folder": "Choreo Autos",
-  "choreoAuto": true
+  "folder": "PathPlanner Autos",
+  "choreoAuto": false
 }
