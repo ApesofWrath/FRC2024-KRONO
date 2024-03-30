@@ -78,7 +78,7 @@ m_controllerOperator(controllerOperator)
     m_rotationMotorController.SetFeedbackDevice(m_rotationEncoder);
     m_rotationMotorController.SetP(0.002, 0); // 0.00002
     m_rotationMotorController.SetI(0.0001, 0); // 0
-    m_rotationMotorController.SetD(0.18, 0); // 0.15
+    m_rotationMotorController.SetD(0.20, 0); // 0.15
     m_rotationMotorController.SetFF(1.0 / 275.0, 0);
 
     m_rotationMotorController.SetIZone(4.0, 0);
@@ -91,9 +91,9 @@ m_controllerOperator(controllerOperator)
     m_rotationMotorController.SetSmartMotionMaxAccel(750.0, 0);
 
     // rotation motor controller (SLOT 1) PIGEON GAINS
-    m_rotationMotorController.SetP(0.04, 1); // 0.00002
-    m_rotationMotorController.SetI(0.0002, 1); // 0
-    m_rotationMotorController.SetD(0.07, 1); // 0.15
+    m_rotationMotorController.SetP(0.026, 1); // 0.00002
+    m_rotationMotorController.SetI(0.00015, 1); // 0
+    m_rotationMotorController.SetD(0.05, 1); // 0.15
     m_rotationMotorController.SetFF(0.0, 1);
 
     m_rotationMotorController.SetIZone(4.0, 1);
@@ -181,9 +181,9 @@ void intakeshooter::Periodic() {
             gravityFF = 0.0;
             m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkMaxPIDController::ArbFFUnits::kPercentOut); // 
 
-            /* if (m_rotationEncoder.GetPosition() < 5.0){
+            if (m_rotationEncoder.GetPosition() < 5.0){
                 m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
-            } */
+            }
 
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
 
@@ -287,7 +287,9 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::AIMAMP:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
 
-            m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+            if (246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()) < 1.0) {
+                m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
+            }
 
             gravityFF = 0.07 * sin(((M_PI/3.0) - (246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble())) * (M_PI/180.0)));
 
@@ -370,6 +372,7 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Intake Rot", m_rotationEncoder.GetPosition());
     frc::SmartDashboard::PutString("Intake Shooter State", intakeState);
     frc::SmartDashboard::PutNumber("Rot Output", m_rotationMotor.GetAppliedOutput());
+    frc::SmartDashboard::PutNumber("Rot Curr Out", m_rotationMotor.GetOutputCurrent());
 
     frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
