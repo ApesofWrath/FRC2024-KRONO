@@ -6,7 +6,7 @@ using namespace generalConstants;
 
 LED::LED(CANifier& LEDCanifier) : m_LEDCANifier{LEDCanifier} {
     // Set default behavior to solid white
-    setBrightness(100);
+    // setBrightness(100);
     setCycle(1);
 }
 
@@ -67,14 +67,14 @@ void LED::setCycle(double speed){
     };
 }
 
-void LED::setBrightness(double setBrightness){
-    brightness = std::clamp(setBrightness, 0.0, 1.0)*100;
-}
+// void LED::setBrightness(double setBrightness){
+//     m_brightness = std::clamp(setBrightness, 0.0, 1.0)*100;
+// }
 
-void LED::setBrightness(int percentBrightness){
-    brightness = std::clamp(percentBrightness, 0, 100);
+// void LED::setBrightness(int percentBrightness){
+//     m_brightness = std::clamp(percentBrightness, 0, 100);
 
-}
+// }
 
 void LED::setTeamColor(){
     auto alliance = frc::DriverStation::GetAlliance();
@@ -91,6 +91,7 @@ void LED::setTeamColor(){
 void LED::Periodic() {
     // Get RGB value from lambda function
     auto color = ledFunction();
+    double brightness = m_brightness.get();
 
     m_LEDCANifier.SetLEDOutput(color.red*brightness, CANifier::LEDChannelB); // NOTE WHEN TESTING: Make sure channels are correct
     m_LEDCANifier.SetLEDOutput(color.green*brightness, CANifier::LEDChannelC);
@@ -104,8 +105,8 @@ LEDmanager::LEDmanager(LED& LED, intakeshooter& intakeshooter) : m_LED{LED}, m_i
 
 
 void LEDmanager::Periodic(){
-    double brightness =  frc::SmartDashboard::GetNumber("LED Brightness", 1.0)/100;
-    m_LED.setBrightness(brightness);
+    // double brightness =  frc::SmartDashboard::GetNumber("LED Brightness", 1.0)/100;
+    // m_LED.setBrightness(brightness);
     if (frc::DriverStation::IsEnabled()){
         intakeshooterStates intakeshooterState = m_intakeshooter.getState();
         switch (intakeshooterState) {

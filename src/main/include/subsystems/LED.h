@@ -2,6 +2,7 @@
 
 #include <MathFunctions.h>
 #include <Constants.h>
+#include <SmartVariables.h>
 
 #include <stdalign.h>
 #include <ctre/phoenix/CANifier.h>
@@ -41,7 +42,7 @@ class LED : public frc2::SubsystemBase {
     private:
     ctre::phoenix::CANifier& m_LEDCANifier;
     void Periodic();
-    double brightness;
+    SmartVariables::smartSettableNumber m_brightness{"LED Brightness", 100.0};
     // This lambda function is called to get the RGB values that the LEDs should be set to, and can be dynamically swapped with different lambda fucntions for different funcitonality
     std::function<frc::Color()> ledFunction;
 };
