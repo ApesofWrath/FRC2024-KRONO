@@ -3,6 +3,7 @@
 #include <units/length.h>
 #include <units/time.h>
 #include <units/velocity.h>
+#include <units/voltage.h>
 #include <numbers>
 #include <frc/Timer.h>
     
@@ -71,6 +72,9 @@ namespace climberConstants {
     constexpr double kClimberExtendedHeight = 2.0;
     constexpr int kSolenoidClimberLeft = 20;
     constexpr int kSolenoidClimberRight = 21;
+    constexpr units::voltage::volt_t ksolenoidUnlockedVoltage{12};
+    constexpr units::voltage::volt_t ksolenoidLockedVoltage{0};
+    constexpr units::time::second_t ktimeToSolenoidUnlock{0.2};
 }
 
 // Motor IDs, Encoder IDs, and Offsets for swervedrive

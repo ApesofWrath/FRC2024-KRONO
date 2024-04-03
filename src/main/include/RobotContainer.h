@@ -37,6 +37,7 @@
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
 #include "subsystems/LED.h"`
+#include "subsystems/NewClimber.h"
 
 #include "MathFunctions.h"
 
