@@ -72,7 +72,7 @@ namespace drivetrainConstants {
 
         constexpr auto kDrivebaseRadius = 13.96536_in;
         constexpr auto kModuleMaxSpeed = 15.5_fps;
-        constexpr units::radians_per_second_t kModuleMaxAngularVelocity = units::inch_t(kModuleMaxSpeed) / kDrivebaseRadius;  // radians per second
+        constexpr auto kModuleMaxAngularVelocity = 13.3186684769_rad_per_s;  // radians per second
         constexpr auto kFinalDriveRatio = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
         constexpr auto kFinalTurnRatio = 1.0 / (150.0 / 7.0);
     }
