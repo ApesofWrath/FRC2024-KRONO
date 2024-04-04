@@ -1,4 +1,4 @@
-#include "commands/RightClimbToggle.h" // relevent header file
+#include "commands/climber/RightClimbToggle.h" // relevent header file
 
 RightClimbToggle::RightClimbToggle(climber* climber) : m_climber{climber} { // constructor for command class
     SetName("RightClimbToggle"); // set the ?? name

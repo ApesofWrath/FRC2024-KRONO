@@ -41,12 +41,12 @@
 
 #include "MathFunctions.h"
 
-#include "commands/ExtendClimber.h"
-#include "commands/RetractClimber.h"
+#include "commands/climber/ExtendClimber.h"
+#include "commands/climber/RetractClimber.h"
 #include "commands/shooterintake/intakeRetract.h"
 #include "commands/shooterintake/scoreAmp.h"
-#include "commands/LeftClimbToggle.h"
-#include "commands/RightClimbToggle.h"
+#include "commands/climber/LeftClimbToggle.h"
+#include "commands/climber/RightClimbToggle.h"
 #include "commands/shooterintake/AutoAngle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>

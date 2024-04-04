@@ -1,4 +1,4 @@
-#include "commands/ExtendClimber.h" // relevent header file
+#include "commands/climber/ExtendClimber.h" // relevent header file
 
 ExtendClimber::ExtendClimber(climber* climber) : m_climber{climber} { // constructor for command class
     SetName("ExtendClimber"); // set the ?? name
