@@ -8,12 +8,12 @@ Drive::Drive( // constructor for command class
              std::function<double()> ySpeed, // double for speed (Y)
              std::function<double()> zRotation // double for rotation
             )
-    : m_drivetrain{drivetrain}, //          \/ \/ \/ \/
-      m_xSpeed(std::move(xSpeed)),//        ?? ?? ?? ??
-      m_ySpeed(std::move(ySpeed)),//     what does it mEAN
-      m_zRotation(std::move(zRotation)) {// /\ /\ /\ /\ 
+    : m_drivetrain{drivetrain},   
+      m_xSpeed(std::move(xSpeed)),
+      m_ySpeed(std::move(ySpeed)),  
+      m_zRotation(std::move(zRotation)) {
   SetName("Drive");  // set the ?? name
-  AddRequirements({m_drivetrain}); // require the m_robotArm pointer
+  AddRequirements({m_drivetrain}); 
 }
 
 void Drive::Initialize() { printf("Drive initialized.\n"); } // print debug message on initialization

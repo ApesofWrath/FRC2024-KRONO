@@ -1,12 +1,12 @@
 
 #include "subsystems/drivetrain.h"
 
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <iostream>
 
 // Constructor, zeros the gyro for swervedrive
-drivetrain::drivetrain() {
-    m_navX.ZeroYaw();
+drivetrain::drivetrain() 
+:  m_pigeon(drivetrainConstants::kPigeonID)
+{
+    m_pigeon.Reset();
     printf("Drive Constructor");
     using namespace pathplanner;
     AutoBuilder::configureHolonomic(
@@ -41,7 +41,7 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
                              units::radians_per_second_t zRot,
                              bool fieldRelative) {
                             frc::ChassisSpeeds chassisSpeeds = fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-                            xSpeed, ySpeed, zRot, m_navX.GetRotation2d())
+                            xSpeed, ySpeed, zRot, m_pigeon.GetRotation2d())
                       : frc::ChassisSpeeds{xSpeed, ySpeed, zRot};
     auto moduleStates = m_kinematics.ToSwerveModuleStates(chassisSpeeds);
                       
@@ -52,14 +52,6 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
     drivetrainConstants::calculations::kModuleMaxSpeed,
     drivetrainConstants::calculations::kModuleMaxAngularVelocity
     );
-
-    //frc::SmartDashboard::PutNumber("xSpeed", xSpeed.value());
-    // frc::SmartDashboard::PutNumber("ySpeed", ySpeed.value());
-    frc::SmartDashboard::PutNumber("zRotation", units::degrees_per_second_t(zRot).value());
-    frc::SmartDashboard::PutNumber("zRotation actual", m_navX.GetRate() * -1.0);
-    frc::SmartDashboard::PutNumber("Robot Rotation", m_navX.GetRotation2d().Degrees().value());
-    frc::SmartDashboard::PutNumber("navX Yaw", m_navX.GetYaw());
-    frc::SmartDashboard::PutNumber("Od Rob Rot", m_odometry.GetEstimatedPosition().Rotation().Degrees().value());
     
     auto [frontRight, rearRight, frontLeft, rearLeft] = moduleStates;
 
@@ -71,14 +63,14 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
 
 // Updates the odometry of the swervedrive
 void drivetrain::UpdateOdometry() {
-    m_odometry.Update(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
+    m_odometry.Update(m_pigeon.GetRotation2d(), {m_frontRight.GetPosition(),
                       m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
                       m_rearLeft.GetPosition()});
 }
 
 // Resets the gyro when function run
 void drivetrain::resetGyro() {
-    m_navX.ZeroYaw();
+    m_pigeon.Reset();
 }
 
 // Perodically (Constantly runs during periodic), updates the odometry of the swervedrive
@@ -86,18 +78,18 @@ frc::Pose2d drivetrain::GetOdometry() {
     return m_odometry.GetEstimatedPosition();
 }
 
-void drivetrain::ResetOdometry180(frc::Pose2d initPose) {
-    initPose.TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(180_deg)));
-    m_odometry.ResetPosition(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
+void drivetrain::ResetOdometry(frc::Pose2d initPose) {
+    m_odometry.ResetPosition(m_pigeon.GetRotation2d(), {m_frontRight.GetPosition(),
+                      m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
+                      m_rearLeft.GetPosition()}, initPose);
+}
+
+void drivetrain::ResetOdometryAngle(frc::Pose2d initPose, units::degree_t angle) {
+    initPose.TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(angle)));
+    m_odometry.ResetPosition(m_pigeon.GetRotation2d(), {m_frontRight.GetPosition(),
                       m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
                       m_rearLeft.GetPosition()}, initPose);
     
-}
-
-void drivetrain::ResetOdometry(frc::Pose2d initPose) {
-    m_odometry.ResetPosition(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
-                      m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
-                      m_rearLeft.GetPosition()}, initPose);
 }
 
 frc::ChassisSpeeds drivetrain::GetRobotRelativeSpeeds(){
@@ -129,27 +121,7 @@ void drivetrain::normalSpeed() {
 }
 
 void drivetrain::Periodic() {
-    UpdateOdometry();
-    // if (m_vision.TargetFound())
-    // {
-    //     AddDataFromVision();
-    // }
-    // Test posting angle to Dashboard.
-    /*frc::SmartDashboard::PutNumber("Front Right Angle", m_frontRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Rear Right Angle", m_rearRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Front Left Angle", m_frontLeft.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Rear Left Angle", m_rearLeft.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-
-    frc::SmartDashboard::PutNumber("Front Right TARGET", m_frontRight.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Rear Right TARGET", m_rearRight.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Front Left TARGET", m_frontLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle)); */
-    // frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
-    frc::SmartDashboard::PutNumber("Odometry Y", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Translation().Y()));
-    frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));
-
-    
+    UpdateOdometry(); 
 }
 
 void drivetrain::SimulationPeriodic() {}

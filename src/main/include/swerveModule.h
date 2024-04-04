@@ -1,20 +1,29 @@
 #pragma once
 
+#include <numbers>
+#include <iostream>
+#include <numbers>
+#include <thread>
+#include <chrono>
+
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/MathUtil.h>
+#include <frc/geometry/Rotation2d.h>
+
 #include <units/angular_velocity.h>
 #include <units/time.h>
 #include <units/velocity.h>
-#include <numbers>
-#include <rev/CANSparkMax.h>
+
 #include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
+
 #include "Constants.h"
 
 class swerveModule {
  public:
   swerveModule(const double module[]);
-
-  enum class ConfigType {motorDrive, motorTurn, encoderTurn};
 
   frc::SwerveModulePosition GetPosition();
   frc::SwerveModuleState GetState();
@@ -22,31 +31,22 @@ class swerveModule {
 
   frc::SwerveModuleState CustomOptimize(const frc::SwerveModuleState& desiredState, const frc::Rotation2d& currentAngle);
 
-  enum class DataType {kCurrentAngle, kCurrentVelocity, kTargetAngle};
-  double DashboardInfo(const DataType& type);
-
  private:
   
+
+  ctre::phoenix6::hardware::TalonFX m_motorDrive;
+  ctre::phoenix6::hardware::TalonFX m_motorTurn;
   ctre::phoenix6::hardware::CANcoder m_encoderTurn;
-  rev::CANSparkMax m_motorDrive;
-  rev::CANSparkMax m_motorTurn;
-  rev::SparkRelativeEncoder m_encoderDrive = m_motorDrive.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
-  rev::SparkRelativeEncoder m_encoderTurnIntegrated = m_motorTurn.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
 
-  rev::SparkPIDController m_driveController = m_motorDrive.GetPIDController();
-  rev::SparkPIDController m_turnController = m_motorTurn.GetPIDController();
+  ctre::phoenix6::configs::CurrentLimitsConfigs m_motorDriveCurrentLimitsConfigs{};
+  ctre::phoenix6::configs::CurrentLimitsConfigs m_motorTurnCurrentLimitsConfigs{};
 
-  // const double m_encoderOffset;
-  double m_targetAngle;
+  ctre::phoenix6::configs::Slot0Configs m_motorDriveSlot0Configs{};
+  ctre::phoenix6::configs::Slot0Configs m_motorTurnSlot0Configs{};
+  
+  ctre::phoenix6::configs::FeedbackConfigs m_motorDriveFeedbackConfigs{};
+  ctre::phoenix6::configs::FeedbackConfigs m_motorTurnFeedbackConfigs{};
 
-  // hardwareSettings m_settings;
+  ctre::phoenix6::controls::VelocityVoltage m_driveMotorSpeed{0.0_tps};
+  ctre::phoenix6::controls::PositionVoltage m_turnMotorAngle{0.0_tr};
 };
-
-//yeah this whole thing down here thats kinda confusing actually does nothing lol, none of these added units are used anywhere
-// namespace units {
-//   UNIT_ADD(angle, native_unit, native_units, nu, unit<std::ratio<360, 2048>, units::degrees>) 2048 clicks per rotation.
-//   UNIT_ADD(angular_velocity, native_units_per_decisecond, native_units_per_decisecond, nu_per_ds,
-//            compound_unit<native_units, inverse<deciseconds>>)  clicks per 100ms (standard FX output).
-//   UNIT_ADD(angle, drive_gearing, drive_gearing, dratio, unit<std::ratio<27, 4>, units::degrees>)
-//   UNIT_ADD(length, wheel_circumference, wheel_circumferences, wcrc, unit<std::ratio<32, 100>, units::meters>)
-// }

@@ -1,19 +1,29 @@
 #pragma once
 
-#include <AHRS.h>
+#include <iostream>
+
 #include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/DriverStation.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/SubsystemBase.h>
+
 #include <units/length.h>
+
+#include <ctre/phoenix6/Pigeon2.hpp>
+
 #include "swerveModule.h"
 #include "Constants.h"
 
 #include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/commands/FollowPathHolonomic.h>
+
+
+
+
 
 class drivetrain : public frc2::SubsystemBase {
  public:
@@ -27,8 +37,8 @@ class drivetrain : public frc2::SubsystemBase {
   void UpdateOdometry();
   void resetGyro();
   frc::Pose2d GetOdometry();
-  void ResetOdometry180(frc::Pose2d initPose);
   void ResetOdometry(frc::Pose2d initPose);
+  void ResetOdometryAngle(frc::Pose2d initPose, units::degree_t angle);
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
   void DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
   void slowDown();
@@ -49,8 +59,8 @@ class drivetrain : public frc2::SubsystemBase {
 
 private:
   
-  // navX
-  AHRS m_navX{frc::SPI::kMXP};
+  // Pigeon2
+  ctre::phoenix6::hardware::Pigeon2 m_pigeon;
   
   // Swervedrive dimensions
   frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in}; //9.875
@@ -71,5 +81,5 @@ private:
                                              m_locationRearLeft};
 
   // Creates SwerveDrive Odometry object
-  frc::SwerveDrivePoseEstimator<4> m_odometry{m_kinematics, m_navX.GetRotation2d(), {m_frontRight.GetPosition(), m_frontLeft.GetPosition(), m_rearRight.GetPosition(), m_rearLeft.GetPosition()}, frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg))};
+  frc::SwerveDrivePoseEstimator<4> m_odometry{m_kinematics, m_pigeon.GetRotation2d(), {m_frontRight.GetPosition(), m_frontLeft.GetPosition(), m_rearRight.GetPosition(), m_rearLeft.GetPosition()}, frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg))};
 };
