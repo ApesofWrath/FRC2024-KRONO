@@ -72,9 +72,22 @@ namespace climberConstants {
     constexpr double kClimberExtendedHeight = 2.0;
     constexpr int kSolenoidClimberLeft = 20;
     constexpr int kSolenoidClimberRight = 21;
+}
+
+namespace newClimberConstants{
+    constexpr int kMotorClimberLeft = 18;
+    constexpr int kMotorClimberRight = 19;
+    constexpr double kTelescopingRatio = 1.0 / 16.0;
+    constexpr double kRotationsToInchTelescoping = 1.05 * std::numbers::pi;
+    // constexpr double kClimberUnextendedHeight = 0.0;
+    // constexpr double kClimberExtendedHeight = 2.0;
+    constexpr int kSolenoidClimberLeft = 20;
+    constexpr int kSolenoidClimberRight = 21;
     constexpr units::voltage::volt_t ksolenoidUnlockedVoltage{12};
     constexpr units::voltage::volt_t ksolenoidLockedVoltage{0};
     constexpr units::time::second_t ktimeToSolenoidUnlock{0.2};
+    constexpr units::length::foot_t kextendedHeight{2.0}; 
+
 }
 
 // Motor IDs, Encoder IDs, and Offsets for swervedrive
