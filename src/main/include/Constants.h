@@ -13,8 +13,6 @@
  * header, which can then be included (where they are needed).
  */
 namespace generalConstants {
-    constexpr double kRotationsToDegrees = 360.0;
-    
     // Declare Global Timer Object
     // To use, include <frc/Timer.h>
     extern frc::Timer timer; 
@@ -68,14 +66,14 @@ namespace drivetrainConstants {
 
     // Math constants and calculations to be used by swervedrive
     namespace calculations {
-        constexpr auto kFinalDriveRatio{(14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0)};
-        constexpr auto kFinalTurnRatio{1.0 / (150.0 / 7.0)};
-        constexpr units::length::meter_t kWheelDiameter{4.0_in};
-        constexpr units::length::meter_t kWheelRadius{4.0_in / 2.0};
-        constexpr units::length::meter_t kWheelCircumference{2 * std::numbers::pi * (kWheelDiameter / 2)};
-        constexpr auto kModuleMaxSpeed{15.1_fps};
-        constexpr auto kChassisMaxSpeed{15.1_fps};
+        constexpr units::meter_t kWheelDiameter = 4.0_in;
+        constexpr units::meter_t kWheelRadius = 4.0_in / 2.0;
+        constexpr units::meter_t kWheelCircumference = 2.0 * std::numbers::pi * kWheelRadius;
 
-        constexpr auto kModuleMaxAngularVelocity{12.957_rad_per_s};  // radians per second
+        constexpr auto kDrivebaseRadius = 13.96536_in;
+        constexpr auto kModuleMaxSpeed = 15.5_fps;
+        constexpr units::radians_per_second_t kModuleMaxAngularVelocity = units::inch_t(kModuleMaxSpeed) / kDrivebaseRadius;  // radians per second
+        constexpr auto kFinalDriveRatio = (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);
+        constexpr auto kFinalTurnRatio = 1.0 / (150.0 / 7.0);
     }
 }

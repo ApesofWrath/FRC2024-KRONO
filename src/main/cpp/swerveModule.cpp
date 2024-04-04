@@ -1,7 +1,6 @@
 #include "swerveModule.h"
 
 using namespace drivetrainConstants::calculations;
-using namespace generalConstants;
 
 // Constructor for creating and configuring the swerve module motors
 swerveModule::swerveModule(const double module[]) 
@@ -40,6 +39,11 @@ swerveModule::swerveModule(const double module[])
     m_motorTurnFeedbackConfigs
     .WithRemoteCANcoder(m_encoderTurn);
 
+    //If we get Phoenix Pro, use this, it's better
+    /* m_motorTurnFeedbackConfigs 
+    .WithFusedCANcoder(m_encoderTurn)
+    .WithRotorToSensorRatio(kFinalTurnRatio); */
+
     m_motorDrive.GetConfigurator().Apply(m_motorDriveCurrentLimitsConfigs);
     m_motorDrive.GetConfigurator().Apply(m_motorDriveFeedbackConfigs);
     m_motorDrive.GetConfigurator().Apply(m_motorDriveSlot0Configs);
@@ -51,11 +55,11 @@ swerveModule::swerveModule(const double module[])
 
 // Gets the position of the swerve module drive motor and turn motor
 frc::SwerveModulePosition swerveModule::GetPosition() {
-    return {units::meter_t{m_motorDrive.GetPosition().GetValueAsDouble() * kWheelRadius.value() * 2.0 * std::numbers::pi}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValue()}))};
+    return {units::meter_t{m_motorDrive.GetPosition().GetValueAsDouble() * kWheelCircumference.value()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValue()}))};
 }
 
 frc::SwerveModuleState swerveModule::GetState() {
-    return {units::meters_per_second_t{m_motorDrive.GetVelocity().GetValueAsDouble() * kWheelRadius.value() * 2.0 * std::numbers::pi}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValue()}))};
+    return {units::meters_per_second_t{m_motorDrive.GetVelocity().GetValueAsDouble() * kWheelCircumference.value()}, frc::Rotation2d(frc::AngleModulus(units::degree_t{m_encoderTurn.GetAbsolutePosition().GetValue()}))};
 }
 
 // Applies the wanted speed and direction to the turn and drive motors
@@ -63,7 +67,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     const auto state = CustomOptimize(
         referenceState, units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValue()));
     
-    m_motorDrive.SetControl(m_driveMotorSpeed.WithVelocity(units::turns_per_second_t(state.speed.value() / (kWheelRadius.value() * 2.0 * std::numbers::pi))));
+    m_motorDrive.SetControl(m_driveMotorSpeed.WithVelocity(units::turns_per_second_t(state.speed.value() / kWheelCircumference.value())));
     m_motorTurn.SetControl(m_turnMotorAngle.WithPosition(units::turn_t(state.angle.Degrees())));
     
 }
@@ -76,7 +80,6 @@ frc::SwerveModuleState swerveModule::CustomOptimize(const frc::SwerveModuleState
     auto optSpeed = desiredState.speed;
     
     auto difference = optAngle.Degrees() - modulusAngle;
-    frc::SmartDashboard::PutNumber("Difference", difference.value());
 
     if (difference >= 270_deg) {
         difference = difference - 360_deg;

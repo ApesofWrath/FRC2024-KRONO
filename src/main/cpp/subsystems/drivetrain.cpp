@@ -1,6 +1,6 @@
 
 #include "subsystems/drivetrain.h"
-
+using namespace drivetrainConstants::calculations;
 
 // Constructor, zeros the gyro for swervedrive
 drivetrain::drivetrain() 
@@ -17,8 +17,8 @@ drivetrain::drivetrain()
         HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
             PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            units::meters_per_second_t(4.5), // Max module speed, in m/s
-            units::meter_t(13.625_in), // Drive base radius in meters. Distance from robot center to furthest module.
+            units::meters_per_second_t(kModuleMaxSpeed), // Max module speed, in m/s
+            units::meter_t(kDrivebaseRadius), // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         []() {
@@ -48,9 +48,9 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
     m_kinematics.DesaturateWheelSpeeds(
     &moduleStates,
     chassisSpeeds,
-    drivetrainConstants::calculations::kModuleMaxSpeed,
-    drivetrainConstants::calculations::kModuleMaxSpeed,
-    drivetrainConstants::calculations::kModuleMaxAngularVelocity
+    kModuleMaxSpeed,
+    kModuleMaxSpeed,
+    kModuleMaxAngularVelocity
     );
     
     auto [frontRight, rearRight, frontLeft, rearLeft] = moduleStates;
