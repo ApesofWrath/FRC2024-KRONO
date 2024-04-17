@@ -14,23 +14,13 @@ RobotContainer::RobotContainer() {
   ConfigureButtonBindings();
 
   // $ CONTROLLER INPUTS FOR SWERVE DRIVE BELOW
-  m_drivetrain.SetDefaultCommand(Drive(
-    &m_drivetrain,
-    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftX()), controllerConstants::kControllerCurve)); },
-    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftY()), controllerConstants::kControllerCurve)); },
-    [this] { return (m_controllerMain.GetRawAxis(4)); }));
+  m_drivetrain.SetDefaultCommand(m_drivetrain.driveCommand(
+    MathFunctions::joystickCurve(m_controllerMain.GetLeftY(), controllerConstants::kControllerCurve),
+    MathFunctions::joystickCurve(m_controllerMain.GetLeftX(), controllerConstants::kControllerCurve),
+    m_controllerMain.GetRawAxis(4)));
   
 
     m_chooser.SetDefaultOption("DoNothing", "DoNothing");
-    m_chooser.AddOption("2NoteCenter", "2NoteCenter");
-    m_chooser.AddOption("2NoteAmpSide", "2NoteAmpSide");
-    m_chooser.AddOption("3NoteAmpSide", "3NoteAmpSide");
-    m_chooser.AddOption("3NoteCenter", "3NoteCenter");
-    m_chooser.AddOption("4Note", "4Note");
-    m_chooser.AddOption("Backup", "Backup");
-    m_chooser.AddOption("Preload", "Preload");
-    m_chooser.AddOption("PreloadBackupCenter", "PreloadBackupCenter");
-    m_chooser.AddOption("New Auto", "New Auto");
 
     frc::SmartDashboard::PutData(&m_chooser);
     
@@ -43,13 +33,13 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureButtonBindings() {
 
   // Zeroing for swervedrive command
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kStart).OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kStart).OnTrue(m_drivetrain.resetGyroCommand());
 
   // Slow button for swerve (whenever left OR right bumper is held down), slows swerve to slow value
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kRightBumper).OnTrue(SlowDown(&m_drivetrain).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kRightBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnTrue(SlowDown(&m_drivetrain).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kRightBumper).OnTrue(m_drivetrain.slowDownCommand());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kRightBumper).OnFalse(m_drivetrain.normalSpeedCommand());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnTrue(m_drivetrain.slowDownCommand());
+  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnFalse(m_drivetrain.normalSpeedCommand());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

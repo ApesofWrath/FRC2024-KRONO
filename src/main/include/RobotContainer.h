@@ -20,10 +20,6 @@
 #include <ctre/phoenix/CANifier.h>
 
 #include "Constants.h"
-#include "commands/Drivetrain/Drive.h"
-#include "commands/Drivetrain/ZeroGyro.h"
-#include "commands/Drivetrain/NormalSpeed.h"
-#include "commands/Drivetrain/SlowDown.h"
 
 #include "subsystems/drivetrain.h"
 

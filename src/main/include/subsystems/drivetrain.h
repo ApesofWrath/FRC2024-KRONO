@@ -6,9 +6,11 @@
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
+#include <frc/filter/SlewRateLimiter.h>
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/SubsystemBase.h>
+
 
 #include <units/length.h>
 
@@ -35,14 +37,20 @@ class drivetrain : public frc2::SubsystemBase {
                    bool fieldRelative);
 
   void UpdateOdometry();
-  void resetGyro();
+
   frc::Pose2d GetOdometry();
+  frc::ChassisSpeeds GetRobotRelativeSpeeds();
+
   void ResetOdometry(frc::Pose2d initPose);
   void ResetOdometryAngle(frc::Pose2d initPose, units::degree_t angle);
-  frc::ChassisSpeeds GetRobotRelativeSpeeds();
-  void DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
-  void slowDown();
-  void normalSpeed();
+
+  void xStance();
+
+  frc2::CommandPtr driveCommand(double xSpeed, double ySpeed, double zRotation);
+  frc2::CommandPtr resetGyroCommand();
+  frc2::CommandPtr slowDownCommand();
+  frc2::CommandPtr normalSpeedCommand();
+  frc2::CommandPtr xStanceCommand();
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -53,9 +61,6 @@ class drivetrain : public frc2::SubsystemBase {
    * simulation.
    */
   void SimulationPeriodic() override;
-
-
-  double kslowConst = 1.0;
 
 private:
   
@@ -82,4 +87,11 @@ private:
 
   // Creates SwerveDrive Odometry object
   frc::SwerveDrivePoseEstimator<4> m_odometry{m_kinematics, m_pigeon.GetRotation2d(), {m_frontRight.GetPosition(), m_frontLeft.GetPosition(), m_rearRight.GetPosition(), m_rearLeft.GetPosition()}, frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg))};
+
+    
+  frc::SlewRateLimiter<units::scalar> m_xSpeedLimiter{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_ySpeedLimiter{3 / 1_s};
+  frc::SlewRateLimiter<units::scalar> m_zRotationLimiter{3 / 1_s};
+
+  double m_speedMultiplier = 1.0;
 };
