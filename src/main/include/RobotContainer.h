@@ -33,6 +33,7 @@
 #include "commands/ShooterIntake/rapidFire.h"
 #include "commands/ShooterIntake/scoreAmp.h"
 #include "commands/ShooterIntake/spinup.h"
+#include "commands/ShooterIntake/AutoAngle.h"
 
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"

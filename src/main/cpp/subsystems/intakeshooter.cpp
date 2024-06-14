@@ -298,17 +298,11 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::AIMAMP:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps));
 
-<<<<<<< HEAD
-            gravityFF = 0.1 * sin(((M_PI/3.0) - (m_rotationEncoder.GetPosition() * (M_PI/180.0))));
-
-            m_rotationMotorController.SetReference(26, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
-=======
             if (246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()) < 1.0 || usePidgeonAlways) {
                 m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
             }
 
             gravityFF = 0.07 * sin(((M_PI/3.0) - (246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble())) * (M_PI/180.0)));
->>>>>>> master
 
             m_rotationMotorController.SetReference(kIntakeAmpAngle, rev::CANSparkMax::ControlType::kPosition, 1, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut);
 
@@ -320,13 +314,8 @@ void intakeshooter::Periodic() {
             intakeState = "AIMAMP";
             break;
         case intakeshooterStates::SCOREAMP:
-<<<<<<< HEAD
-            if (ampWaitCounter < 50) {
+            if (ampWaitCounter < 30) {
                 ampWaitCounter++;
-=======
-            if (counter < 30) {
-                counter++;
->>>>>>> master
             } else {
                 currentLimitsConfigs.WithStatorCurrentLimit(80.0);
                 
@@ -386,12 +375,8 @@ void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Shtr Motor Output", m_shooterMotorLeft.GetAppliedOutput());
     frc::SmartDashboard::PutNumber("Shtr Out Curr", m_shooterMotorLeft.GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Shtr RPM", m_shooterLeftEncoder.GetVelocity());
-<<<<<<< HEAD
-    // frc::SmartDashboard::PutNumber("GravFF", gravityFF);
-=======
     frc::SmartDashboard::PutBoolean("Shooter At Speed", shooterAtSpeed());
     frc::SmartDashboard::PutNumber("GravFF", gravityFF);
->>>>>>> master
     frc::SmartDashboard::PutNumber("Intake RPM", m_intakeMotorLeft.GetVelocity().GetValueAsDouble());
 }
 
