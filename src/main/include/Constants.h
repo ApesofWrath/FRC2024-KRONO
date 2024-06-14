@@ -60,6 +60,7 @@ namespace shooterConstants {
     constexpr int kMotorShooterLeft = 16;
     constexpr int kMotorShooterRight = 17;
     constexpr double kShooterRPMTolerance = 300;
+	constexpr bool usePidgeonAlways = false; // true = mbr config (slips); false = master config (wiggles)
 }
 
 namespace climberConstants {
