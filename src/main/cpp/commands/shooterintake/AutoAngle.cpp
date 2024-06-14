@@ -14,6 +14,10 @@ AutoAngle::AutoAngle(intakeshooter* intakeshooter, vision* vision) : m_intakesho
   m_interpolatingMap.insert(89.9, 105);
   m_interpolatingMap.insert(108.3, 102);
   m_interpolatingMap.insert(120.9, 100);
+  m_interpolatingMap.insert(132.9, 98);
+  m_interpolatingMap.insert(144.0, 96);
+  m_interpolatingMap.insert(156.0, 94);
+  m_interpolatingMap.insert(400.0, 30);
 
 }
 
@@ -23,8 +27,8 @@ void AutoAngle::Initialize() {printf("AutoAngle Initialized");
   double distance = m_vision->getDistance();
   frc::SmartDashboard::PutNumber("Apriltag distance", distance);
   double angle{m_interpolatingMap[distance]};
-  std::clamp(angle, 0.0, 127.0);
-  m_intakeshooter->spinup(angle);
+  double clamped_angle = std::clamp(angle, 0.0, 127.0);
+  m_intakeshooter->spinup(clamped_angle);
 }
 
 // Called repeatedly when this Command is scheduled to run

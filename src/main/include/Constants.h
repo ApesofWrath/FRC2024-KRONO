@@ -44,12 +44,12 @@ namespace intakeConstants {
     const auto IDLE_SPEED = 2.5_tps;
     const auto ON_SPEED = 10.0_tps;
     constexpr int kBeambreakCanifier = 18;
-    constexpr int kIntakeAngleTolerance = 2;
+    constexpr int kIntakeAngleTolerance = 1;
     constexpr int kPigeon = 22;
 
     constexpr double kIntakeResetAngle = 0; // 0 for encoder; -66.138 pigeon
-    constexpr double kIntakeSpeakerAngle = 114.5; // 114.5 for encoder; 56.42 pigeon
-    constexpr double kIntakeAmpAngle = 26; // 26 for encoder; -51.24 pigeon
+    constexpr double kIntakeSpeakerAngle = 115.5; // 114.5 for encoder; 56.42 pigeon
+    constexpr double kIntakeAmpAngle = 23; // 26 for encoder; -51.24 pigeon
     constexpr double kIntakeIntakingAngle = 126; // 126 for encoder; 61.34 pigeon
 
     /* 246.138 - 180 + (-66.138) = 0
@@ -59,7 +59,8 @@ namespace intakeConstants {
 namespace shooterConstants {
     constexpr int kMotorShooterLeft = 16;
     constexpr int kMotorShooterRight = 17;
-    constexpr double kShooterRPMTolerance = 100;
+    constexpr double kShooterRPMTolerance = 300;
+	constexpr bool usePidgeonAlways = false; // true = mbr config (slips); false = master config (wiggles)
 }
 
 namespace climberConstants {
@@ -113,8 +114,8 @@ namespace drivetrainConstants {
         constexpr auto kFinalTurnRatio{1.0 / (150.0 / 7.0)};
         constexpr units::length::meter_t kWheelDiameter{4.0_in};
         constexpr units::length::meter_t kWheelCircumference{2 * std::numbers::pi * (kWheelDiameter / 2)};
-        constexpr auto kModuleMaxSpeed{15.1_fps * 0.8};
-        constexpr auto kChassisMaxSpeed{15.1_fps * 0.8};
+        constexpr auto kModuleMaxSpeed{15.1_fps};
+        constexpr auto kChassisMaxSpeed{15.1_fps};
 
         constexpr auto kModuleMaxAngularVelocity{12.957_rad_per_s};  // radians per second
         constexpr auto kModuleMaxAngularAcceleration{std::numbers::pi * 8_rad_per_s / 1_s};  // radians per second^2

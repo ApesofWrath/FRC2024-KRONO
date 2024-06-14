@@ -84,12 +84,18 @@ void LEDmanager::Periodic(){
             m_LED.setTeamColor();
 
             break;
+        case intakeshooterStates::BACKOFF:
+            m_LED.setSolid(frc::Color::kYellow);
 
+            break;
+        case intakeshooterStates::NOTEFORWARD:
+            m_LED.setSolid(frc::Color::kYellow);
+
+            break;
         case intakeshooterStates::HOLDING:
             m_LED.setSolid(frc::Color::kTeal);
 
             break;
-        
         case intakeshooterStates::SPINUPPIGEON:
             if (m_intakeshooter.shooterAtSpeed()){
                 m_LED.setSolid(frc::Color::kGreen);

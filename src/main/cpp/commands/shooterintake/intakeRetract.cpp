@@ -5,10 +5,13 @@ intakeRetract::intakeRetract(intakeshooter* intake) : m_intake{intake} { // cons
     AddRequirements({m_intake}); // require the m_drivetrain pointer
 }
 
-void intakeRetract::Initialize() { printf("intakeRetract Initialized \n"); } // print debug message on initialization
+void intakeRetract::Initialize() { 
+    printf("intakeRetract Initialized \n"); 
+    
+    m_intake->intakeRetract();
+    } // print debug message on initialization
 
 void intakeRetract::Execute() { // on command call (button press)
-    m_intake->intakeRetract();
 }
 
 bool intakeRetract::IsFinished() { return true; } // return when ??
