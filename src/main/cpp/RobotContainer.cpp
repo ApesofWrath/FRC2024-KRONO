@@ -47,17 +47,16 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureButtonBindings() {
 
   // Zeroing for swervedrive command
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kStart).OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
+  m_controllerMain.Start().OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
 
   // Slow button for swerve (whenever left OR right bumper is held down), slows swerve to slow value
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kRightBumper).OnTrue(SlowDown(&m_drivetrain).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kRightBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnTrue(SlowDown(&m_drivetrain).ToPtr());
-  frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kLeftBumper).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
-  
+  m_controllerMain.RightBumper().OnTrue(SlowDown(&m_drivetrain).ToPtr());
+  m_controllerMain.RightBumper().OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
+  m_controllerMain.LeftBumper().OnTrue(SlowDown(&m_drivetrain).ToPtr());
+  m_controllerMain.LeftBumper().OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
+
   // Align
   frc2::JoystickButton(&m_controllerMain, frc::XboxController::Button::kB).WhileTrue(Align(&m_vision, &m_drivetrain).ToPtr());
-
 
   // ShooterIntake buttons
   frc2::JoystickButton(&m_controllerOperator, frc::XboxController::Button::kLeftBumper).OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
