@@ -63,20 +63,20 @@ void RobotContainer::ConfigureButtonBindings() {
 	}));
 
 	// ShooterIntake buttons
-	m_controllerOperator.LeftBumper().OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
-	m_controllerOperator.B().OnTrue(AutoAngle(&m_intakeshooter, &m_vision).ToPtr()); // spinup for far speaker shot (7 feet from speaker) !!!!96.6 (111.5)
-	m_controllerOperator.X().OnTrue(spinup(&m_intakeshooter, intakeConstants::kIntakeSpeakerAngle).ToPtr()); // spinup for near speaker shot (right at speaker) Y !!!!!110.0
-	m_controllerOperator.RightBumper().OnTrue(fire(&m_intakeshooter).ToPtr());
-	m_controllerOperator.A().OnTrue(intakeRetract(&m_intakeshooter).ToPtr()); //leftbumper
-	m_controllerOperator.Y().OnTrue(scoreAmp(&m_intakeshooter).ToPtr());
+	m_controllerOperator.LeftBumper().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})); // kA
+	m_controllerOperator.B().OnTrue(AutoAngle(&m_intakeshooter, &m_vision).ToPtr()); // spinup for far speaker shot (7 feet from speaker)                       <
+	m_controllerOperator.X().OnTrue(spinup(&m_intakeshooter, intakeConstants::kIntakeSpeakerAngle).ToPtr()); // spinup for near speaker shot (right at speaker) < TODO: these three are monsters
+	m_controllerOperator.RightBumper().OnTrue(fire(&m_intakeshooter).ToPtr()); //                                                                               <
+	m_controllerOperator.A().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})); //leftbumper
+	m_controllerOperator.Y().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.scoreAmp();}));
 	
 	// Climber Buttons
-	m_controllerOperator.LeftStick().OnTrue(ExtendClimber(&m_climber).ToPtr());
-	m_controllerOperator.RightStick().OnTrue(RetractClimber(&m_climber).ToPtr());
+	m_controllerOperator.LeftStick().OnTrue(m_climber.RunOnce([this]{m_climber.climberExtend();}));
+	m_controllerOperator.RightStick().OnTrue(m_climber.RunOnce([this]{m_climber.climberRetract();}));
 
 	// Climber Zero Maintinence Buttons
-	m_controllerAlt.LeftBumper().OnTrue(LeftClimbToggle(&m_climber).ToPtr());
-	m_controllerAlt.RightBumper().OnTrue(RightClimbToggle(&m_climber).ToPtr());
+	m_controllerAlt.LeftBumper().OnTrue(m_climber.RunOnce([this]{m_climber.leftClimbToggle();}));
+	m_controllerAlt.RightBumper().OnTrue(m_climber.RunOnce([this]{m_climber.rightClimbToggle();}));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
