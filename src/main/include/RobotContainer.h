@@ -18,35 +18,17 @@
 #include <frc2/Command/Button/CommandXboxController.h>
 #include <frc2/command/button/JoystickButton.h>
 #include <ctre/phoenix/CANifier.h>
-#include <commands/Drivetrain/Align.h>
 #include <subsystems/vision.h>
 
 #include "Constants.h"
-#include "commands/Drivetrain/Drive.h"
-#include "commands/Drivetrain/ZeroGyro.h"
-#include "commands/Drivetrain/NormalSpeed.h"
-#include "commands/Drivetrain/SlowDown.h"
-
-#include "commands/shooterintake/fire.h"
-#include "commands/shooterintake/intakeActivate.h"
-#include "commands/shooterintake/intakeRetract.h"
-#include "commands/shooterintake/rapidFire.h"
-#include "commands/shooterintake/scoreAmp.h"
-#include "commands/shooterintake/spinup.h"
 
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
-#include "subsystems/LED.h"`
+#include "subsystems/climber.h"
+#include "subsystems/LED.h"
+#include "subsystems/driveCommand.h"
 
 #include "MathFunctions.h"
-
-#include "commands/ExtendClimber.h"
-#include "commands/RetractClimber.h"
-#include "commands/shooterintake/intakeRetract.h"
-#include "commands/shooterintake/scoreAmp.h"
-#include "commands/LeftClimbToggle.h"
-#include "commands/RightClimbToggle.h"
-#include "commands/shooterintake/AutoAngle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>

@@ -4,80 +4,84 @@
 
 #include "RobotContainer.h"
 
-
 using namespace generalConstants;
 RobotContainer::RobotContainer() {
 
-  // Initialize all of your commands and subsystems here
-  pathplanner::NamedCommands::registerCommand("spinup", std::move(spinup(&m_intakeshooter, 115.5).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("fire", std::move(fire(&m_intakeshooter).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(intakeActivate(&m_intakeshooter).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(intakeRetract(&m_intakeshooter).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("rapidFire", std::move(rapidFire(&m_intakeshooter).ToPtr()));
-  // Configure the button bindings
-  ConfigureButtonBindings();
+	// Initialize all of your commands and subsystems here
+	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.Run([this]{m_intakeshooter.spinup(115.5);})));
+	pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.fire();})));
+	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})));
+	pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})));
+	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.rapidFire();})));
+	// Configure the button bindings
+	ConfigureButtonBindings();
 
-  // $ CONTROLLER INPUTS FOR SWERVE DRIVE BELOW
-  m_drivetrain.SetDefaultCommand(Drive(
-    &m_drivetrain,
-    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftX()), controllerConstants::kControllerCurve)); },
-    [this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftY()), controllerConstants::kControllerCurve)); },
-    [this] { return (m_controllerMain.GetRawAxis(4)); }));
-  
+	// $ CONTROLLER INPUTS FOR SWERVE DRIVE BELOW
+	m_drivetrain.SetDefaultCommand(Drive(
+		&m_drivetrain,
+		[this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftX()), controllerConstants::kControllerCurve)); },
+		[this] { return (MathFunctions::joystickCurve((m_controllerMain.GetLeftY()), controllerConstants::kControllerCurve)); },
+		[this] { return (m_controllerMain.GetRawAxis(4)); }
+	));
 
-    m_chooser.SetDefaultOption("DoNothing", "DoNothing");
-    m_chooser.AddOption("2NoteCenter", "2NoteCenter");
-    m_chooser.AddOption("2NoteAmpSide", "2NoteAmpSide");
-    m_chooser.AddOption("3NoteAmpSide", "3NoteAmpSide");
-    m_chooser.AddOption("3NoteCenter", "3NoteCenter");
-    m_chooser.AddOption("4Note", "4Note");
-    m_chooser.AddOption("Backup", "Backup");
-    m_chooser.AddOption("Preload", "Preload");
-    m_chooser.AddOption("PreloadBackupCenter", "PreloadBackupCenter");
-    m_chooser.AddOption("New Auto", "New Auto");
+	m_chooser.SetDefaultOption("DoNothing", "DoNothing");
+	m_chooser.AddOption("2NoteCenter", "2NoteCenter");
+	m_chooser.AddOption("2NoteAmpSide", "2NoteAmpSide");
+	m_chooser.AddOption("3NoteAmpSide", "3NoteAmpSide");
+	m_chooser.AddOption("3NoteCenter", "3NoteCenter");
+	m_chooser.AddOption("4Note", "4Note");
+	m_chooser.AddOption("Backup", "Backup");
+	m_chooser.AddOption("Preload", "Preload");
+	m_chooser.AddOption("PreloadBackupCenter", "PreloadBackupCenter");
+	m_chooser.AddOption("New Auto", "New Auto");
 
-    frc::SmartDashboard::PutData(&m_chooser);
-    
-    // Start Timer
-    timer.Start();
-  
+	frc::SmartDashboard::PutData(&m_chooser);
+		
+	// Start Timer
+	timer.Start();
 }
 
 // All the button commands are set in this function
 void RobotContainer::ConfigureButtonBindings() {
+	// regular command stuff so far↴  command declaration↴ lambda with the code↴
+	// m_controller.Button().Trigger( m_subsystem.RunOnce( [this]{ commandCode(); } ) )
 
-  // Zeroing for swervedrive command
-  m_controllerMain.Start().OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
+	// Zeroing for swervedrive command
+	m_controllerMain.Start().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.resetGyro();}));
 
-  // Slow button for swerve (whenever left OR right bumper is held down), slows swerve to slow value
-  m_controllerMain.RightBumper().OnTrue(SlowDown(&m_drivetrain).ToPtr());
-  m_controllerMain.RightBumper().OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
-  m_controllerMain.LeftBumper().OnTrue(SlowDown(&m_drivetrain).ToPtr());
-  m_controllerMain.LeftBumper().OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
+	// Slow button for swerve (whenever left OR right bumper is held down), slows swerve to slow value
+	m_controllerMain.RightBumper().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.slowDown();}))
+		.OnFalse(m_drivetrain.RunOnce([this]{m_drivetrain.normalSpeed();}));
+	m_controllerMain.LeftBumper().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.slowDown();}))
+		.OnFalse(m_drivetrain.RunOnce([this]{m_drivetrain.normalSpeed();}));
 
-  // Align
-  m_controllerMain.B().WhileTrue(Align(&m_vision, &m_drivetrain).ToPtr());
+	// Align
+	m_controllerMain.B().WhileTrue(m_drivetrain.RunOnce([this]{
+		double heading_error = m_vision.getHeadingError();
+		units::angular_velocity::radians_per_second_t heading_error_radians{heading_error};
+		m_drivetrain.SwerveDrive(0.0_mps, 0.0_mps, heading_error_radians, false);
+	}));
 
-  // ShooterIntake buttons
-  m_controllerOperator.LeftBumper().OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
-  m_controllerOperator.B().OnTrue(AutoAngle(&m_intakeshooter, &m_vision).ToPtr()); // spinup for far speaker shot (7 feet from speaker) !!!!96.6 (111.5)
-  m_controllerOperator.X().OnTrue(spinup(&m_intakeshooter, intakeConstants::kIntakeSpeakerAngle).ToPtr()); // spinup for near speaker shot (right at speaker) Y !!!!!110.0
-  m_controllerOperator.RightBumper().OnTrue(fire(&m_intakeshooter).ToPtr());
-  m_controllerOperator.A().OnTrue(intakeRetract(&m_intakeshooter).ToPtr()); //leftbumper
-  m_controllerOperator.Y().OnTrue(scoreAmp(&m_intakeshooter).ToPtr());
-  
-  // Climber Buttons
-  m_controllerOperator.LeftStick().OnTrue(ExtendClimber(&m_climber).ToPtr());
-  m_controllerOperator.RightStick().OnTrue(RetractClimber(&m_climber).ToPtr());
+	// ShooterIntake buttons
+	m_controllerOperator.LeftBumper().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})); // kA
+	m_controllerOperator.B().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.autoAngle(&m_vision);})); // spinup for far speaker shot (7 feet from speaker)
+	m_controllerOperator.X().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.spinup(intakeConstants::kIntakeSpeakerAngle);}) // spinup for near speaker shot (right at speaker)
+		.Until([this]{return (m_intakeshooter.shooterAtSpeed() && m_intakeshooter.getState() == intakeshooterStates::SPINUPPIGEON) || !m_intakeshooter.allowSpinup;}));  // inline command with dynamic end condition and passing an arg
+	m_controllerOperator.RightBumper().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.fire();})
+		.Until([this]{return m_intakeshooter.getState() == intakeshooterStates::POSTFIRE;})); // inline command with dynamic end condition
+	m_controllerOperator.A().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})); //leftbumper
+	m_controllerOperator.Y().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.scoreAmp();}));
+	
+	// Climber Buttons
+	m_controllerOperator.LeftStick().OnTrue(m_climber.RunOnce([this]{m_climber.climberExtend();}));
+	m_controllerOperator.RightStick().OnTrue(m_climber.RunOnce([this]{m_climber.climberRetract();}));
 
-  // Climber Zero Maintinence Buttons
-  m_controllerAlt.LeftBumper().OnTrue(LeftClimbToggle(&m_climber).ToPtr());
-  m_controllerAlt.RightBumper().OnTrue(RightClimbToggle(&m_climber).ToPtr());
+	// Climber Zero Maintinence Buttons
+	m_controllerAlt.LeftBumper().OnTrue(m_climber.RunOnce([this]{m_climber.leftClimbToggle();}));
+	m_controllerAlt.RightBumper().OnTrue(m_climber.RunOnce([this]{m_climber.rightClimbToggle();}));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  using namespace pathplanner;
-  return m_chooser.GetSelected() == "DoNothing" ? frc2::WaitCommand(15_s).ToPtr() : PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
+	using namespace pathplanner;
+	return m_chooser.GetSelected() == "DoNothing" ? frc2::WaitCommand(15_s).ToPtr() : PathPlannerAuto(m_chooser.GetSelected()).ToPtr();
 }
-
-
