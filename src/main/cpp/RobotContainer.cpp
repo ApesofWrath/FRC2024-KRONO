@@ -43,6 +43,9 @@ RobotContainer::RobotContainer() {
 
 // All the button commands are set in this function
 void RobotContainer::ConfigureButtonBindings() {
+	// regular command stuff so far↴  command declaration↴ lambda with the code↴
+	// m_controller.Button().Trigger( m_subsystem.RunOnce( [this]{ commandCode(); } ) )
+
 	// Zeroing for swervedrive command
 	m_controllerMain.Start().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.resetGyro();}));
 
@@ -53,7 +56,11 @@ void RobotContainer::ConfigureButtonBindings() {
 		.OnFalse(m_drivetrain.RunOnce([this]{m_drivetrain.normalSpeed();}));
 
 	// Align
-	m_controllerMain.B().WhileTrue(Align(&m_vision, &m_drivetrain).ToPtr());
+	m_controllerMain.B().WhileTrue(m_drivetrain.RunOnce([this]{
+		double heading_error = m_vision.getHeadingError();
+		units::angular_velocity::radians_per_second_t heading_error_radians{heading_error};
+		m_drivetrain.SwerveDrive(0.0_mps, 0.0_mps, heading_error_radians, false);
+	}));
 
 	// ShooterIntake buttons
 	m_controllerOperator.LeftBumper().OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
