@@ -4,7 +4,6 @@
 
 #include "RobotContainer.h"
 
-
 using namespace generalConstants;
 RobotContainer::RobotContainer() {
 
@@ -50,8 +49,10 @@ void RobotContainer::ConfigureButtonBindings() {
   m_controllerMain.Start().OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
 
 // Slow button for swerve (whenever left OR right bumper is held down), slows swerve to slow value
-  m_controllerMain.RightBumper().OnTrue(SlowDown(&m_drivetrain).ToPtr()).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
-  m_controllerMain.LeftBumper().OnTrue(SlowDown(&m_drivetrain).ToPtr()).OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
+  m_controllerMain.RightBumper().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.slowDown();}))
+  	.OnFalse(m_drivetrain.RunOnce([this]{m_drivetrain.normalSpeed();}));
+  m_controllerMain.LeftBumper().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.slowDown();}))
+  	.OnFalse(m_drivetrain.RunOnce([this]{m_drivetrain.normalSpeed();}));
 
   // Align
   m_controllerMain.B().WhileTrue(Align(&m_vision, &m_drivetrain).ToPtr());
