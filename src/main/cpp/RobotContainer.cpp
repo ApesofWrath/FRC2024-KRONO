@@ -64,9 +64,11 @@ void RobotContainer::ConfigureButtonBindings() {
 
 	// ShooterIntake buttons
 	m_controllerOperator.LeftBumper().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})); // kA
-	m_controllerOperator.B().OnTrue(AutoAngle(&m_intakeshooter, &m_vision).ToPtr()); // spinup for far speaker shot (7 feet from speaker)                       <
-	m_controllerOperator.X().OnTrue(spinup(&m_intakeshooter, intakeConstants::kIntakeSpeakerAngle).ToPtr()); // spinup for near speaker shot (right at speaker) < TODO: these three are monsters
-	m_controllerOperator.RightBumper().OnTrue(fire(&m_intakeshooter).ToPtr()); //                                                                               <
+	m_controllerOperator.B().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.autoAngle(&m_vision);})); // spinup for far speaker shot (7 feet from speaker)
+	m_controllerOperator.X().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.spinup(intakeConstants::kIntakeSpeakerAngle);}) // spinup for near speaker shot (right at speaker)
+		.Until([this]{return (m_intakeshooter.shooterAtSpeed() && m_intakeshooter.getState() == intakeshooterStates::SPINUPPIGEON) || !m_intakeshooter.allowSpinup;}));  // inline command with dynamic end condition and passing an arg
+	m_controllerOperator.RightBumper().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.fire();})
+		.Until([this]{return m_intakeshooter.getState() == intakeshooterStates::POSTFIRE;})); // inline command with dynamic end condition
 	m_controllerOperator.A().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})); //leftbumper
 	m_controllerOperator.Y().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.scoreAmp();}));
 	

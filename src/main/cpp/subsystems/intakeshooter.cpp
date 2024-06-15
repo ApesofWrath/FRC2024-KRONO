@@ -136,6 +136,18 @@ m_controllerOperator(controllerOperator)
     m_shooterMotorLeft.BurnFlash();
     m_shooterMotorRight.BurnFlash();
     m_rotationMotor.BurnFlash();
+
+	// Fill interpolation map
+	m_interpolatingMap.insert(52.1, 114.5);
+    m_interpolatingMap.insert(64.5, 110.5);
+    m_interpolatingMap.insert(75.5, 108);
+    m_interpolatingMap.insert(89.9, 105);
+    m_interpolatingMap.insert(108.3, 102);
+    m_interpolatingMap.insert(120.9, 100);
+    m_interpolatingMap.insert(132.9, 98);
+    m_interpolatingMap.insert(144.0, 96);
+    m_interpolatingMap.insert(156.0, 94);
+    m_interpolatingMap.insert(400.0, 30);
 }
 
 void intakeshooter::intakeActivate() {
@@ -146,12 +158,20 @@ void intakeshooter::intakeRetract() {
     currentIntakeshooterState = intakeshooterStates::IDLE;
 }
 
-void intakeshooter::spinup(float angle) { // provide manual angle control before vision is finished
-    shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
+void intakeshooter::spinup(float angle) {
+    shootAngle = angle; // read shootAngle from angle when explicitly set
 
     if (allowSpinup) {
         currentIntakeshooterState = intakeshooterStates::SPINUP;
     }
+}
+
+void intakeshooter::autoAngle(vision* vision) {
+	double distance = vision->getDistance();
+	frc::SmartDashboard::PutNumber("Apriltag distance", distance);
+	double angle{m_interpolatingMap[distance]};
+	double clamped_angle = std::clamp(angle, 0.0, 127.0);
+	spinup(clamped_angle);
 }
 
 void intakeshooter::scoreAmp() {
