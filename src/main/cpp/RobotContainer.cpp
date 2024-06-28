@@ -13,6 +13,7 @@ RobotContainer::RobotContainer() {
 	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})));
 	pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})));
 	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.rapidFire();})));
+	pathplanner::NamedCommands::registerCommand("xStance", std::move(m_drivetrain.Run([this]{m_drivetrain.xStance();})));
 	// Configure the button bindings
 	ConfigureButtonBindings();
 
