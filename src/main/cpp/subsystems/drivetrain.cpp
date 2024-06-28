@@ -115,7 +115,6 @@ void drivetrain::DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds
     m_rearLeft.SetDesiredState(rearLeft);
 }
 
-
 // Slow constant value
 void drivetrain::slowDown() {
     kslowConst = 0.5;
@@ -128,28 +127,18 @@ void drivetrain::normalSpeed() {
     printf("Normal Func");
 }
 
+void drivetrain::xStance() {
+    m_frontRight.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(45.0_deg)));
+    m_rearRight.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(-45.0_deg)));
+    m_frontLeft.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(-45.0_deg)));
+    m_rearLeft.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(45.0_deg)));
+}
+
 void drivetrain::Periodic() {
     UpdateOdometry();
-    // if (m_vision.TargetFound())
-    // {
-    //     AddDataFromVision();
-    // }
-    // Test posting angle to Dashboard.
-    /*frc::SmartDashboard::PutNumber("Front Right Angle", m_frontRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Rear Right Angle", m_rearRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Front Left Angle", m_frontLeft.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-    frc::SmartDashboard::PutNumber("Rear Left Angle", m_rearLeft.DashboardInfo(swerveModule::DataType::kCurrentAngle));
-
-    frc::SmartDashboard::PutNumber("Front Right TARGET", m_frontRight.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Rear Right TARGET", m_rearRight.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Front Left TARGET", m_frontLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
-    frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle)); */
-    // frc::SmartDashboard::PutNumber("Rear Left TARGET", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));
     frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
     frc::SmartDashboard::PutNumber("Odometry Y", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Translation().Y()));
-    frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));
-
-    
+    frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));   
 }
 
 void drivetrain::SimulationPeriodic() {}
