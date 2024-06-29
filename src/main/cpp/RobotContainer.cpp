@@ -8,12 +8,12 @@ using namespace generalConstants;
 RobotContainer::RobotContainer() {
 
 	// Initialize all of your commands and subsystems here
-	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.Run([this]{m_intakeshooter.spinup(115.5);})));
+	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.Run([this]{m_intakeshooter.spinup(intakeConstants::kIntakeSpeakerAngle);})));
 	pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.fire();})));
 	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})));
 	pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})));
 	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.rapidFire();})));
-	pathplanner::NamedCommands::registerCommand("xStance", std::move(m_drivetrain.Run([this]{m_drivetrain.xStance();})));
+	pathplanner::NamedCommands::registerCommand("xStance", std::move(m_drivetrain.RunOnce([this]{m_drivetrain.xStance();})));
 	// Configure the button bindings
 	ConfigureButtonBindings();
 
@@ -72,6 +72,7 @@ void RobotContainer::ConfigureButtonBindings() {
 		.Until([this]{return m_intakeshooter.getState() == intakeshooterStates::POSTFIRE;})); // inline command with dynamic end condition
 	m_controllerOperator.A().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})); //leftbumper
 	m_controllerOperator.Y().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.scoreAmp();}));
+	m_controllerMain.A().WhileTrue(m_drivetrain.RunOnce([this]{m_drivetrain.xStance();}));
 	
 	// Climber Buttons
 	m_controllerOperator.LeftStick().OnTrue(m_climber.RunOnce([this]{m_climber.climberExtend();}));
