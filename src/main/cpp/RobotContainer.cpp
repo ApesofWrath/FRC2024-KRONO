@@ -8,11 +8,11 @@ using namespace generalConstants;
 RobotContainer::RobotContainer() {
 
 	// Initialize all of your commands and subsystems here
-	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.Run([this]{m_intakeshooter.spinup(intakeConstants::kIntakeSpeakerAngle);})));
-	pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.fire();})));
-	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})));
+	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.Run([this]{m_intakeshooter.spinup(intakeConstants::kIntakeSpeakerAngle);}).Until([this]{return m_intakeshooter.shooterAtSpeed() || !m_intakeshooter.allowSpinup;})));
+	pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.fire();}).Until([this]{return m_intakeshooter.getState() == intakeshooterStates::POSTFIRE;})));
+	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.rapidFire();}).Until([this]{return m_intakeshooter.getState() == intakeshooterStates::RAPIDPOSTFIRE;})));
+	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.Run([this]{m_intakeshooter.intakeActivate();})));
 	pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})));
-	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.rapidFire();})));
 	pathplanner::NamedCommands::registerCommand("xStance", std::move(m_drivetrain.Run([this]{m_drivetrain.xStance();})));
 	// Configure the button bindings
 	ConfigureButtonBindings();
