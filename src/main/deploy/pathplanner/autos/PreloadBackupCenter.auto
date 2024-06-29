@@ -12,25 +12,38 @@
     "data": {
       "commands": [
         {
-          "type": "sequential",
+          "type": "path",
+          "data": {
+            "pathName": "Backup"
+          }
+        },
+        {
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "spinup"
+                  "name": "xStance"
                 }
               },
               {
-                "type": "wait",
+                "type": "sequential",
                 "data": {
-                  "waitTime": 1.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "fire"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "spinup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rapidFire"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -39,12 +52,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Backup"
+            "pathName": "Return"
           }
         }
       ]
     }
   },
-  "folder": "PathPlanner Autos",
+  "folder": null,
   "choreoAuto": false
 }
