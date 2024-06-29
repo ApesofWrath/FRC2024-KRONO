@@ -136,6 +136,7 @@ void drivetrain::xStance() {
 
 void drivetrain::Periodic() {
     UpdateOdometry();
+	frc::SmartDashboard::PutNumber("Slowness", kslowConst);
     frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
     frc::SmartDashboard::PutNumber("Odometry Y", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Translation().Y()));
     frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));
