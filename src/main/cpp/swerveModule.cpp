@@ -86,15 +86,13 @@ frc::SwerveModuleState swerveModule::GetState() {
 
 // Applies the wanted speed and direction to the turn and drive motors
 void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState) {
-    const auto state = frc::SwerveModuleState::Optimize(
+    const auto state = CustomOptimize(
         referenceState,units::degree_t(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees));
     //This returns the position in +-Cancoder units counting forever, as opposed to absolulte -180 to +180 deg.
 
     const auto targetWheelSpeed{state.speed};
     m_targetAngle = state.angle.Degrees().value();
     const double turnOutput = m_targetAngle;
-
-    //frc::SmartDashboard::PutNumber("TarWheelSpeed", targetWheelSpeed);
 
     units::radians_per_second_t targetMotorSpeed{
         (targetWheelSpeed * units::radian_t(2 * std::numbers::pi))
@@ -103,9 +101,7 @@ void swerveModule::SetDesiredState(const frc::SwerveModuleState& referenceState)
     m_encoderTurnIntegrated.SetPosition(m_encoderTurn.GetAbsolutePosition().GetValueAsDouble() * kRotationsToDegrees);
     m_turnController.SetReference(turnOutput, rev::CANSparkMax::ControlType::kPosition);
 
-    frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
-    frc::SmartDashboard::PutNumber("Target Wheel Speed" + std::to_string(m_motorTurn.GetDeviceId()), targetWheelSpeed.value());
-    frc::SmartDashboard::PutNumber("Target Motor Speed", targetMotorSpeed.value());
+
 }
 
 // Calculates difference between desired angle and current angle for swerve modules and other values
@@ -133,14 +129,6 @@ frc::SwerveModuleState swerveModule::CustomOptimize(const frc::SwerveModuleState
         }
     }
     optAngle = currentAngle.Degrees() + difference;
-
-    // frc::SmartDashboard::PutNumber("Desired Angle", optAngle.Degrees().value());
-    // frc::SmartDashboard::PutNumber("Neo Encoder Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderTurnIntegrated.GetPosition());
-    frc::SmartDashboard::PutNumber("Neo Encoder Vel " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetVelocity());
-    // frc::SmartDashboard::PutNumber("Neo Encoder Drive Pos " + std::to_string(m_motorTurn.GetDeviceId()), m_encoderDrive.GetPosition());
-    
-    //frc::SmartDashboard::PutNumber("Motor " + std::to_string(m_motorTurn.GetDeviceID()) + " Desired Angle", m_motorTurn.GetClosedLoopTarget());
-    //frc::SmartDashboard::PutNumber("Motor " + std::to_string(m_motorTurn.GetDeviceID()) + " Real Angle", m_motorTurn.GetSelectedSensorPosition());
 
     return {optSpeed, optAngle};
 }

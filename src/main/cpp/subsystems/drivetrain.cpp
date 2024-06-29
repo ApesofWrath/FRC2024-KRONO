@@ -138,7 +138,15 @@ void drivetrain::Periodic() {
     UpdateOdometry();
     frc::SmartDashboard::PutNumber("Odometry X", units::unit_cast<double>(m_odometry.GetEstimatedPosition().X()));
     frc::SmartDashboard::PutNumber("Odometry Y", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Translation().Y()));
-    frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));   
+    frc::SmartDashboard::PutNumber("Odometry Rot", units::unit_cast<double>(m_odometry.GetEstimatedPosition().Rotation().Degrees()));
+	frc::SmartDashboard::PutNumber("Current Angle fr", m_frontRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));   
+	frc::SmartDashboard::PutNumber("Current Angle fl", m_frontLeft.DashboardInfo(swerveModule::DataType::kCurrentAngle));   
+	frc::SmartDashboard::PutNumber("Current Angle br", m_rearRight.DashboardInfo(swerveModule::DataType::kCurrentAngle));   
+	frc::SmartDashboard::PutNumber("Current Angle bl", m_rearLeft.DashboardInfo(swerveModule::DataType::kCurrentAngle));   
+	frc::SmartDashboard::PutNumber("Target Angle fr", m_frontRight.DashboardInfo(swerveModule::DataType::kTargetAngle));   
+	frc::SmartDashboard::PutNumber("Target Angle fl", m_frontLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));   
+	frc::SmartDashboard::PutNumber("Target Angle br", m_rearRight.DashboardInfo(swerveModule::DataType::kTargetAngle));   
+	frc::SmartDashboard::PutNumber("Target Angle bl", m_rearLeft.DashboardInfo(swerveModule::DataType::kTargetAngle));   
 }
 
 void drivetrain::SimulationPeriodic() {}

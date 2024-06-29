@@ -26,8 +26,33 @@
                 "data": {
                   "name": "xStance"
                 }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "spinup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rapidFire"
+                      }
+                    }
+                  ]
+                }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Return"
           }
         }
       ]
