@@ -12,13 +12,13 @@ Drive::Drive( // constructor for command class
       m_xSpeed(std::move(xSpeed)),//        ?? ?? ?? ??
       m_ySpeed(std::move(ySpeed)),//     what does it mEAN
       m_zRotation(std::move(zRotation)) {// /\ /\ /\ /\ 
-  SetName("Drive");  // set the ?? name
-  AddRequirements({m_drivetrain}); // require the m_robotArm pointer
+  SetName("Drive");  // set the function name
+  AddRequirements({m_drivetrain}); // require the m_drivetrain pointer
 }
 
 void Drive::Initialize() { printf("Drive initialized.\n"); } // print debug message on initialization
 
-void Drive::Execute() { // on command call (button press)
+void Drive::Execute() { // on command call
   m_drivetrain->SwerveDrive( // make m_drivetrain point to SwerveDrive function while passing the below values
                             -m_ySpeedLimiter.Calculate(frc::ApplyDeadband((m_ySpeed() * m_drivetrain->kslowConst), 0.08)) * drivetrainConstants::calculations::kChassisMaxSpeed, // ??
                             -m_xSpeedLimiter.Calculate(frc::ApplyDeadband((m_xSpeed() * m_drivetrain->kslowConst), 0.08)) * drivetrainConstants::calculations::kChassisMaxSpeed, // ??
@@ -27,4 +27,4 @@ void Drive::Execute() { // on command call (button press)
 
 void Drive::End(bool interrupted) { printf("**Drive has been interrupted!**\n"); } // print debug message on end when it is inturrupted
 
-bool Drive::IsFinished() { return false; } // return when ??
+bool Drive::IsFinished() { return false; } // never exit
