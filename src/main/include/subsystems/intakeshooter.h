@@ -44,9 +44,9 @@ class intakeshooter : public frc2::SubsystemBase {
     void intakeActivate();
     void intakeRetract();
 	void spinup();
+	void spinup(float angle);
     void autoAngle(vision* vision);
     void scoreAmp();
-    void spinup(float angle);
     void fire();
     void rapidFire();
     intakeshooterStates getState();

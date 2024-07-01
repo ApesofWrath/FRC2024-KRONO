@@ -158,6 +158,10 @@ void intakeshooter::intakeRetract() {
     currentIntakeshooterState = intakeshooterStates::IDLE;
 }
 
+void intakeshooter::spinup() {
+	spinup(intakeConstants::kIntakeSpeakerAngle);
+}
+
 void intakeshooter::spinup(float angle) {
     shootAngle = angle; // read shootAngle from angle when explicitly set
 

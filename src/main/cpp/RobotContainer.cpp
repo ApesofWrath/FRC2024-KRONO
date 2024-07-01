@@ -8,7 +8,7 @@ using namespace generalConstants;
 RobotContainer::RobotContainer() {
 
 	// Initialize all of your commands and subsystems here
-	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.Run([this]{m_intakeshooter.spinup(intakeConstants::kIntakeSpeakerAngle);}).Until([this]{return m_intakeshooter.shooterAtSpeed() || !m_intakeshooter.allowSpinup;})));
+	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.Run([this]{m_intakeshooter.spinup();}).Until([this]{return m_intakeshooter.shooterAtSpeed() || !m_intakeshooter.allowSpinup;})));
 	pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.fire();}).Until([this]{return m_intakeshooter.getState() == intakeshooterStates::POSTFIRE;})));
 	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.rapidFire();}).Until([this]{return m_intakeshooter.getState() == intakeshooterStates::RAPIDPOSTFIRE;})));
 	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.Run([this]{m_intakeshooter.intakeActivate();})));
@@ -66,7 +66,7 @@ void RobotContainer::ConfigureButtonBindings() {
 	// ShooterIntake buttons
 	m_controllerOperator.LeftBumper().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})); // kA
 	m_controllerOperator.B().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.autoAngle(&m_vision);})); // spinup for far speaker shot (7 feet from speaker)
-	m_controllerOperator.X().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.spinup(intakeConstants::kIntakeSpeakerAngle);}) // spinup for near speaker shot (right at speaker)
+	m_controllerOperator.X().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.spinup();}) // spinup for near speaker shot (right at speaker)
 		.Until([this]{return (m_intakeshooter.shooterAtSpeed() && m_intakeshooter.getState() == intakeshooterStates::SPINUPPIGEON) || !m_intakeshooter.allowSpinup;}));  // inline command with dynamic end condition and passing an arg
 	m_controllerOperator.RightBumper().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.fire();})
 		.Until([this]{return m_intakeshooter.getState() == intakeshooterStates::POSTFIRE;})); // inline command with dynamic end condition
