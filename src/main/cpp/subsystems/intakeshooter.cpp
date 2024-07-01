@@ -150,46 +150,61 @@ m_controllerOperator(controllerOperator)
     m_interpolatingMap.insert(400.0, 30);
 }
 
-void intakeshooter::intakeActivate() {
-    currentIntakeshooterState = intakeshooterStates::INTAKING;
+frc2::CommandPtr intakeshooter::intakeActivate() {
+	return frc2::cmd::RunOnce([this]{ currentIntakeshooterState = intakeshooterStates::INTAKING; });
 }
 
-void intakeshooter::intakeRetract() {
-    currentIntakeshooterState = intakeshooterStates::IDLE;
+frc2::CommandPtr intakeshooter::intakeRetract() {
+    return frc2::cmd::RunOnce([this]{ 
+		currentIntakeshooterState = intakeshooterStates::IDLE;
+	});
 }
 
-void intakeshooter::spinup() {
-	spinup(intakeConstants::kIntakeSpeakerAngle);
+frc2::CommandPtr intakeshooter::spinup() {
+	return frc2::cmd::Run([this]{ 
+		spinup(intakeConstants::kIntakeSpeakerAngle);
+	}).Until([this]{
+		return (shooterAtSpeed() && getState() == intakeshooterStates::SPINUPPIGEON) || !allowSpinup;
+	});
+}
+
+frc2::CommandPtr intakeshooter::autoAngle(vision* vision) {
+	return frc2::cmd::RunOnce([this, vision]{ 
+		double distance = vision->getDistance();
+		frc::SmartDashboard::PutNumber("Apriltag distance", distance);
+		double angle{m_interpolatingMap[distance]};
+		double clamped_angle = std::clamp(angle, 0.0, 127.0);
+		spinup(clamped_angle);
+	});
+}
+
+frc2::CommandPtr intakeshooter::scoreAmp() {
+    return frc2::cmd::RunOnce([this]{ 
+		currentIntakeshooterState = intakeshooterStates::AIMAMP;
+	});
+}
+
+frc2::CommandPtr intakeshooter::rapidFire() {
+    return frc2::cmd::RunOnce([this]{ 
+		currentIntakeshooterState = intakeshooterStates::RAPIDFIRE;
+	}).Until([this]{
+		return getState() == intakeshooterStates::RAPIDPOSTFIRE;
+	});
+}
+
+frc2::CommandPtr intakeshooter::fire() {
+    return frc2::cmd::Run([this]{ 
+		if (m_rotationEncoder.GetPosition() >= 50) {
+			currentIntakeshooterState = intakeshooterStates::FIRE;
+		}
+	}).Until([this]{
+		return getState() == intakeshooterStates::POSTFIRE;
+	});
 }
 
 void intakeshooter::spinup(float angle) {
     shootAngle = angle; // read shootAngle from angle when explicitly set
-
-    if (allowSpinup) {
-        currentIntakeshooterState = intakeshooterStates::SPINUP;
-    }
-}
-
-void intakeshooter::autoAngle(vision* vision) {
-	double distance = vision->getDistance();
-	frc::SmartDashboard::PutNumber("Apriltag distance", distance);
-	double angle{m_interpolatingMap[distance]};
-	double clamped_angle = std::clamp(angle, 0.0, 127.0);
-	spinup(clamped_angle);
-}
-
-void intakeshooter::scoreAmp() {
-    currentIntakeshooterState = intakeshooterStates::AIMAMP;
-}
-
-void intakeshooter::rapidFire() {
-    currentIntakeshooterState = intakeshooterStates::RAPIDFIRE;
-}
-
-void intakeshooter::fire() {
-    if (m_rotationEncoder.GetPosition() >= 50) {
-        currentIntakeshooterState = intakeshooterStates::FIRE;
-    }
+	currentIntakeshooterState = allowSpinup ? intakeshooterStates::SPINUP : currentIntakeshooterState;
 }
 
 intakeshooterStates intakeshooter::getState() {
@@ -203,8 +218,6 @@ bool intakeshooter::shooterAtSpeed() {
 void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
     frc::SmartDashboard::PutNumber("Ab Angle", 246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
-
-    // m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
 
     rollingSamples[rollingSample] = m_rotationEncoder.GetPosition();
     rollSampSum = 0.0;
@@ -241,10 +254,6 @@ void intakeshooter::Periodic() {
 
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set speeds seperatly for spin while shooting
-            // currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding (for preloads)
-            /* if (m_rotationEncoder.GetPosition() < 0){
-                m_rotationEncoder.SetPosition(0);
-            } */
 
             intakeState = "IDLE";
             break;
@@ -364,7 +373,6 @@ void intakeshooter::Periodic() {
                 m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
 
                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(18_tps));
-                //currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::IDLE : intakeshooterStates::SCOREAMP; // if the canifier's limit backward input is tripped, switch to postfire
 
                 intakeState = "SCOREAMP";
             }
@@ -382,7 +390,6 @@ void intakeshooter::Periodic() {
             
             shooterClearCount++;
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
-            //currentIntakeshooterState = shooterClearCount > 4 ? intakeshooterStates::POSTFIRE : currentIntakeshooterState;
             intakeState = "FIRE";
             break;
         case intakeshooterStates::RAPIDFIRE:

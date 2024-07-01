@@ -6,13 +6,12 @@
 
 using namespace generalConstants;
 RobotContainer::RobotContainer() {
-
 	// Initialize all of your commands and subsystems here
-	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.Run([this]{m_intakeshooter.spinup();}).Until([this]{return m_intakeshooter.shooterAtSpeed() || !m_intakeshooter.allowSpinup;})));
-	pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.fire();}).Until([this]{return m_intakeshooter.getState() == intakeshooterStates::POSTFIRE;})));
-	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.Run([this]{m_intakeshooter.rapidFire();}).Until([this]{return m_intakeshooter.getState() == intakeshooterStates::RAPIDPOSTFIRE;})));
-	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.Run([this]{m_intakeshooter.intakeActivate();})));
-	pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})));
+	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.spinup()));
+	pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.fire()));
+	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.rapidFire()));
+	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.intakeActivate()));
+	pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.intakeRetract()));
 	pathplanner::NamedCommands::registerCommand("xStance", std::move(m_drivetrain.Run([this]{m_drivetrain.xStance();})));
 	// Configure the button bindings
 	ConfigureButtonBindings();
@@ -39,7 +38,7 @@ RobotContainer::RobotContainer() {
 	frc::SmartDashboard::PutData(&m_chooser);
 		
 	// Start Timer
-	timer.Start();
+	//timer.Start();
 }
 
 // All the button commands are set in this function
@@ -62,17 +61,15 @@ void RobotContainer::ConfigureButtonBindings() {
 		units::angular_velocity::radians_per_second_t heading_error_radians{heading_error};
 		m_drivetrain.SwerveDrive(0.0_mps, 0.0_mps, heading_error_radians, false);
 	}));
+	m_controllerMain.A().WhileTrue(m_drivetrain.Run([this]{m_drivetrain.xStance();}));
 
 	// ShooterIntake buttons
-	m_controllerOperator.LeftBumper().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeActivate();})); // kA
-	m_controllerOperator.B().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.autoAngle(&m_vision);})); // spinup for far speaker shot (7 feet from speaker)
-	m_controllerOperator.X().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.spinup();}) // spinup for near speaker shot (right at speaker)
-		.Until([this]{return (m_intakeshooter.shooterAtSpeed() && m_intakeshooter.getState() == intakeshooterStates::SPINUPPIGEON) || !m_intakeshooter.allowSpinup;}));  // inline command with dynamic end condition and passing an arg
-	m_controllerOperator.RightBumper().OnTrue(m_intakeshooter.Run([this]{m_intakeshooter.fire();})
-		.Until([this]{return m_intakeshooter.getState() == intakeshooterStates::POSTFIRE;})); // inline command with dynamic end condition
-	m_controllerOperator.A().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.intakeRetract();})); //leftbumper
-	m_controllerOperator.Y().OnTrue(m_intakeshooter.RunOnce([this]{m_intakeshooter.scoreAmp();}));
-	m_controllerMain.A().WhileTrue(m_drivetrain.Run([this]{m_drivetrain.xStance();}));
+	m_controllerOperator.LeftBumper().OnTrue(m_intakeshooter.intakeActivate()); // kA
+	m_controllerOperator.B().OnTrue(m_intakeshooter.autoAngle(&m_vision)); // spinup for far speaker shot (7 feet from speaker)
+	m_controllerOperator.X().OnTrue(m_intakeshooter.spinup()); // spinup for near speaker shot (right at speaker)
+	m_controllerOperator.RightBumper().OnTrue(m_intakeshooter.fire()); // inline command with dynamic end condition
+	m_controllerOperator.A().OnTrue(m_intakeshooter.intakeRetract()); //leftbumper
+	m_controllerOperator.Y().OnTrue(m_intakeshooter.scoreAmp());
 	
 	// Climber Buttons
 	m_controllerOperator.LeftStick().OnTrue(m_climber.RunOnce([this]{m_climber.climberExtend();}));
