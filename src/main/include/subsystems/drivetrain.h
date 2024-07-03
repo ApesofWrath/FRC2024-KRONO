@@ -35,7 +35,6 @@ class drivetrain : public frc2::SubsystemBase {
   frc2::CommandPtr UpdateOdometry();
   frc2::CommandPtr resetGyro();
   frc2::CommandPtr slowDown();
-  frc2::CommandPtr normalSpeed();
   frc2::CommandPtr xStance(); // assert dominance by being hard to move
   frc2::CommandPtr squareUp(vision* vision);
   void ResetOdometry180(frc::Pose2d initPose);

@@ -47,8 +47,7 @@ void RobotContainer::ConfigureButtonBindings() {
 	m_controllerMain.Start().OnTrue(m_drivetrain.resetGyro());
 
 	// Slow button for swerve (whenever left OR right bumper is held down), slows swerve to slow value
-	m_controllerMain.RightBumper().OnTrue(m_drivetrain.slowDown()).OnFalse(m_drivetrain.normalSpeed());
-	m_controllerMain.LeftBumper().OnTrue(m_drivetrain.slowDown()).OnFalse(m_drivetrain.normalSpeed());
+	(m_controllerMain.RightBumper() || m_controllerMain.LeftBumper()).WhileTrue(m_drivetrain.slowDown());
 
 	// Align
 	m_controllerMain.B().WhileTrue(m_drivetrain.squareUp(&m_vision));

@@ -76,14 +76,9 @@ frc2::CommandPtr drivetrain::resetGyro() {
     return frc2::cmd::RunOnce([this]{ m_navX.ZeroYaw(); });
 }
 
-// Slow constant value
+// Slow the constant value until the command is inturrupted
 frc2::CommandPtr drivetrain::slowDown() {
-    return frc2::cmd::RunOnce([this]{ kslowConst = 0.5; });
-}
-
-// Normal speed value (should always be 1.0)
-frc2::CommandPtr drivetrain::normalSpeed() {
-    return frc2::cmd::RunOnce([this]{ kslowConst = 1.0; });
+    return frc2::cmd::RunOnce([this]{ kslowConst = 0.5; }).AndThen(frc2::cmd::Idle()).FinallyDo([this]{ kslowConst = 1.0; });
 }
 
 frc2::CommandPtr drivetrain::xStance() {
