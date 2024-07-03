@@ -12,7 +12,7 @@ RobotContainer::RobotContainer() {
 	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.rapidFire()));
 	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.intakeActivate()));
 	pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.intakeRetract()));
-	pathplanner::NamedCommands::registerCommand("xStance", std::move(m_drivetrain.Run([this]{m_drivetrain.xStance();})));
+	pathplanner::NamedCommands::registerCommand("xStance", std::move(m_drivetrain.xStance()));
 	// Configure the button bindings
 	ConfigureButtonBindings();
 
@@ -44,21 +44,15 @@ RobotContainer::RobotContainer() {
 // All the button commands are set in this function
 void RobotContainer::ConfigureButtonBindings() {
 	// Zeroing for swervedrive command
-	m_controllerMain.Start().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.resetGyro();}));
+	m_controllerMain.Start().OnTrue(m_drivetrain.resetGyro());
 
 	// Slow button for swerve (whenever left OR right bumper is held down), slows swerve to slow value
-	m_controllerMain.RightBumper().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.slowDown();}))
-		.OnFalse(m_drivetrain.RunOnce([this]{m_drivetrain.normalSpeed();}));
-	m_controllerMain.LeftBumper().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.slowDown();}))
-		.OnFalse(m_drivetrain.RunOnce([this]{m_drivetrain.normalSpeed();}));
+	m_controllerMain.RightBumper().OnTrue(m_drivetrain.slowDown()).OnFalse(m_drivetrain.normalSpeed());
+	m_controllerMain.LeftBumper().OnTrue(m_drivetrain.slowDown()).OnFalse(m_drivetrain.normalSpeed());
 
 	// Align
-	m_controllerMain.B().WhileTrue(m_drivetrain.RunOnce([this]{
-		double heading_error = m_vision.getHeadingError();
-		units::angular_velocity::radians_per_second_t heading_error_radians{heading_error};
-		m_drivetrain.SwerveDrive(0.0_mps, 0.0_mps, heading_error_radians, false);
-	}));
-	m_controllerMain.A().WhileTrue(m_drivetrain.Run([this]{m_drivetrain.xStance();}));
+	m_controllerMain.B().WhileTrue(m_drivetrain.squareUp(&m_vision));
+	m_controllerMain.A().WhileTrue(m_drivetrain.xStance());
 
 	// ShooterIntake buttons
 	m_controllerOperator.LeftBumper().OnTrue(m_intakeshooter.intakeActivate()); // kA
