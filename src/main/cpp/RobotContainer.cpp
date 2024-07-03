@@ -43,9 +43,6 @@ RobotContainer::RobotContainer() {
 
 // All the button commands are set in this function
 void RobotContainer::ConfigureButtonBindings() {
-	// regular command stuff so far↴  command declaration↴ lambda with the code↴
-	// m_controller.Button().Trigger( m_subsystem.RunOnce( [this]{ commandCode(); } ) )
-
 	// Zeroing for swervedrive command
 	m_controllerMain.Start().OnTrue(m_drivetrain.RunOnce([this]{m_drivetrain.resetGyro();}));
 
