@@ -64,37 +64,50 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
 }
 
 frc2::CommandPtr climber::climberRetract() {
-    return frc2::cmd::RunOnce([this]{ currentExtendState = extendingStates::RETRACT; });
-}
-
-frc2::CommandPtr climber::climberExtend() {
-    return frc2::cmd::RunOnce([this]{ currentExtendState = extendingStates::SOLEXTEND; });
-}
-
-frc2::CommandPtr climber::leftClimbToggle() {
-    return frc2::cmd::RunOnce([this]{
-		if(!lToggle) {
-			m_climberMotorLeft.Set(-0.2);
-			lToggle = true;
-		} else {
-			m_climberMotorLeft.Set(0.0);
-			m_climberMotorLeftEncoder.SetPosition(0);
-			lToggle = false;
-		}
+    return frc2::cmd::Run([this]{
+		climbState = "RETRACT";
+		m_climberSolenoidLeft.SetVoltage(units::voltage::volt_t(0));
+		m_climberMotorLeftController.SetReference(0.5, rev::CANSparkMax::ControlType::kPosition);
+		m_climberMotorRightController.SetReference(0.5, rev::CANSparkMax::ControlType::kPosition);
+	}).Until([this]{
+		return m_climberMotorLeftEncoder.GetPosition() < 0.8 && m_climberMotorRightEncoder.GetPosition() < 0.8;
+	}).AndThen([this]{
+		m_climberMotorLeft.Set(0);
+		m_climberMotorRight.Set(0);
+		climbState = "INIT";
 	});
 }
 
-frc2::CommandPtr climber::rightClimbToggle() {
-		return frc2::cmd::RunOnce([this]{
-			if(!rToggle) {
-				m_climberMotorRight.Set(-0.2);
-				rToggle = true;
-			} else {
-				m_climberMotorRight.Set(0.0);
-				m_climberMotorRightEncoder.SetPosition(0);
-				rToggle = false;
-			}
-		});
+frc2::CommandPtr climber::climberExtend() {
+    return frc2::cmd::Run([this]{
+		climbState = "EXTEND";
+		m_climberSolenoidLeft.SetVoltage(units::voltage::volt_t(12));
+	}).WithTimeout(0.1_s)
+	.AndThen([this]{
+		m_climberMotorLeft.Set(-0.05);
+		m_climberMotorRight.Set(-0.05);
+		m_climberMotorLeftController.SetReference(19, rev::CANSparkMax::ControlType::kPosition);
+		m_climberMotorRightController.SetReference(20, rev::CANSparkMax::ControlType::kPosition);
+		climbState = "INIT";
+	});
+}
+
+frc2::CommandPtr climber::leftClimbZero() {
+    return frc2::cmd::RunOnce([this]{
+			m_climberMotorLeft.Set(-0.2);
+	}).AndThen(frc2::cmd::Idle()).FinallyDo([this]{
+			m_climberMotorLeft.Set(0.0);
+			m_climberMotorLeftEncoder.SetPosition(0);
+	});
+}
+
+frc2::CommandPtr climber::rightClimbZero() {
+	return frc2::cmd::RunOnce([this]{
+			m_climberMotorRight.Set(-0.2);
+	}).AndThen(frc2::cmd::Idle()).FinallyDo([this]{
+			m_climberMotorRight.Set(0.0);
+			m_climberMotorRightEncoder.SetPosition(0);
+	});
 }
 
 void climber::Periodic(){
@@ -103,64 +116,4 @@ void climber::Periodic(){
     frc::SmartDashboard::PutNumber("Climb Out Curr L", m_climberMotorLeft.GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Climb Out Curr R", m_climberMotorRight.GetOutputCurrent());
     frc::SmartDashboard::PutString("Climb State", climbState);
-
-    switch (currentExtendState) {
-        case extendingStates::SOLEXTEND:
-            m_climberSolenoidLeft.SetVoltage(units::voltage::volt_t(12));
-
-            solCount++;
-
-            if (solCount > 4) {
-                m_climberMotorLeft.Set(-0.05);
-                m_climberMotorRight.Set(-0.05);
-                currentExtendState = extendingStates::EXTEND;
-                solCount = 0;
-            }
-
-            climbState = "SOLEXTEND";
-            break;
-        case extendingStates::EXTEND:
-            m_climberMotorLeftController.SetReference(19, rev::CANSparkMax::ControlType::kPosition);
-            m_climberMotorRightController.SetReference(20, rev::CANSparkMax::ControlType::kPosition);
-
-            climbState = "EXTEND";
-            currentExtendState = extendingStates::INIT;
-            break;
-        case extendingStates::WAITING:
-            if (m_climberMotorLeftEncoder.GetPosition() > 18.9 && m_climberMotorRightEncoder.GetPosition() > 19.9) {
-                currentExtendState = extendingStates::CLOSESOLENOIDS;
-            }
-
-            climbState = "WAITING";
-            break;
-        case extendingStates::CLOSESOLENOIDS:
-
-            climbState = "CLOSESOLENOIDS";
-            currentExtendState = extendingStates::INIT;
-            break;
-        case extendingStates::RETRACT:
-            m_climberSolenoidLeft.SetVoltage(units::voltage::volt_t(0));
-
-            m_climberMotorLeftController.SetReference(0.5, rev::CANSparkMax::ControlType::kPosition);
-            m_climberMotorRightController.SetReference(0.5, rev::CANSparkMax::ControlType::kPosition);
-
-            if (m_climberMotorLeftEncoder.GetPosition() < 0.8 && m_climberMotorRightEncoder.GetPosition() < 0.8) {
-                currentExtendState = extendingStates::POSTRETRACT;
-            }
-            
-            climbState = "RETRACT";
-            break;
-        case extendingStates::POSTRETRACT:
-            m_climberMotorLeft.Set(0);
-            m_climberMotorRight.Set(0);
-
-            climbState = "POSTRETRACT";
-            currentExtendState = extendingStates::INIT;
-            break;
-        default:
-        case extendingStates::INIT:
-
-            climbState = "INIT";
-            break;
-    }
 }

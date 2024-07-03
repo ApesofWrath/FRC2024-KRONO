@@ -66,8 +66,8 @@ void RobotContainer::ConfigureButtonBindings() {
 	m_controllerOperator.RightStick().OnTrue(m_climber.climberRetract());
 
 	// Climber Zero Maintinence Buttons
-	m_controllerAlt.LeftBumper().OnTrue(m_climber.leftClimbToggle());
-	m_controllerAlt.RightBumper().OnTrue(m_climber.rightClimbToggle());
+	m_controllerOperator.LeftTrigger().WhileTrue(m_climber.leftClimbZero());
+	m_controllerOperator.RightTrigger().WhileTrue(m_climber.rightClimbZero());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

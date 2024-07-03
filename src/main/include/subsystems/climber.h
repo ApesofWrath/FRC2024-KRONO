@@ -12,24 +12,14 @@
 
 using namespace climberConstants;
 
-enum class extendingStates {
-    INIT,
-    SOLEXTEND,
-    EXTEND,
-    WAITING,
-    CLOSESOLENOIDS,
-    RETRACT,
-    POSTRETRACT
-};
-
 class climber : public frc2::SubsystemBase {
     public:
 		climber();
 
 		frc2::CommandPtr climberExtend();
 		frc2::CommandPtr climberRetract();
-		frc2::CommandPtr leftClimbToggle();
-		frc2::CommandPtr rightClimbToggle();
+		frc2::CommandPtr leftClimbZero();
+		frc2::CommandPtr rightClimbZero();
 
 		void Periodic();
 
@@ -44,11 +34,5 @@ class climber : public frc2::SubsystemBase {
 		rev::CANSparkMax m_climberSolenoidLeft;
 		rev::CANSparkMax m_climberSolenoidRight;
 
-		extendingStates currentExtendState = extendingStates::INIT;
-
-		int solCount = 0;
-		std::string climbState = "";
-
-		bool lToggle = false;
-		bool rToggle = false;
+		std::string climbState = "INIT";
 }; 
