@@ -5,6 +5,7 @@
 #include <rev/CANSparkMax.h>
 #include <Constants.h>
 
+#include <frc2/command/Commands.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -23,34 +24,31 @@ enum class extendingStates {
 
 class climber : public frc2::SubsystemBase {
     public:
-    climber();
-	/* void SetHeight(double height);
-    void TelescopeToggle();
-    void TelescopeToggle(telescopeStates state); */
+		climber();
 
-    void climberExtend();
-    void climberRetract();
+		frc2::CommandPtr climberExtend();
+		frc2::CommandPtr climberRetract();
+		frc2::CommandPtr leftClimbToggle();
+		frc2::CommandPtr rightClimbToggle();
 
-    void leftClimbToggle();
-    void rightClimbToggle();
-    void Periodic();
+		void Periodic();
 
     private:
-    rev::CANSparkMax m_climberMotorLeft;
-    rev::CANSparkMax m_climberMotorRight;
-    rev::SparkPIDController m_climberMotorLeftController = m_climberMotorLeft.GetPIDController();
-    rev::SparkPIDController m_climberMotorRightController = m_climberMotorRight.GetPIDController();
-    rev::SparkRelativeEncoder m_climberMotorLeftEncoder = m_climberMotorLeft.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
-    rev::SparkRelativeEncoder m_climberMotorRightEncoder = m_climberMotorRight.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
+		rev::CANSparkMax m_climberMotorLeft;
+		rev::CANSparkMax m_climberMotorRight;
+		rev::SparkPIDController m_climberMotorLeftController = m_climberMotorLeft.GetPIDController();
+		rev::SparkPIDController m_climberMotorRightController = m_climberMotorRight.GetPIDController();
+		rev::SparkRelativeEncoder m_climberMotorLeftEncoder = m_climberMotorLeft.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
+		rev::SparkRelativeEncoder m_climberMotorRightEncoder = m_climberMotorRight.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
 
-    rev::CANSparkMax m_climberSolenoidLeft;
-    rev::CANSparkMax m_climberSolenoidRight;
+		rev::CANSparkMax m_climberSolenoidLeft;
+		rev::CANSparkMax m_climberSolenoidRight;
 
-    extendingStates currentExtendState = extendingStates::INIT;
+		extendingStates currentExtendState = extendingStates::INIT;
 
-    int solCount = 0;
-    std::string climbState = "";
+		int solCount = 0;
+		std::string climbState = "";
 
-    bool lToggle = false;
-    bool rToggle = false;
+		bool lToggle = false;
+		bool rToggle = false;
 }; 

@@ -63,47 +63,38 @@ m_climberSolenoidRight(kSolenoidClimberRight, rev::CANSparkMax::MotorType::kBrus
     m_climberSolenoidRight.BurnFlash();
 }
 
-/* // Climber state machene (toggle and explicit set)
-void climber::TelescopeToggle () { // Note that turnery would need to be expanded with addition of any additional states (get S to do it)
-    currentTelescopeState = (currentTelescopeState == telescopeStates::UNEXTENDED) ? telescopeStates::EXTENDED : telescopeStates::UNEXTENDED;
-}
-void climber::TelescopeToggle (telescopeStates state) {
-    currentTelescopeState = state;
+frc2::CommandPtr climber::climberRetract() {
+    return frc2::cmd::RunOnce([this]{ currentExtendState = extendingStates::RETRACT; });
 }
 
-// Set height of climber
-void climber::SetHeight(double height){
-	m_climberMotorLeftController.SetReference(height, rev::CANSparkMax::ControlType::kPosition);
-} */
-
-void climber::climberRetract() {
-    currentExtendState = extendingStates::RETRACT;
+frc2::CommandPtr climber::climberExtend() {
+    return frc2::cmd::RunOnce([this]{ currentExtendState = extendingStates::SOLEXTEND; });
 }
 
-void climber::climberExtend() {
-    currentExtendState = extendingStates::SOLEXTEND;
+frc2::CommandPtr climber::leftClimbToggle() {
+    return frc2::cmd::RunOnce([this]{
+		if(!lToggle) {
+			m_climberMotorLeft.Set(-0.2);
+			lToggle = true;
+		} else {
+			m_climberMotorLeft.Set(0.0);
+			m_climberMotorLeftEncoder.SetPosition(0);
+			lToggle = false;
+		}
+	});
 }
 
-void climber::leftClimbToggle() {
-    if(!lToggle) {
-        m_climberMotorLeft.Set(-0.2);
-        lToggle = true;
-    } else {
-        m_climberMotorLeft.Set(0.0);
-        m_climberMotorLeftEncoder.SetPosition(0);
-        lToggle = false;
-    }
-}
-
-void climber::rightClimbToggle() {
-    if(!rToggle) {
-        m_climberMotorRight.Set(-0.2);
-        rToggle = true;
-    } else {
-        m_climberMotorRight.Set(0.0);
-        m_climberMotorRightEncoder.SetPosition(0);
-        rToggle = false;
-    }
+frc2::CommandPtr climber::rightClimbToggle() {
+		return frc2::cmd::RunOnce([this]{
+			if(!rToggle) {
+				m_climberMotorRight.Set(-0.2);
+				rToggle = true;
+			} else {
+				m_climberMotorRight.Set(0.0);
+				m_climberMotorRightEncoder.SetPosition(0);
+				rToggle = false;
+			}
+		});
 }
 
 void climber::Periodic(){

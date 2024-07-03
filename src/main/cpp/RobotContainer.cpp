@@ -69,12 +69,12 @@ void RobotContainer::ConfigureButtonBindings() {
 	m_controllerOperator.Y().OnTrue(m_intakeshooter.scoreAmp());
 	
 	// Climber Buttons
-	m_controllerOperator.LeftStick().OnTrue(m_climber.RunOnce([this]{m_climber.climberExtend();}));
-	m_controllerOperator.RightStick().OnTrue(m_climber.RunOnce([this]{m_climber.climberRetract();}));
+	m_controllerOperator.LeftStick().OnTrue(m_climber.climberExtend());
+	m_controllerOperator.RightStick().OnTrue(m_climber.climberRetract());
 
 	// Climber Zero Maintinence Buttons
-	m_controllerAlt.LeftBumper().OnTrue(m_climber.RunOnce([this]{m_climber.leftClimbToggle();}));
-	m_controllerAlt.RightBumper().OnTrue(m_climber.RunOnce([this]{m_climber.rightClimbToggle();}));
+	m_controllerAlt.LeftBumper().OnTrue(m_climber.leftClimbToggle());
+	m_controllerAlt.RightBumper().OnTrue(m_climber.rightClimbToggle());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
