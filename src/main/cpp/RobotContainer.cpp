@@ -35,6 +35,9 @@ RobotContainer::RobotContainer() {
 	m_chooser.AddOption("Preload", "Preload");
 	m_chooser.AddOption("PreloadBackupCenter", "PreloadBackupCenter");
 	m_chooser.AddOption("New Auto", "New Auto");
+	m_chooser.AddOption("3 Note - test", "3 Note - test");
+	m_chooser.AddOption("4 Note - test", "4 Note - test");
+	m_chooser.AddOption("5 Note - test", "5 Note - test");
 
 	frc::SmartDashboard::PutData(&m_chooser);
 		
