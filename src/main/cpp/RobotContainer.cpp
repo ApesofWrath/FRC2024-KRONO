@@ -38,6 +38,8 @@ RobotContainer::RobotContainer() {
 	m_chooser.AddOption("3 Note - test", "3 Note - test");
 	m_chooser.AddOption("4 Note - test", "4 Note - test");
 	m_chooser.AddOption("5 Note - test", "5 Note - test");
+	m_chooser.AddOption("6 Note - test", "6 Note - test");
+	m_chooser.AddOption("5 Note Amp side- test", "5 Note Amp side- test");
 
 	frc::SmartDashboard::PutData(&m_chooser);
 		

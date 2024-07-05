@@ -2,21 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4291761916857166,
-      "y": 5.556066607628711
+      "x": 1.460222840309143,
+      "y": 5.5347208976745605
     },
-    "rotation": -176.72951207681643
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "spinup"
-          }
-        },
         {
           "type": "named",
           "data": {
@@ -26,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3.1"
+            "pathName": "6-1"
           }
         },
         {
@@ -64,7 +58,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3.2"
+            "pathName": "6-2"
           }
         },
         {
@@ -102,7 +96,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4.1"
+            "pathName": "6-3"
           }
         },
         {
@@ -140,7 +134,45 @@
         {
           "type": "path",
           "data": {
-            "pathName": "updated 5.1"
+            "pathName": "6-4 (1)"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "xStance"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "spinup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rapidFire"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6-5"
           }
         },
         {
@@ -178,6 +210,6 @@
       ]
     }
   },
-  "folder": null,
-  "choreoAuto": false
+  "folder": "Choreo Autos",
+  "choreoAuto": true
 }
