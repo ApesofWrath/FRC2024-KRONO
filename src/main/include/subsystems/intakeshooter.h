@@ -31,14 +31,12 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     HOLDING, // enter on note at correct position (sensor), ensure note position correctness
     SPINUP, // enter on rev button press, firing wheels go to max speed & angle correctly (read shootTarget)
     SPINUPPIGEON,
-    AMPBACK,
     AIMAMP,
     SCOREAMP,
     RAPIDFIRE, // do not bind to a button - for auto use only(goes to rapidpostfire state)
     FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
     POSTFIRE, // after the note is fired, check if the note is gone before resuming idle
     RAPIDPOSTFIRE, // returns to intaking position instead of idle for quicker shots and less intake movement
-    ZEROING // after we fire, go back to neutral and then resume idle
 };
 
 class intakeshooter : public frc2::SubsystemBase {
@@ -60,8 +58,6 @@ class intakeshooter : public frc2::SubsystemBase {
 		void Periodic() override;
 
     private:
-		void spinup(float angle);
-
 		frc2::CommandXboxController* m_controllerMain;
 		frc2::CommandXboxController* m_controllerOperator;
 
@@ -95,7 +91,6 @@ class intakeshooter : public frc2::SubsystemBase {
 
 		std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 
-		int shooterClearCount = 0;
 		double shootAngle; // set the angle at which we are shooting based off of the limelight
 		double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
 		int ampBackCount = 0;
