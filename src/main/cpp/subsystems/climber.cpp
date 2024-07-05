@@ -82,10 +82,10 @@ frc2::CommandPtr climber::climberExtend() {
     return frc2::cmd::Run([this]{
 		climbState = "EXTEND";
 		m_climberSolenoidLeft.SetVoltage(units::voltage::volt_t(12));
-	}).WithTimeout(0.1_s)
-	.AndThen([this]{
+	}).WithTimeout(0.1_s).AndThen([this]{
 		m_climberMotorLeft.Set(-0.05);
 		m_climberMotorRight.Set(-0.05);
+	}).WithTimeout(0.1_s).AndThen([this]{
 		m_climberMotorLeftController.SetReference(19, rev::CANSparkMax::ControlType::kPosition);
 		m_climberMotorRightController.SetReference(20, rev::CANSparkMax::ControlType::kPosition);
 		climbState = "INIT";
