@@ -52,7 +52,6 @@ class intakeshooter : public frc2::SubsystemBase {
 		intakeshooterStates getState();
 		bool shooterAtSpeed();
 
-		bool allowSpinup = true;
 		wpi::interpolating_map<double, double> m_interpolatingMap;
 
 		void Periodic() override;

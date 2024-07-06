@@ -161,12 +161,10 @@ frc2::CommandPtr intakeshooter::intakeRetract() {
 }
 
 frc2::CommandPtr intakeshooter::spinup() {
-	return frc2::cmd::Run([this]{ 
+	return frc2::cmd::RunOnce([this]{ 
 		shootAngle = intakeConstants::kIntakeSpeakerAngle;
-		currentIntakeshooterState = allowSpinup ? intakeshooterStates::SPINUP : currentIntakeshooterState;
-	}).Until([this]{
-		return (shooterAtSpeed() && getState() == intakeshooterStates::SPINUPPIGEON) || !allowSpinup;
-	});
+		currentIntakeshooterState = intakeshooterStates::SPINUP;
+	}).OnlyIf([this]{ return currentIntakeshooterState == intakeshooterStates::HOLDING; });
 }
 
 frc2::CommandPtr intakeshooter::autoAngle(vision* vision) {
@@ -175,8 +173,8 @@ frc2::CommandPtr intakeshooter::autoAngle(vision* vision) {
 		frc::SmartDashboard::PutNumber("Apriltag distance", distance);
 		double angle{m_interpolatingMap[distance]};
 		shootAngle = std::clamp(angle, 0.0, 127.0);
-		currentIntakeshooterState = allowSpinup ? intakeshooterStates::SPINUP : currentIntakeshooterState;
-	});
+		currentIntakeshooterState = intakeshooterStates::SPINUP;
+	}).OnlyIf([this]{ return currentIntakeshooterState == intakeshooterStates::HOLDING; });
 }
 
 frc2::CommandPtr intakeshooter::scoreAmp() {
@@ -252,9 +250,7 @@ void intakeshooter::Periodic() {
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::BACKOFF : intakeshooterStates::INTAKING; // if the canifier's limit forward input is tripped, switch to backoff
             intakeState = "INTAKING";
             break;
-        case::intakeshooterStates::BACKOFF:
-            allowSpinup = false;
-            
+        case::intakeshooterStates::BACKOFF:         
             gravityFF = 0.1 * sin(((0.0) - ((-1.0 * m_Pigeon.GetPitch().GetValueAsDouble()) * (M_PI/180.0))));
 
             m_rotationMotorController.SetReference(kIntakeResetAngle, rev::CANSparkMax::ControlType::kSmartMotion, 0, gravityFF, rev::SparkPIDController::SparkMaxPIDController::ArbFFUnits::kPercentOut); //retract intake when holding note
@@ -270,8 +266,6 @@ void intakeshooter::Periodic() {
         case intakeshooterStates::NOTEFORWARD:
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(-1_tps));
 
-            allowSpinup = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR);
-
             m_controllerMain->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 0.0);
             m_controllerOperator->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 0.0);
 
@@ -279,8 +273,6 @@ void intakeshooter::Periodic() {
             intakeState = "NOTEFORWARD";
             break;
         case intakeshooterStates::HOLDING:
-            allowSpinup = true;
-
             m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(0_tps)); // set the speed of the intake motor
             
             if (m_rotationEncoder.GetPosition() < 5.0  || usePidgeonAlways) m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
