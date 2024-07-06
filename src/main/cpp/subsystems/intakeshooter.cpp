@@ -188,18 +188,12 @@ frc2::CommandPtr intakeshooter::scoreAmp() {
 frc2::CommandPtr intakeshooter::rapidFire() {
     return frc2::cmd::RunOnce([this]{ 
 		currentIntakeshooterState = intakeshooterStates::RAPIDFIRE;
-	}).Until([this]{
-		return getState() == intakeshooterStates::RAPIDPOSTFIRE;
 	});
 }
 
 frc2::CommandPtr intakeshooter::fire() {
-    return frc2::cmd::Run([this]{ 
+    return frc2::cmd::RunOnce([this]{ 
 		currentIntakeshooterState = intakeshooterStates::FIRE;
-	}).Until([this]{
-		return getState() == intakeshooterStates::POSTFIRE;
-	}).Unless([this]{
-		return m_rotationEncoder.GetPosition() < 50;
 	});
 }
 
