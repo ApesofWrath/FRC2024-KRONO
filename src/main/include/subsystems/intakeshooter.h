@@ -35,6 +35,7 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
     SCOREAMP,
     RAPIDFIRE, // do not bind to a button - for auto use only(goes to rapidpostfire state)
     FIRE, // enter fire button, feed note to shooter wheels, go to idle when note gone
+	// TODO: POSTFIRE/RAPIDPOSTFIRE shouldn't exist
     POSTFIRE, // after the note is fired, check if the note is gone before resuming idle
     RAPIDPOSTFIRE, // returns to intaking position instead of idle for quicker shots and less intake movement
 };
@@ -86,17 +87,16 @@ class intakeshooter : public frc2::SubsystemBase {
 		rev::SparkPIDController m_rotationMotorController = m_rotationMotor.GetPIDController();
 
 		intakeshooterStates currentIntakeshooterState = intakeshooterStates::IDLE;
-		int counter;
-
 		std::string intakeState = ""; // display the intake state as a string for smartDash, no elegant way to do this so dont bother
 
 		double shootAngle; // set the angle at which we are shooting based off of the limelight
 		double gravityFF = 0.0; // calculate to conteract the force of gravity when setting the angle
-		int ampBackCount = 0;
 
 		double rollingSamples[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 		int rollingSample = 0;
 		double rollSampSum = 0.0;
 		double rollSampAvg = 0.0;
+
+		int counter; // TODO: this shouldn't exist
 };
