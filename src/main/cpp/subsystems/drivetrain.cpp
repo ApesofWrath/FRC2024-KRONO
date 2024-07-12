@@ -1,8 +1,4 @@
-
 #include "subsystems/drivetrain.h"
-
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <iostream>
 
 // Constructor, zeros the gyro for swervedrive
 drivetrain::drivetrain() {
@@ -53,8 +49,6 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
     drivetrainConstants::calculations::kModuleMaxAngularVelocity
     );
 
-    //frc::SmartDashboard::PutNumber("xSpeed", xSpeed.value());
-    // frc::SmartDashboard::PutNumber("ySpeed", ySpeed.value());
     frc::SmartDashboard::PutNumber("zRotation", units::degrees_per_second_t(zRot).value());
     frc::SmartDashboard::PutNumber("zRotation actual", m_navX.GetRate() * -1.0);
     frc::SmartDashboard::PutNumber("Robot Rotation", m_navX.GetRotation2d().Degrees().value());
@@ -70,28 +64,45 @@ void drivetrain::SwerveDrive(units::meters_per_second_t xSpeed,
 }
 
 // Updates the odometry of the swervedrive
-void drivetrain::UpdateOdometry() {
-    m_odometry.Update(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
-                      m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
-                      m_rearLeft.GetPosition()});
+frc2::CommandPtr drivetrain::UpdateOdometry() {
+    return frc2::cmd::RunOnce([this]{ m_odometry.Update(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
+		m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
+		m_rearLeft.GetPosition()});
+	});
 }
 
 // Resets the gyro when function run
-void drivetrain::resetGyro() {
-    m_navX.ZeroYaw();
+frc2::CommandPtr drivetrain::resetGyro() {
+    return frc2::cmd::RunOnce([this]{ m_navX.ZeroYaw(); });
 }
 
-// Perodically (Constantly runs during periodic), updates the odometry of the swervedrive
-frc::Pose2d drivetrain::GetOdometry() {
-    return m_odometry.GetEstimatedPosition();
+// Slow the constant value until the command is inturrupted
+frc2::CommandPtr drivetrain::slowDown() {
+    return frc2::cmd::RunOnce([this]{ kslowConst = 0.5; }).AndThen(frc2::cmd::Idle()).FinallyDo([this]{ kslowConst = 1.0; });
+}
+
+frc2::CommandPtr drivetrain::xStance() {
+	return frc2::cmd::Run([this]{
+		m_frontRight.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(45.0_deg)));
+		m_rearRight.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(-45.0_deg)));
+		m_frontLeft.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(-45.0_deg)));
+		m_rearLeft.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(45.0_deg)));
+	});
+}
+
+frc2::CommandPtr drivetrain::squareUp(vision* vision) {
+	return frc2::cmd::RunOnce([this, vision]{
+		double heading_error = vision->getHeadingError();
+		units::angular_velocity::radians_per_second_t heading_error_radians{heading_error};
+		SwerveDrive(0.0_mps, 0.0_mps, heading_error_radians, false);
+	});
 }
 
 void drivetrain::ResetOdometry180(frc::Pose2d initPose) {
-    initPose.TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(180_deg)));
-    m_odometry.ResetPosition(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
-                      m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
-                      m_rearLeft.GetPosition()}, initPose);
-    
+	initPose.TransformBy(frc::Transform2d(frc::Translation2d(0_m, 0_m), frc::Rotation2d(180_deg)));
+	m_odometry.ResetPosition(m_navX.GetRotation2d(), {m_frontRight.GetPosition(),
+		m_rearRight.GetPosition(), m_frontLeft.GetPosition(),
+		m_rearLeft.GetPosition()}, initPose);
 }
 
 void drivetrain::ResetOdometry(frc::Pose2d initPose) {
@@ -100,8 +111,9 @@ void drivetrain::ResetOdometry(frc::Pose2d initPose) {
                       m_rearLeft.GetPosition()}, initPose);
 }
 
-frc::ChassisSpeeds drivetrain::GetRobotRelativeSpeeds(){
-    return m_kinematics.ToChassisSpeeds(m_frontRight.GetState(), m_rearRight.GetState(), m_frontLeft.GetState(), m_rearLeft.GetState());
+// Perodically (Constantly runs during periodic), updates the odometry of the swervedrive
+frc::Pose2d drivetrain::GetOdometry() {
+    return m_odometry.GetEstimatedPosition();
 }
 
 void drivetrain::DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds) {
@@ -115,23 +127,8 @@ void drivetrain::DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds
     m_rearLeft.SetDesiredState(rearLeft);
 }
 
-// Slow constant value
-void drivetrain::slowDown() {
-    kslowConst = 0.5;
-    printf("Slow Func");
-}
-
-// Normal speed value (should always be 1.0)
-void drivetrain::normalSpeed() {
-    kslowConst = 1.0;
-    printf("Normal Func");
-}
-
-void drivetrain::xStance() {
-    m_frontRight.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(45.0_deg)));
-    m_rearRight.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(-45.0_deg)));
-    m_frontLeft.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(-45.0_deg)));
-    m_rearLeft.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(45.0_deg)));
+frc::ChassisSpeeds drivetrain::GetRobotRelativeSpeeds(){
+    return m_kinematics.ToChassisSpeeds(m_frontRight.GetState(), m_rearRight.GetState(), m_frontLeft.GetState(), m_rearLeft.GetState());
 }
 
 void drivetrain::Periodic() {
