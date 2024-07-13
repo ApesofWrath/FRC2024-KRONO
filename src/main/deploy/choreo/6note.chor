@@ -1515,8 +1515,8 @@
                     "controlIntervalCount": 15
                 },
                 {
-                    "x": 4.866283416748047,
-                    "y": 4.589365005493164,
+                    "x": 4.894088268280029,
+                    "y": 4.484144687652588,
                     "heading": 0,
                     "isInitialGuess": false,
                     "translationConstrained": true,
@@ -2160,9 +2160,9 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": [],
             "eventMarkers": [],
-            "isTrajectoryStale": false
+            "isTrajectoryStale": true
         }
     },
-    "splitTrajectoriesAtStopPoints": false,
+    "splitTrajectoriesAtStopPoints": true,
     "usesObstacles": false
 }
