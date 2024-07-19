@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.234835526003542,
-      "y": 5.54
+      "x": 1.363,
+      "y": 5.5347208976745605
     },
-    "rotation": 0.0
+    "rotation": 5.784460118981041e-24
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3.1"
+            "pathName": "6-1.1"
           }
         },
         {
@@ -64,7 +64,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3.2"
+            "pathName": "6-2"
           }
         },
         {
@@ -102,7 +102,83 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4.1"
+            "pathName": "6-3"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "xStance"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "spinup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rapidFire"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6-4 (1)"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "xStance"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "spinup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rapidFire"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6-5"
           }
         },
         {
@@ -140,6 +216,6 @@
       ]
     }
   },
-  "folder": null,
-  "choreoAuto": false
+  "folder": "Choreo Autos",
+  "choreoAuto": true
 }

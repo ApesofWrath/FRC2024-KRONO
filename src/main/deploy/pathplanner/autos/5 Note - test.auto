@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4291761916857166,
+      "x": 1.257767193706975,
       "y": 5.556066607628711
     },
-    "rotation": -176.72951207681643
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "spinup"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -134,7 +140,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5.1"
+            "pathName": "updated 5.1"
           }
         },
         {

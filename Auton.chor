@@ -1,5 +1,5 @@
 {
-    "version": "v0.3",
+    "version": "v0.3.1",
     "robotConfiguration": {
         "mass": 54.52875107427567,
         "rotationalInertia": 6.000000000000001,
@@ -72,6 +72,15 @@
                 {
                     "x": 1.3720027208328247,
                     "y": 5.6,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": true,
+                    "controlIntervalCount": 40
+                },
+                {
+                    "x": 1.5297342538833618,
+                    "y": 4.116687297821045,
                     "heading": 0,
                     "isInitialGuess": false,
                     "translationConstrained": true,

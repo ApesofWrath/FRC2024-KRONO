@@ -1,0 +1,63 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6639342904090881,
+      "y": 4.385663032531738
+    },
+    "rotation": -59.98868115019719
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5NoteSourceSide.1"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "spinup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "rapidFire"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Choreo Autos",
+  "choreoAuto": true
+}

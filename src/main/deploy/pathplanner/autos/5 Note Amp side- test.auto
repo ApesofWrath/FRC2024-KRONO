@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.234835526003542,
+      "x": 1.23,
       "y": 5.54
     },
     "rotation": 0.0
@@ -64,7 +64,83 @@
         {
           "type": "path",
           "data": {
+            "pathName": "5-ampSide"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "xStance"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "spinup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rapidFire"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "3.1"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "xStance"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "spinup"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "rapidFire"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4.1"
           }
         },
         {
