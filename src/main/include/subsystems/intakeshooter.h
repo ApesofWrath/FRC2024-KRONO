@@ -78,8 +78,8 @@ class intakeshooter : public frc2::SubsystemBase {
 		rev::CANSparkMax m_shooterMotorLeft;
 		rev::CANSparkMax m_shooterMotorRight;
 		rev::CANSparkMax m_rotationMotor;
+	
 		rev::SparkMaxAlternateEncoder m_rotationEncoder = m_rotationMotor.GetAlternateEncoder(rev::SparkMaxAlternateEncoder::Type::kQuadrature, 8192);
-
 		rev::SparkRelativeEncoder m_shooterLeftEncoder = m_shooterMotorLeft.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
 		rev::SparkRelativeEncoder m_shooterRightEncoder = m_shooterMotorRight.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor, 42);
 

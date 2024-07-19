@@ -197,8 +197,7 @@ frc2::CommandPtr intakeshooter::fire() {
 
 frc2::CommandPtr intakeshooter::zeroOTF() {
     return frc2::cmd::RunOnce([this]{ 
-		//m_rotationMotorController.SetPosition(0);
-	printf("\n\n\n\n\n\n\n\n\n\nSAUL NEEDS TO FINISH THIS!!!!!");
+		m_rotationEncoder.SetPosition(0);
 	});
 }
 
