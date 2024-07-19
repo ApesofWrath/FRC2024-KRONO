@@ -50,6 +50,7 @@ class intakeshooter : public frc2::SubsystemBase {
 		frc2::CommandPtr scoreAmp();
 		frc2::CommandPtr fire();
 		frc2::CommandPtr rapidFire();
+		frc2::CommandPtr zeroOTF();
 		intakeshooterStates getState();
 		bool shooterAtSpeed();
 

@@ -63,6 +63,7 @@ void RobotContainer::ConfigureButtonBindings() {
 	m_controllerOperator.RightBumper().OnTrue(m_intakeshooter.fire()); // inline command with dynamic end condition
 	m_controllerOperator.A().OnTrue(m_intakeshooter.intakeRetract()); //leftbumper
 	m_controllerOperator.Y().OnTrue(m_intakeshooter.scoreAmp());
+	m_controllerOperator.Start().OnTrue(m_intakeshooter.zeroOTF());
 	
 	// Climber Buttons
 	m_controllerOperator.LeftStick().OnTrue(m_climber.climberExtend());
