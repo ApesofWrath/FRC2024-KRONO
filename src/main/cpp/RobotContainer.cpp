@@ -9,12 +9,12 @@ using namespace generalConstants;
 RobotContainer::RobotContainer() {
 
   // Initialize all of your commands and subsystems here
-  pathplanner::NamedCommands::registerCommand("spinup", std::move(spinup(&m_intakeshooter, 115.5).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("fire", std::move(fire(&m_intakeshooter).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(intakeActivate(&m_intakeshooter).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(intakeRetract(&m_intakeshooter).ToPtr()));
-  pathplanner::NamedCommands::registerCommand("rapidFire", std::move(rapidFire(&m_intakeshooter).ToPtr()));
-  // Configure the button bindings
+	pathplanner::NamedCommands::registerCommand("spinup", std::move(m_intakeshooter.spinup()));
+	pathplanner::NamedCommands::registerCommand("fire", std::move(m_intakeshooter.fire()));
+	pathplanner::NamedCommands::registerCommand("rapidFire", std::move(m_intakeshooter.rapidFire()));
+	pathplanner::NamedCommands::registerCommand("intakeActivate", std::move(m_intakeshooter.intakeActivate()));
+	pathplanner::NamedCommands::registerCommand("intakeRetract", std::move(m_intakeshooter.intakeRetract()));
+	pathplanner::NamedCommands::registerCommand("xStance", std::move(m_drivetrain.xStance()));  // Configure the button bindings
   ConfigureButtonBindings();
 
   // $ CONTROLLER INPUTS FOR SWERVE DRIVE BELOW
@@ -54,16 +54,16 @@ void RobotContainer::ConfigureButtonBindings() {
 
   // Align
   m_controllerMain.B().WhileTrue(m_drivetrain.Align(&m_vision));
-  m_controllerMain.A().WhileTrue(m_drivetrain.Run([this]{m_drivetrain.xStance();}));
+  m_controllerMain.A().WhileTrue(m_drivetrain.xStance());
 
   // ShooterIntake buttons
-  m_controllerOperator.LeftBumper().OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
-  m_controllerOperator.B().OnTrue(AutoAngle(&m_intakeshooter, &m_vision).ToPtr()); // spinup for far speaker shot (7 feet from speaker) !!!!96.6 (111.5)
-  m_controllerOperator.X().OnTrue(spinup(&m_intakeshooter, intakeConstants::kIntakeSpeakerAngle).ToPtr()); // spinup for near speaker shot (right at speaker) Y !!!!!110.0
-  m_controllerOperator.RightBumper().OnTrue(fire(&m_intakeshooter).ToPtr());
-  m_controllerOperator.A().OnTrue(intakeRetract(&m_intakeshooter).ToPtr()); //leftbumper
-  m_controllerOperator.Y().OnTrue(scoreAmp(&m_intakeshooter).ToPtr());
-  m_controllerOperator.Start().OnTrue(m_intakeshooter.zeroOTF());
+	m_controllerOperator.LeftBumper().OnTrue(m_intakeshooter.intakeActivate()); // kA
+	m_controllerOperator.B().OnTrue(m_intakeshooter.autoAngle(&m_vision)); // spinup for far speaker shot (7 feet from speaker)
+	m_controllerOperator.X().OnTrue(m_intakeshooter.spinup()); // spinup for near speaker shot (right at speaker)
+	m_controllerOperator.RightBumper().OnTrue(m_intakeshooter.fire()); // inline command with dynamic end condition
+	m_controllerOperator.A().OnTrue(m_intakeshooter.intakeRetract()); //leftbumper
+	m_controllerOperator.Y().OnTrue(m_intakeshooter.scoreAmp());
+	m_controllerOperator.Start().OnTrue(m_intakeshooter.zeroOTF());
   
 	// Climber Buttons
 	m_controllerOperator.LeftStick().OnTrue(m_climber.climberExtend());

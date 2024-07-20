@@ -12,6 +12,9 @@
 #include <ctre/phoenix/CANifier.h>
 #include <ctre/phoenix6/Pigeon2.hpp>
 
+#include <subsystems/vision.h>
+
+#include <wpi/interpolating_map.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/Commands.h>
 #include <frc2/command/CommandPtr.h>
@@ -41,23 +44,22 @@ enum class intakeshooterStates { // proceed cyclically down list, each comment d
 class intakeshooter : public frc2::SubsystemBase {
     public:
     intakeshooter(frc2::CommandXboxController* controllerMain, frc2::CommandXboxController* controllerOperator, ctre::phoenix::CANifier& beambreakCanifier);
-    void intakeActivate();
-    void intakeRetract();
-    void spinup();
-    void scoreAmp();
-    void spinup(float angle);
-    void fire();
-    void rapidFire();
+	frc2::CommandPtr intakeActivate();
+	frc2::CommandPtr intakeRetract();
+	frc2::CommandPtr spinup();
+	frc2::CommandPtr autoAngle(vision* vision);
+	frc2::CommandPtr scoreAmp();
+	frc2::CommandPtr fire();
+	frc2::CommandPtr rapidFire();
     intakeshooterStates getState();
     bool shooterAtSpeed();
 	frc2::CommandPtr zeroOTF();
 
     bool allowSpinup = true;
+	wpi::interpolating_map<double, double> m_interpolatingMap;
 
     void Periodic() override;
     private:
-
-
     frc2::CommandXboxController* m_controllerMain;
     frc2::CommandXboxController* m_controllerOperator;
 

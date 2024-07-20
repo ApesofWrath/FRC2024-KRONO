@@ -29,16 +29,6 @@
 #include "subsystems/climber.h"
 #include "subsystems/LED.h"
 
-#include "commands/shooterintake/fire.h"
-#include "commands/shooterintake/intakeActivate.h"
-#include "commands/shooterintake/intakeRetract.h"
-#include "commands/shooterintake/rapidFire.h"
-#include "commands/shooterintake/scoreAmp.h"
-#include "commands/shooterintake/spinup.h"
-#include "commands/shooterintake/intakeRetract.h"
-#include "commands/shooterintake/scoreAmp.h"
-#include "commands/shooterintake/AutoAngle.h"
-
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>

@@ -136,36 +136,63 @@ m_controllerOperator(controllerOperator)
     m_shooterMotorLeft.BurnFlash();
     m_shooterMotorRight.BurnFlash();
     m_rotationMotor.BurnFlash();
+
+	// Fill interpolation map
+	m_interpolatingMap.insert(52.1, 114.5);
+    m_interpolatingMap.insert(64.5, 110.5);
+    m_interpolatingMap.insert(75.5, 108);
+    m_interpolatingMap.insert(89.9, 105);
+    m_interpolatingMap.insert(108.3, 102);
+    m_interpolatingMap.insert(120.9, 100);
+    m_interpolatingMap.insert(132.9, 98);
+    m_interpolatingMap.insert(144.0, 96);
+    m_interpolatingMap.insert(156.0, 94);
+    m_interpolatingMap.insert(400.0, 30);
 }
 
-void intakeshooter::intakeActivate() {
-    currentIntakeshooterState = intakeshooterStates::INTAKING;
+frc2::CommandPtr intakeshooter::intakeActivate() {
+	return frc2::cmd::RunOnce([this]{ currentIntakeshooterState = intakeshooterStates::INTAKING; });
 }
 
-void intakeshooter::intakeRetract() {
-    currentIntakeshooterState = intakeshooterStates::IDLE;
+frc2::CommandPtr intakeshooter::intakeRetract() {
+    return frc2::cmd::RunOnce([this]{ 
+		currentIntakeshooterState = intakeshooterStates::IDLE;
+	});
 }
 
-void intakeshooter::spinup(float angle) { // provide manual angle control before vision is finished
-    shootAngle = angle; // read shootAngle from angle (passed from command) when explicitly set
-
-    if (allowSpinup) {
-        currentIntakeshooterState = intakeshooterStates::SPINUP;
-    }
+frc2::CommandPtr intakeshooter::spinup() {
+	return frc2::cmd::RunOnce([this]{ 
+		shootAngle = intakeConstants::kIntakeSpeakerAngle;
+		currentIntakeshooterState = intakeshooterStates::SPINUP;
+	}).OnlyIf([this]{ return currentIntakeshooterState == intakeshooterStates::HOLDING || currentIntakeshooterState == intakeshooterStates::NOTEFORWARD || currentIntakeshooterState == intakeshooterStates::BACKOFF; });
 }
 
-void intakeshooter::scoreAmp() {
-    currentIntakeshooterState = intakeshooterStates::AIMAMP;
+frc2::CommandPtr intakeshooter::autoAngle(vision* vision) {
+	return frc2::cmd::RunOnce([this, vision]{ 
+		double distance = vision->getDistance();
+		frc::SmartDashboard::PutNumber("Apriltag distance", distance);
+		double angle{m_interpolatingMap[distance]};
+		shootAngle = std::clamp(angle, 0.0, 127.0);
+		currentIntakeshooterState = intakeshooterStates::SPINUP;
+	}).OnlyIf([this]{ return currentIntakeshooterState == intakeshooterStates::HOLDING || currentIntakeshooterState == intakeshooterStates::NOTEFORWARD || currentIntakeshooterState == intakeshooterStates::BACKOFF; });
 }
 
-void intakeshooter::rapidFire() {
-    currentIntakeshooterState = intakeshooterStates::RAPIDFIRE;
+frc2::CommandPtr intakeshooter::scoreAmp() {
+    return frc2::cmd::RunOnce([this]{ 
+		currentIntakeshooterState = intakeshooterStates::AIMAMP;
+	});
 }
 
-void intakeshooter::fire() {
-    if (m_rotationEncoder.GetPosition() >= 50) {
-        currentIntakeshooterState = intakeshooterStates::FIRE;
-    }
+frc2::CommandPtr intakeshooter::rapidFire() {
+    return frc2::cmd::RunOnce([this]{ 
+		currentIntakeshooterState = intakeshooterStates::RAPIDFIRE;
+	});
+}
+
+frc2::CommandPtr intakeshooter::fire() {
+    return frc2::cmd::RunOnce([this]{ 
+		currentIntakeshooterState = intakeshooterStates::FIRE;
+	}).OnlyIf([this]{ return currentIntakeshooterState == intakeshooterStates::SPINUPPIGEON; });
 }
 
 intakeshooterStates intakeshooter::getState() {
@@ -185,8 +212,6 @@ frc2::CommandPtr intakeshooter::zeroOTF() {
 void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
     frc::SmartDashboard::PutNumber("Ab Angle", 246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
-
-    // m_rotationEncoder.SetPosition(246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));
 
     rollingSamples[rollingSample] = m_rotationEncoder.GetPosition();
     rollSampSum = 0.0;
@@ -223,10 +248,6 @@ void intakeshooter::Periodic() {
 
             m_shooterMotorLeftController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set the speed of the shooter motor (worse api b/c REV is cringe)
             m_shooterMotorRightController.SetReference(0, rev::CANSparkMax::ControlType::kVelocity); // set speeds seperatly for spin while shooting
-            // currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::HOLDING : intakeshooterStates::IDLE; // if the canifier's limit forward input is tripped, switch to holding (for preloads)
-            /* if (m_rotationEncoder.GetPosition() < 0){
-                m_rotationEncoder.SetPosition(0);
-            } */
 
             intakeState = "IDLE";
             break;
@@ -346,7 +367,6 @@ void intakeshooter::Periodic() {
                 m_intakeMotorRight.GetConfigurator().Apply(currentLimitsConfigs);
 
                 m_intakeMotorLeft.SetControl(m_velocityIntake.WithVelocity(18_tps));
-                //currentIntakeshooterState = m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMR) ? intakeshooterStates::IDLE : intakeshooterStates::SCOREAMP; // if the canifier's limit backward input is tripped, switch to postfire
 
                 intakeState = "SCOREAMP";
             }
@@ -364,7 +384,6 @@ void intakeshooter::Periodic() {
             
             shooterClearCount++;
             currentIntakeshooterState = !m_BeambreakCanifier.GetGeneralInput(ctre::phoenix::CANifier::LIMF) ? intakeshooterStates::POSTFIRE : intakeshooterStates::FIRE; // if the canifier's limit backward input is tripped, switch to postfire
-            //currentIntakeshooterState = shooterClearCount > 4 ? intakeshooterStates::POSTFIRE : currentIntakeshooterState;
             intakeState = "FIRE";
             break;
         case intakeshooterStates::RAPIDFIRE:
