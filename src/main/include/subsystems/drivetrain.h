@@ -1,15 +1,23 @@
 #pragma once
 
 #include <AHRS.h>
+#include <iostream>
 #include <frc/geometry/Translation2d.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/DriverStation.h>
-#include <frc2/command/SubsystemBase.h>
 #include <units/length.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
+#include <subsystems/vision.h>
 #include "swerveModule.h"
 #include "Constants.h"
+
+#include <frc2/command/Commands.h>
+#include <frc2/command/InstantCommand.h>
+#include <frc2/command/SubsystemBase.h>
+#include <frc2/command/CommandPtr.h>
 
 #include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
@@ -24,16 +32,17 @@ class drivetrain : public frc2::SubsystemBase {
                    units::radians_per_second_t zRot,
                    bool fieldRelative);
 
-  void UpdateOdometry();
-  void resetGyro();
-  frc::Pose2d GetOdometry();
+  frc2::CommandPtr UpdateOdometry();
+  frc2::CommandPtr resetGyro();
+  frc2::CommandPtr slowDown();
+  frc2::CommandPtr xStance(); // assert dominance by being hard to move
+  frc2::CommandPtr Align(vision* vision);
   void ResetOdometry180(frc::Pose2d initPose);
   void ResetOdometry(frc::Pose2d initPose);
+  frc::Pose2d GetOdometry();
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
   void DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
-  void slowDown();
-  void normalSpeed();
-  void xStance();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -52,7 +61,7 @@ private:
   
   // navX
   AHRS m_navX{frc::SPI::kMXP};
-  
+
   // Swervedrive dimensions
   frc::Translation2d m_locationFrontRight{+9.875_in, -9.875_in}; //9.875
   frc::Translation2d m_locationRearRight{-9.875_in, -9.875_in};

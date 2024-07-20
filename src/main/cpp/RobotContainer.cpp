@@ -47,16 +47,13 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureButtonBindings() {
 
   // Zeroing for swervedrive command
-  m_controllerMain.Start().OnTrue(ZeroGyro(&m_drivetrain).ToPtr());
+  m_controllerMain.Start().OnTrue(m_drivetrain.resetGyro());
 
   // Slow button for swerve (whenever left OR right bumper is held down), slows swerve to slow value
-  m_controllerMain.RightBumper().OnTrue(SlowDown(&m_drivetrain).ToPtr());
-  m_controllerMain.RightBumper().OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
-  m_controllerMain.LeftBumper().OnTrue(SlowDown(&m_drivetrain).ToPtr());
-  m_controllerMain.LeftBumper().OnFalse(NormalSpeed(&m_drivetrain).ToPtr());
+  (m_controllerMain.RightBumper() || m_controllerMain.LeftBumper()).WhileTrue(m_drivetrain.slowDown());
 
   // Align
-  m_controllerMain.B().WhileTrue(Align(&m_vision, &m_drivetrain).ToPtr());
+  m_controllerMain.B().WhileTrue(m_drivetrain.Align(&m_vision));
   m_controllerMain.A().WhileTrue(m_drivetrain.Run([this]{m_drivetrain.xStance();}));
 
   // ShooterIntake buttons
