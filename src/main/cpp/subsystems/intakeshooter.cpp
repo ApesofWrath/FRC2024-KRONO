@@ -195,6 +195,12 @@ frc2::CommandPtr intakeshooter::fire() {
 	});
 }
 
+frc2::CommandPtr intakeshooter::zeroOTF() {
+    return frc2::cmd::RunOnce([this]{ 
+		m_rotationEncoder.SetPosition(0);
+	});
+}
+
 intakeshooterStates intakeshooter::getState() {
     return currentIntakeshooterState;
 }
