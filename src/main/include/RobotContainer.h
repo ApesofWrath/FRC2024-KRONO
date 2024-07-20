@@ -36,16 +36,13 @@
 
 #include "subsystems/drivetrain.h"
 #include "subsystems/intakeshooter.h"
-#include "subsystems/LED.h"`
+#include "subsystems/climber.h"
+#include "subsystems/LED.h"
 
 #include "MathFunctions.h"
 
-#include "commands/ExtendClimber.h"
-#include "commands/RetractClimber.h"
 #include "commands/shooterintake/intakeRetract.h"
 #include "commands/shooterintake/scoreAmp.h"
-#include "commands/LeftClimbToggle.h"
-#include "commands/RightClimbToggle.h"
 #include "commands/shooterintake/AutoAngle.h"
 
 #include <pathplanner/lib/path/PathPlannerPath.h>
