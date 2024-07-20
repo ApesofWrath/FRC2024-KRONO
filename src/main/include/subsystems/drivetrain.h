@@ -33,6 +33,7 @@ class drivetrain : public frc2::SubsystemBase {
   void DriveRobotRelativeSpeeds(frc::ChassisSpeeds robotRelativeSpeeds);
   void slowDown();
   void normalSpeed();
+  void xStance();
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */

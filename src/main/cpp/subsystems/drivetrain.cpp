@@ -128,6 +128,13 @@ void drivetrain::normalSpeed() {
     printf("Normal Func");
 }
 
+void drivetrain::xStance() {
+    m_frontRight.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(45.0_deg)));
+    m_rearRight.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(-45.0_deg)));
+    m_frontLeft.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(-45.0_deg)));
+    m_rearLeft.SetDesiredState(frc::SwerveModuleState(0.0_mps, frc::Rotation2d(45.0_deg)));
+}
+
 void drivetrain::Periodic() {
     UpdateOdometry();
     // if (m_vision.TargetFound())

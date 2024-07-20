@@ -57,6 +57,7 @@ void RobotContainer::ConfigureButtonBindings() {
 
   // Align
   m_controllerMain.B().WhileTrue(Align(&m_vision, &m_drivetrain).ToPtr());
+  m_controllerMain.A().WhileTrue(m_drivetrain.Run([this]{m_drivetrain.xStance();}));
 
   // ShooterIntake buttons
   m_controllerOperator.LeftBumper().OnTrue(intakeActivate(&m_intakeshooter).ToPtr()); // kA
@@ -65,6 +66,7 @@ void RobotContainer::ConfigureButtonBindings() {
   m_controllerOperator.RightBumper().OnTrue(fire(&m_intakeshooter).ToPtr());
   m_controllerOperator.A().OnTrue(intakeRetract(&m_intakeshooter).ToPtr()); //leftbumper
   m_controllerOperator.Y().OnTrue(scoreAmp(&m_intakeshooter).ToPtr());
+  m_controllerOperator.Start().OnTrue(m_intakeshooter.zeroOTF());
   
   // Climber Buttons
   m_controllerOperator.LeftStick().OnTrue(ExtendClimber(&m_climber).ToPtr());

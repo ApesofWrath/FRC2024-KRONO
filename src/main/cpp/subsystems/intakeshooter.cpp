@@ -176,6 +176,12 @@ bool intakeshooter::shooterAtSpeed() {
     return m_shooterLeftEncoder.GetVelocity() > 4500.0 - kShooterRPMTolerance && m_shooterLeftEncoder.GetVelocity() < 4500.0 + kShooterRPMTolerance;
 }
 
+frc2::CommandPtr intakeshooter::zeroOTF() {
+    return frc2::cmd::RunOnce([this]{ 
+		m_rotationEncoder.SetPosition(0);
+	});
+}
+
 void intakeshooter::Periodic() {
     frc::SmartDashboard::PutNumber("Pigeon", -m_Pigeon.GetPitch().GetValueAsDouble());
     frc::SmartDashboard::PutNumber("Ab Angle", 246.138 - 180.0 + (-m_Pigeon.GetPitch().GetValueAsDouble()));

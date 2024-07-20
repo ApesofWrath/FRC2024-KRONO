@@ -13,6 +13,7 @@
 #include <ctre/phoenix6/Pigeon2.hpp>
 
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc2/command/Commands.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/XboxController.h>
@@ -49,6 +50,7 @@ class intakeshooter : public frc2::SubsystemBase {
     void rapidFire();
     intakeshooterStates getState();
     bool shooterAtSpeed();
+	frc2::CommandPtr zeroOTF();
 
     bool allowSpinup = true;
 
