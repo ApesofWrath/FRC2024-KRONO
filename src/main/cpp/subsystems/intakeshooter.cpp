@@ -276,8 +276,8 @@ void intakeshooter::Periodic() {
 
             intakeState = "BACKOFF";
 
-            m_controllerMain->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 1.0);
-            m_controllerOperator->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 1.0);
+            m_controllerMain->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 0.5);
+            m_controllerOperator->SetRumble(frc2::CommandXboxController::RumbleType::kBothRumble, 0.5);
 
             break;
         case intakeshooterStates::NOTEFORWARD:
