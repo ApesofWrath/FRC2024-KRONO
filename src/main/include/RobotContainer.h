@@ -90,5 +90,4 @@ class RobotContainer {
   // Controller creation
   frc2::CommandXboxController m_controllerMain{controllerConstants::kControllerMainID};
   frc2::CommandXboxController m_controllerOperator{controllerConstants::kControllerCmdID};
-  frc2::CommandXboxController m_controllerAlt{controllerConstants::kControllerAltID};
 };

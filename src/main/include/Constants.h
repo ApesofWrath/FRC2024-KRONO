@@ -30,7 +30,6 @@ namespace controllerConstants {
     //USB port addresses on drivestation PC.
     constexpr int kControllerMainID = 0;
     constexpr int kControllerCmdID = 1;
-    constexpr int kControllerAltID = 2;
 
     // Curve amount for drivers controller
     constexpr double kControllerCurve = 1.0;
